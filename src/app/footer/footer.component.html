@@ -1,0 +1,109 @@
+<footer class="footer-container">
+  <div class="footer-grid">
+
+    <!-- Aiuto e contatti -->
+    <div class="footer-column">
+      <div class="block-title">
+        <mat-icon>help_outline</mat-icon>
+        <span>Aiuto e contatti</span>
+      </div>
+
+      <div class="two-columns">
+
+        <ul>
+          <li class="bold-title">Domande frequenti</li>
+
+          <li>
+            <a [routerLink]="['/aiuto']"
+               [queryParams]="{cat: 'ordini', faq: 'come-effettuare-ordine'}">
+              Come effettuare un ordine
+            </a>
+          </li>
+
+          <li>
+            <a [routerLink]="['/aiuto']"
+               [queryParams]="{cat: 'consegna', faq: 'tempi-spedizione'}">
+              Tempi di spedizione
+            </a>
+          </li>
+
+          <li>
+            <a [routerLink]="['/aiuto']"
+               [queryParams]="{cat: 'reso', faq: 'come-effettuare-reso'}">
+              Come effettuare un reso
+            </a>
+          </li>
+        </ul>
+
+        <ul>
+          <li class="spacer-item"></li>
+
+          <li>
+            <a [routerLink]="['/aiuto']"
+               [queryParams]="{cat: 'pagamento', faq: 'opzioni-pagamento'}">
+              Metodi di pagamento
+            </a>
+          </li>
+
+          <li>
+            <a [routerLink]="['/aiuto']"
+               [queryParams]="{cat: 'consegna', faq: 'dove-ordine'}">
+              Dove si trova il mio ordine
+            </a>
+          </li>
+
+          <li>
+            <a [routerLink]="['/aiuto']"
+               [queryParams]="{cat: 'account', faq: 'modifica-dati'}">
+              Come modifico i dati in account
+            </a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- Spedito da -->
+    <div class="footer-column">
+      <div class="block-title">
+        <mat-icon>local_shipping</mat-icon>
+        <span>Spedito da</span>
+      </div>
+
+      <div class="logos-container">
+
+        <img
+          class="shipping-logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/a/ac/DHL_Logo.svg"
+          alt="DHL">
+
+        <img
+          class="shipping-logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Logo_SDA.jpg"
+          alt="SDA">
+
+        <img
+          class="shipping-logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Logo_Poste_Italiane.png"
+          alt="Poste Italiane">
+
+      </div>
+    </div>
+
+    <!-- Pagamenti -->
+    <div class="footer-column">
+      <div class="block-title">
+        <mat-icon>credit_card</mat-icon>
+        <span>Modalità di pagamento</span>
+      </div>
+
+      <div class="logos-container">
+        <span class="logo-box">Visa</span>
+        <span class="logo-box">Mastercard</span>
+        <span class="logo-box">PayPal</span>
+        <span class="logo-box">Pagamento alla consegna</span>
+      </div>
+    </div>
+
+  </div>
+</footer>

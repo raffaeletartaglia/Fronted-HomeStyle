@@ -1,0 +1,148 @@
+.footer-container {
+  background-color: #f4f4f4;
+  padding: 60px 40px;
+  margin-top: 150px;
+  font-family: inherit;
+  color: #111;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 50px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.block-title mat-icon {
+  width: 28px;
+  height: 28px;
+  font-size: 28px;
+}
+
+.block-title span {
+  line-height: 1;
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  font-size: 15px;
+  color: #111;
+}
+
+li a {
+  display: block;
+  color: #111;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+li a:hover {
+  text-decoration: underline;
+}
+
+.bold-title {
+  font-weight: 700;
+  cursor: default;
+}
+
+.spacer-item {
+  height: 22px;
+  cursor: default;
+}
+
+.logos-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+}
+
+.shipping-logo {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .spacer-item {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    padding: 40px 20px;
+  }
+
+  .block-title {
+    font-size: 20px;
+  }
+
+  .block-title mat-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+  }
+
+  li {
+    font-size: 14px;
+  }
+
+  .logos-container {
+    gap: 10px;
+  }
+
+  .shipping-logo {
+    height: 25px;
+  }
+}
