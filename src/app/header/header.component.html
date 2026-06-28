@@ -1,13 +1,106 @@
-<div class="card flex flex-wrap justify-center gap-4">
-            <p-iconfield>
-                <p-inputicon class="pi pi-search" />
-                <input type="text" pInputText placeholder="Search" />
-            </p-iconfield>
-            <p-iconfield>
-                <input type="text" pInputText />
-                <p-inputicon class="pi pi-spinner pi-spin" />
-            </p-iconfield>
+<header>
+  <!-- Usa justify-content-between per mettere il logo a sx e il resto a dx -->
+  <nav class="navbar navbar-expand-md navbar-light custom-navbar d-flex justify-content-between align-items-center">
+
+    <!-- ========================================== -->
+    <!-- 1. SINISTRA: LOGO                          -->
+    <!-- ========================================== -->
+    <h1 class="navbar-brand text-light logo mb-0" style="cursor: pointer" (click)="goHomepage()">
+      homeStyle
+    </h1>
+
+    <!-- ========================================== -->
+    <!-- 2. DESTRA: RICERCA + ICONE                 -->
+    <!-- ========================================== -->
+    <div class="d-flex flex-row align-items-center">
+
+      <!-- BARRA DI RICERCA -->
+      <div class="search-container d-flex flex-row align-items-center mr-4">
+        <input type="text" placeholder="Cerca..." [(ngModel)]="this.productService.ricerca" class="form-control" style="border-radius: 1rem;">
+        <button class="btn btn-dark custom-btn ml-2" type="submit" (click)="productService.getProducts()">Cerca</button>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- GRUPPO ICONE                               -->
+      <!-- ========================================== -->
+      <div class="bottonis d-flex flex-row align-items-center" style="gap: 15px; position: relative;">
+
+        <!-- ================= ICONA 1: UTENTE ================= -->
+        <!-- La classe 'user-icon-container' serve al TS per far chiudere la tendina cliccando fuori -->
+        <div class="user-icon-container" style="position: relative; cursor: pointer;">
+          <div (click)="toggleUserMenu()">
+            <!-- Qui metti la tua immagine/icona dell'utente -->
+            <img src="assets/images/user.png" alt="Utente" width="30" height="30">
+          </div>
+
+          <!-- LA TENDINA DELL'UTENTE -->
+          <div class="dropdown-menu" style="display: block; right: 0; left: auto; top: 40px;" *ngIf="isUserMenuOpen">
+
+            <!-- COSA VEDE SE NON È LOGGATO -->
+            <ng-container *ngIf="!keyCloak.getLoggedStatus()">
+              <a class="dropdown-item" (click)="changePage($event, 'accedi')">Accedi</a>
+              <a class="dropdown-item" (click)="changePage($event, 'registrati')">Registrati</a>
+            </ng-container>
+
+            <!-- COSA VEDE SE È LOGGATO COME UTENTE NORMALE -->
+            <ng-container *ngIf="keyCloak.getLoggedStatus() && !keyCloak.getAdmin()">
+              <a class="dropdown-item" (click)="changePage($event, 'personal-data')">Il mio profilo</a>
+              <a class="dropdown-item" (click)="changePage($event, 'da-fare')">Ordini</a>
+              <a class="dropdown-item" (click)="changePage($event, 'resi')">Effettua un reso</a>
+              <a class="dropdown-item" (click)="changePage($event, 'help-request')">Aiuto e contatti</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item text-danger" (click)="keyCloak.toggleLogin()">Disconnettiti</a>
+            </ng-container>
+
+            <!-- COSA VEDE SE È LOGGATO COME ADMIN -->
+            <ng-container *ngIf="keyCloak.getLoggedStatus() && keyCloak.getAdmin()">
+              <a class="dropdown-item" (click)="changeSection($event, 0, 'admin-area',0)">Cerca utenti</a>
+              <a class="dropdown-item" (click)="changeSection($event, 1, 'admin-area',1)">Segnalazioni</a>
+              <a class="dropdown-item" (click)="changeSection($event, 2, 'admin-area',2)">Richieste di supporto</a>
+              <a class="dropdown-item" (click)="changeSection($event, 3, 'admin-area',3)">Utenti bannati</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item text-danger" (click)="keyCloak.toggleLogin()">Disconnettiti</a>
+            </ng-container>
+
+          </div>
         </div>
-         <div class="card">
-            <p-menubar [model]="items" />
+
+        <!-- ================= ICONA 2: WISHLIST ================= -->
+        <!-- Questa non ha tendina, usa il metodo che gestisce il redirect in base al login -->
+        <div style="cursor: pointer;" (click)="clickWishlistIcon($event)">
+          <!-- Qui metti la tua immagine/icona del cuore -->
+          <img src="assets/images/heart.png" alt="Wishlist" width="30" height="30">
         </div>
+
+        <!-- ================= ICONA 3: CARRELLO ================= -->
+        <div class="cart-icon-container" style="position: relative; cursor: pointer;">
+
+          <div (click)="clickCartIcon($event)">
+            <!-- Qui metti la tua immagine/icona del carrello -->
+            <img src="assets/images/cart.png" alt="Carrello" width="30" height="30">
+            <!-- Il pallino rosso delle notifiche/oggetti nel carrello -->
+            <span class="badge badge-danger" style="position: absolute; top: -5px; right: -10px;" *ngIf="notifyCount > 0">{{ notifyCount }}</span>
+          </div>
+
+          <!-- LA TENDINA DEL CARRELLO (Appare solo se loggato, gestito nel TS, e se cliccato) -->
+          <div class="dropdown-menu" style="display: block; right: 0; left: auto; top: 40px; width: 300px; padding: 10px;" *ngIf="isCartMenuOpen">
+
+            <h6 class="dropdown-header">Il tuo carrello</h6>
+
+            <!-- Qui metterai il ciclo *ngFor per mostrare gli oggetti nel carrello -->
+            <!-- Esempio statico: -->
+            <div class="cart-item d-flex justify-content-between mb-2">
+              <span>Prodotto Esempio</span>
+              <span>€ 19.99</span>
+            </div>
+
+            <div class="dropdown-divider"></div>
+            <button class="btn btn-warning w-100 mt-2" (click)="changePage($event, 'shopping-cart')">Vai al carrello</button>
+
+          </div>
+        </div>
+
+      </div> <!-- Fine Gruppo Icone -->
+    </div> <!-- Fine blocco Destra -->
+  </nav>
+</header>
