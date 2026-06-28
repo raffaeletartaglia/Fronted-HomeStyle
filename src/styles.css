@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Custom styles for MatDialog with Bootstrap */
+.bootstrap-dialog-container .mdc-dialog__surface {
+  padding: 0 !important;
+  border-radius: var(--bs-border-radius-lg, 0.5rem) !important;
+  overflow: hidden !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.bootstrap-dialog-container .mat-mdc-dialog-container {
+  padding: 0 !important;
+}

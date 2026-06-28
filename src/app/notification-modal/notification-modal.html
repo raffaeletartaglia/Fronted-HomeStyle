@@ -1,0 +1,19 @@
+<div class="modal-content border-0 glass-effect">
+  <div class="modal-header text-white" [ngClass]="{
+    'bg-info': data.level === 'info',
+    'bg-success': data.level === 'success',
+    'bg-warning text-dark': data.level === 'warning',
+    'bg-danger': data.level === 'error'
+  }">
+    <h5 class="modal-title m-0" style="display: flex; align-items: center;">
+      <mat-icon style="margin-right: 8px; margin-left: 4px;">{{ getIcon() }}</mat-icon>
+      <span class="padding-top: 4px;">{{ data.title }}</span>
+    </h5>
+    <button mat-icon-button (click)="close()" style="color: inherit; margin: 0.5rem 0.5rem 0.5rem auto;">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="modal-body p-4">
+    <p class="mb-0">{{ data.message }}</p>
+  </div>
+</div>

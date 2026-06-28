@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
-import {BehaviorSubject} from "rxjs";
-import {WarningMessageComponent} from "../warning-message/warning-message.component";
-import {RegistrationComponent} from "../registration/registration.component";
-import {AllPopupComponent} from "../all-popup/all-popup.component";
+import { Injectable } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { BehaviorSubject } from "rxjs";
+import { WarningMessageComponent } from "../warning-message/warning-message.component";
+
+import { AllPopup } from "../all-popup/all-popup";
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +52,7 @@ export class PopupService {
   openPopups(num: number, avviso: boolean) {
     switch (num) {
       case 0:
-        this.dialog.open(AllPopupComponent);
+        this.dialog.open(AllPopup);
         this.wichComponent = 0;
         this.isOther = true;
         this.isAdd = false;
@@ -72,15 +72,12 @@ export class PopupService {
       case 14:
       case 15:
       case 16:
-        this.dialog.open(AllPopupComponent);
+        this.dialog.open(AllPopup);
         this.wichComponent = num;
         this.isOther = false;
         this.isAdd = true;
         break;
-      case 3:
-        this.dialog.open(RegistrationComponent);
-        this.isLogin = true;
-        break;
+
       default:
         this.isAvviso = avviso;
         this.dialog.open(WarningMessageComponent);
