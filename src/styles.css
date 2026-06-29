@@ -14,3 +14,57 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .bootstrap-dialog-container .mat-mdc-dialog-container {
   padding: 0 !important;
 }
+
+/* =========================================
+   RESTYLING GLOBALE AREA ADMIN E TABELLE
+   ========================================= */
+
+/* Allarga l'area principale limitata a 1200px */
+.page-container {
+  max-width: 1600px !important;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Rendi le tabelle più "morbide" e ariose */
+.mat-elevation-z8, .table-container {
+  border-radius: 16px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025) !important;
+  border: 1px solid #f3f4f6;
+  background: #ffffff;
+}
+
+/* Centra il testo e aumenta il padding nelle celle */
+th.mat-mdc-header-cell, td.mat-mdc-cell {
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 1rem 1.5rem !important;
+  color: #374151; /* Testo più morbido */
+}
+
+/* Colore e peso dell'intestazione per distinguerla */
+th.mat-mdc-header-cell {
+  color: #6b7280 !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  background-color: #f9fafb !important;
+  border-bottom: 2px solid #e5e7eb !important;
+}
+
+/* Linea di separazione morbida tra le righe */
+tr.mat-mdc-row {
+  border-bottom: 1px solid #f3f4f6 !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Effetto hover più pulito */
+tr.mat-mdc-row:hover {
+  background-color: #f8fafc !important;
+}
+
+/* Assicura che i bottoni nelle tabelle siano ben spaziati */
+td.mat-mdc-cell button {
+  margin: 0 0.25rem;
+}

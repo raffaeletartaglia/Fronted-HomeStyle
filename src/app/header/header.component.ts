@@ -1,14 +1,5 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
-import {Event, Router} from "@angular/router";
-import {MatIcon} from "@angular/material/icon";
-import {MatMenu, MatMenuTrigger} from "@angular/material/menu";
-import {MatIconButton} from "@angular/material/button";
-import {MatList, MatListItem} from "@angular/material/list";
-import {MatBadge} from "@angular/material/badge";
-import {count, Subscription} from "rxjs";
 import {FormsModule} from "@angular/forms";
-import { KeyCloakService } from '../services/keyCloack.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,18 +10,6 @@ import { MenuItem } from 'primeng/api';
   selector: 'app-header',
   standalone: true,
   imports: [
-    NgClass,
-    NgIf,
-    MatIcon,
-    MatMenuTrigger,
-    MatMenu,
-    MatIconButton,
-    NgForOf,
-    MatList,
-    MatListItem,
-    MatBadge,
-    DatePipe,
-    NgOptimizedImage,
     FormsModule,
     IconFieldModule,
      InputIconModule,

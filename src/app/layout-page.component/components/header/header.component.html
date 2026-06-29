@@ -4,7 +4,7 @@
     </button>
     <span>HomeStyle</span>
     <span class="example-spacer"></span>
-    
+
     <!-- Bottoni per utenti non autenticati -->
     <ng-container *ngIf="!isLoggedIn">
         <button mat-button (click)="login()">Sign In</button>
@@ -13,7 +13,7 @@
 
     <!-- Bottoni per utenti autenticati -->
     <ng-container *ngIf="isLoggedIn">
-        <button mat-icon-button aria-label="User Profile">
+        <button mat-icon-button aria-label="User Profile" (click)="goToDashboard()">
             <mat-icon>account_circle</mat-icon>
         </button>
         <button mat-button (click)="logout()">Logout</button>

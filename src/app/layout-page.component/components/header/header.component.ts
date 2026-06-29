@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
 import Keycloak from 'keycloak-js';
 import { UtenteService } from '../../../services/utente.service';
+import { Router } from '@angular/router';
 
 /**
  * Componente per l'Header dell'applicazione (Navbar in alto).
@@ -27,7 +28,7 @@ export class HeaderComponent implements OnInit {
     isLoggedIn: boolean = false;
     userProfile: any = null;
 
-    constructor(private keycloak: Keycloak, private utenteService: UtenteService) {}
+    constructor(private keycloak: Keycloak, private utenteService: UtenteService, private router: Router) { }
 
     /**
      * Inizializza il componente leggendo lo stato di autenticazione
@@ -37,7 +38,7 @@ export class HeaderComponent implements OnInit {
      */
     ngOnInit() {
         this.isLoggedIn = this.keycloak.authenticated ?? false;
-        
+
         if (this.isLoggedIn) {
             // Proviamo a ottenere i dati dal nostro backend (database locale)
             this.utenteService.getUserData().subscribe({
@@ -56,7 +57,7 @@ export class HeaderComponent implements OnInit {
                     if (err.status === 404 && this.keycloak.tokenParsed) {
                         const tokenNome = this.keycloak.tokenParsed['given_name'] || '';
                         const tokenCognome = this.keycloak.tokenParsed['family_name'] || '';
-                        
+
                         this.utenteService.aggiornaProfilo(tokenNome, tokenCognome, '').subscribe({
                             next: (newDati) => {
                                 this.userProfile = {
@@ -125,5 +126,9 @@ export class HeaderComponent implements OnInit {
      */
     async manageAccount() {
         await this.keycloak.accountManagement();
+    }
+
+    goToDashboard() {
+        this.router.navigate(['/dashboard']);
     }
 }

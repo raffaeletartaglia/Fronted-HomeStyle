@@ -26,7 +26,7 @@
               },
               "src/silent-check-sso.html"
             ],
-            "styles": ["src/material-theme.scss", "src/styles.css"]
+            "styles": [ "node_modules/primeicons/primeicons.css",  "src/material-theme.scss", "src/styles.css"]
           },
           "configurations": {
             "production": {

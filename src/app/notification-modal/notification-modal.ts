@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -12,7 +12,7 @@ export interface NotificationData {
 
 @Component({
   selector: 'app-notification-modal',
-  imports: [NgClass, NgIf, MatDialogModule, MatIconModule, MatButtonModule],
+  imports: [NgClass, MatDialogModule, MatIconModule, MatButtonModule],
   templateUrl: './notification-modal.html',
   styleUrl: './notification-modal.css',
 })
