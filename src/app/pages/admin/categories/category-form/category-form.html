@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Modifica Categoria' : 'Nuova Categoria' }}</h2>
+<mat-dialog-content>
+  
+
+
+  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="w-100 mb-2 mt-2">
+      <mat-label>Nome Categoria</mat-label>
+      <input matInput formControlName="nomeCategoria" placeholder="Es. Illuminazione" required>
+      <mat-error *ngIf="categoryForm.get('nomeCategoria')?.hasError('required')">
+        Il nome è obbligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 mb-2">
+      <mat-label>Descrizione</mat-label>
+      <textarea matInput formControlName="descrizione" rows="3" placeholder="Opzionale..."></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 mb-2">
+      <mat-label>Stanze Associate</mat-label>
+      <mat-select formControlName="stanze" multiple>
+        <mat-option *ngFor="let room of stanzeOptions" [value]="room.tipologia">
+          {{ formatRoomType(room.tipologia) }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Annulla</button>
+  <button mat-raised-button color="primary" [disabled]="categoryForm.invalid" (click)="onSubmit()">
+    Salva
+  </button>
+</mat-dialog-actions>

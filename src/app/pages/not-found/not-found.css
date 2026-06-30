@@ -1,0 +1,14 @@
+.not-found-container {
+  min-height: 80vh;
+}
+
+.error-icon {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  color: #f44336; /* Mat-warn color */
+}
+
+.max-w-md {
+  max-width: 600px;
+}

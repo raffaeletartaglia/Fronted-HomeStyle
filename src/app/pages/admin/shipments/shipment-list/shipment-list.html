@@ -1,0 +1,83 @@
+<div class="page-container">
+  <div class="header-section">
+    <h1>Gestione Spedizioni</h1>
+    <p>Visualizza e gestisci le spedizioni degli ordini (Corriere, Tracking e Stato).</p>
+  </div>
+
+  <div class="table-container mat-elevation-z8">
+    <table mat-table [dataSource]="spedizioni">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID Spedizione </th>
+        <td mat-cell *matCellDef="let element"> {{element.id | slice:0:8}}... </td>
+      </ng-container>
+
+      <!-- Ordine Column -->
+      <ng-container matColumnDef="ordineId">
+        <th mat-header-cell *matHeaderCellDef> ID Ordine </th>
+        <td mat-cell *matCellDef="let element"> {{element.ordineId | slice:0:8}}... </td>
+      </ng-container>
+
+      <!-- Corriere Column -->
+      <ng-container matColumnDef="corriere">
+        <th mat-header-cell *matHeaderCellDef> Corriere </th>
+        <td mat-cell *matCellDef="let element"> {{element.corriere || 'Non assegnato'}} </td>
+      </ng-container>
+
+      <!-- Tracking Column -->
+      <ng-container matColumnDef="codiceTracking">
+        <th mat-header-cell *matHeaderCellDef> Tracking </th>
+        <td mat-cell *matCellDef="let element"> {{element.codiceTracking || 'N/D'}} </td>
+      </ng-container>
+
+      <!-- Stato Column -->
+      <ng-container matColumnDef="statoSpedizione">
+        <th mat-header-cell *matHeaderCellDef> Stato </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-chip [color]="getStatoColor(element.statoSpedizione)" selected>
+            {{element.statoSpedizione | titlecase}}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Azioni Column -->
+      <ng-container matColumnDef="azioni">
+        <th mat-header-cell *matHeaderCellDef> Azioni </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="primary" matTooltip="Modifica Tracking/Corriere" (click)="apriModalModifica(element)" *ngIf="element.statoSpedizione !== 'CONSEGNATO' && element.statoSpedizione !== 'ANNULLATO'">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <!-- Transizioni di stato -->
+          <button mat-icon-button color="primary" matTooltip="Segna come Spedito" (click)="cambiaStato(element.id, 'SPEDITO')" *ngIf="element.statoSpedizione === 'PREPARAZIONE'">
+            <mat-icon>local_shipping</mat-icon>
+          </button>
+
+          <button mat-icon-button color="primary" matTooltip="Segna In Transito" (click)="cambiaStato(element.id, 'IN_TRANSITO')" *ngIf="element.statoSpedizione === 'SPEDITO'">
+            <mat-icon>moving</mat-icon>
+          </button>
+
+          <button mat-icon-button color="primary" matTooltip="Segna come Consegnato" (click)="cambiaStato(element.id, 'CONSEGNATO')" *ngIf="element.statoSpedizione === 'IN_TRANSITO' || element.statoSpedizione === 'SPEDITO'">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" matTooltip="Annulla Spedizione" (click)="cambiaStato(element.id, 'ANNULLATO')" *ngIf="element.statoSpedizione === 'PREPARAZIONE'">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row-hover"></tr>
+    </table>
+
+    <mat-paginator 
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="onPageChange($event)"
+      aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>

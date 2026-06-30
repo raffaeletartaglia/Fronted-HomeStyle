@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <div class="d-flex align-items-center mb-4 gap-4">
+    <h2 class="mb-0">Gestione Categorie</h2>
+    <button mat-raised-button color="primary" class="rounded-pill" style="height: 32px; line-height: 32px; font-size: 13px;" (click)="openAddDialog()">
+      <mat-icon style="font-size: 18px; width: 18px; height: 18px; line-height: 18px; margin-right: 4px;">add</mat-icon> Aggiungi Categoria
+    </button>
+  </div>
+
+  <div *ngIf="isLoading()" class="d-flex justify-content-center my-5">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div class="mat-elevation-z8 table-wrapper" *ngIf="!isLoading()">
+    <table mat-table [dataSource]="categories" class="w-100">
+
+    <ng-container matColumnDef="nomeCategoria">
+      <th mat-header-cell *matHeaderCellDef> Nome </th>
+      <td mat-cell *matCellDef="let element"> {{element.nomeCategoria}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="descrizione">
+      <th mat-header-cell *matHeaderCellDef> Descrizione </th>
+      <td mat-cell *matCellDef="let element"> {{element.descrizione}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="azioni">
+      <th mat-header-cell *matHeaderCellDef> Azioni </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="openEditDialog(element)" style="background-color: rgba(240, 240, 245); margin-right: 8px;">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteCategory(element.id)" style="background-color: rgba(240, 240, 245);">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+    <div *ngIf="categories.length === 0" class="text-center mt-3 text-muted" style="padding: 20px;">
+      Categorie non presenti.
+    </div>
+
+    <mat-paginator
+                   [length]="totalElements"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   [pageIndex]="pageIndex"
+                   (page)="onPageChange($event)"
+                   aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+.detail-section h3 {
+  font-size: 1.1rem;
+  color: #3f51b5;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+.detail-section p {
+  margin: 4px 0;
+}
+.mt-3 {
+  margin-top: 16px;
+}
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+.products-table th, .products-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+.products-table th {
+  background-color: #f5f5f5;
+}
+.text-end {
+  text-align: right;
+}

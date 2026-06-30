@@ -1,0 +1,14 @@
+<div class="not-found-container container d-flex flex-column align-items-center justify-content-center text-center">
+  <mat-icon class="error-icon color-warn mb-4">error_outline</mat-icon>
+  <h1 class="display-1 fw-bold text-dark mb-2">404</h1>
+  <h2 class="h4 text-muted mb-4">Pagina Non Trovata o Accesso Negato</h2>
+  <p class="lead mb-5 max-w-md">
+    La pagina che stai cercando non esiste oppure non hai i permessi necessari per visualizzarla.
+  </p>
+  
+  <div class="action-buttons d-flex gap-3">
+    <button mat-raised-button color="primary" class="px-4 py-2 rounded-pill" (click)="goToLogin()">
+      <mat-icon class="me-2">login</mat-icon> Torna alla pagina di login
+    </button>
+  </div>
+</div>

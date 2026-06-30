@@ -1,0 +1,70 @@
+<div class="product-detail-container" *ngIf="product && !isLoading()">
+  
+  <div class="header-actions">
+    <button mat-icon-button (click)="goBack()" class="back-btn" title="Torna Indietro">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <div class="product-card">
+    <div class="product-image-section">
+      <img *ngIf="product.immagine" [src]="'data:image/jpeg;base64,' + product.immagine" alt="Prodotto" class="product-img">
+      <div *ngIf="!product.immagine" class="no-image">Nessuna Immagine</div>
+    </div>
+    
+    <div class="product-info-section">
+      <div class="brand-chip" *ngIf="product.marca">{{ product.marca | uppercase }}</div>
+      <h1 class="product-title">{{ product.nomeProdotto }}</h1>
+      
+      <div class="price-stock-row">
+        <span class="product-price">€{{ product.prezzo | number:'1.2-2' }}</span>
+        <span class="stock-badge" [ngClass]="{'in-stock': (product.giacenza || 0) > 0, 'out-of-stock': (product.giacenza || 0) === 0}">
+          <mat-icon>{{ (product.giacenza || 0) > 0 ? 'check_circle' : 'cancel' }}</mat-icon>
+          {{ (product.giacenza || 0) > 0 ? 'Disponibile: ' + (product.giacenza || 0) : 'Esaurito' }}
+        </span>
+      </div>
+
+      <div class="product-desc-box">
+        <p class="product-desc">{{ product.descrizione || 'Nessuna descrizione disponibile.' }}</p>
+      </div>
+
+      <div class="tags-section">
+        <div class="tag-group">
+          <strong>Categoria:</strong>
+          <mat-chip class="custom-chip">{{ product.categoria.nomeCategoria || 'N/D' }}</mat-chip>
+        </div>
+      </div>
+
+      <div class="actions-section">
+        <ng-container *ngIf="isAdmin">
+          <!-- Admin Actions -->
+          <button mat-raised-button color="primary" class="action-btn" (click)="openEditDialog()">
+            <mat-icon>edit</mat-icon> Modifica Prodotto
+          </button>
+          <button mat-raised-button color="warn" class="action-btn" (click)="deleteProduct()">
+            <mat-icon>delete</mat-icon> Elimina Prodotto
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="!isAdmin">
+          <!-- User Actions -->
+          <button mat-raised-button class="action-btn user-btn cart-btn">
+            <mat-icon>add_shopping_cart</mat-icon> Aggiungi al Carrello
+          </button>
+          <button mat-raised-button class="action-btn user-btn buy-btn">
+            <mat-icon>shopping_bag</mat-icon> Compra Ora
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading()" class="loading-spinner">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
+
+<div *ngIf="!product && !isLoading()" class="not-found-container">
+  <h2>Prodotto non trovato</h2>
+  <button mat-raised-button color="primary" (click)="goBack()">Torna Indietro</button>
+</div>
