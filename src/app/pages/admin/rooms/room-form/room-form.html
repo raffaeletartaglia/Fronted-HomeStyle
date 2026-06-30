@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Modifica Stanza' : 'Nuova Stanza' }}</h2>
+<mat-dialog-content>
+  
+
+
+  <form [formGroup]="roomForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="w-100 mb-2 mt-2">
+      <mat-label>Tipologia Stanza</mat-label>
+      <mat-select formControlName="tipologia" required>
+        <mat-option *ngFor="let option of areaCasaOptions" [value]="option">
+          {{ formatRoomType(option) }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="roomForm.get('tipologia')?.hasError('required')">
+        La tipologia è obbligatoria
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Annulla</button>
+  <button mat-raised-button color="primary" [disabled]="roomForm.invalid" (click)="onSubmit()">
+    Salva
+  </button>
+</mat-dialog-actions>

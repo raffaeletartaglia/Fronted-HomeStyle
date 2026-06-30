@@ -1,0 +1,46 @@
+.order-list-container {
+  padding: 20px;
+}
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+table {
+  width: 100%;
+}
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  background-color: white;
+  margin-top: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+}
+.text-muted {
+  color: #6c757d;
+  font-size: 0.85em;
+}
+.status-select {
+  width: 170px;
+  margin-top: 15px; /* Alignment for mat-form-field inside table */
+}
+/* Reduce internal padding of the select to make it fit nicely in the row */
+::ng-deep .status-select .mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  min-height: 40px !important;
+}
+::ng-deep .status-select .mdc-text-field--outlined .mdc-notched-outline {
+  top: 0 !important;
+}
+
+.table-wrapper { display: flex; flex-direction: column; min-height: calc(100vh - 180px); }
+mat-paginator { margin-top: auto; }
