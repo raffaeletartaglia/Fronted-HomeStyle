@@ -1,8 +1,10 @@
-export interface Categoria{
-    id: string;
+import { Stanza } from './stanza.model';
+import { Prodotto } from './prodotto.model';
+
+export interface Categoria {
+    id?: string;
     nomeCategoria: string;
-    descrizione: string;
-    quantita: number;
-    dataAggiunta: string;
-    
+    descrizione?: string;
+    stanze?: Stanza[];
+    prodotti?: Prodotto[];
 }

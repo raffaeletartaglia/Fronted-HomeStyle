@@ -11,4 +11,6 @@ export interface Prodotto {
   includeMontaggio: boolean;
   dataProssimaDisponibilita: string; // LocalDate mappato come stringa ISO
   categoria: Categoria;
+  immagine?: string;
+  giacenza?: number;
 }

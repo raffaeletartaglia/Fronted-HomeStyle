@@ -1,0 +1,41 @@
+<div class="profile-container">
+  <h2>Il Mio Profilo</h2>
+  <p class="subtitle">Gestisci le tue informazioni personali e i contatti.</p>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="firstName" placeholder="Inserisci il tuo nome">
+        <mat-error *ngIf="profileForm.get('firstName')?.hasError('required')">Il nome è obbligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Cognome</mat-label>
+        <input matInput formControlName="lastName" placeholder="Inserisci il tuo cognome">
+        <mat-error *ngIf="profileForm.get('lastName')?.hasError('required')">Il cognome è obbligatorio</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field full-width">
+        <mat-label>Email (Gestita da Keycloak)</mat-label>
+        <input matInput type="email" formControlName="email">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field full-width">
+        <mat-label>Numero di Telefono</mat-label>
+        <input matInput formControlName="numeroTelefono" placeholder="Inserisci 10 cifre">
+        <mat-error *ngIf="profileForm.get('numeroTelefono')?.hasError('required')">Il telefono è obbligatorio</mat-error>
+        <mat-error *ngIf="profileForm.get('numeroTelefono')?.hasError('minlength') || profileForm.get('numeroTelefono')?.hasError('maxlength')">Deve essere di 10 caratteri</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Salvataggio...' : 'Salva Modifiche' }}
+      </button>
+    </div>
+  </form>
+</div>

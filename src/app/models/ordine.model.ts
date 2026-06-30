@@ -1,5 +1,6 @@
 import { DettaglioOrdine } from './dettaglioOrdine.model';
 import { Indirizzo } from './indirizzo.model';
+import { Utente } from './utente.model';
 
 export type StatoOrdine =
   'IN_ELABORAZIONE' |
@@ -12,7 +13,9 @@ export interface Ordine {
   statoOrdine: StatoOrdine;
   dataOrdine: string;
   dataPrevistaConsegna: string;
+  prezzoTotale: number;
 
+  utente: Utente;
   indirizzoSpedizione: Indirizzo;
 
   prodotti: DettaglioOrdine[];

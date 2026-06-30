@@ -1,0 +1,43 @@
+.profile-container {
+  max-width: 600px;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.profile-container h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-field {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}

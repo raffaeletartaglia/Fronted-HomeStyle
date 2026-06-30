@@ -1,0 +1,40 @@
+/* src/app/notification-modal/notification-modal.css */
+
+.glass-effect {
+    /* Sfondo semi-trasparente bianco o leggermente grigio */
+    background: rgba(255, 255, 255, 0.7) !important;
+
+    /* L'effetto sfocatura di fondo (IL CUORE DEL GLASSMORPHISM) */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    /* NUOVE PROPRIETÀ PER I BORDI CURVI */
+    border-radius: 1.2rem !important;
+    /* Puoi aumentare o diminuire questo valore (es. 1.5rem o 20px) */
+    overflow: hidden !important;
+    /* Fondamentale affinché l'header non "buchi" gli angoli */
+}
+
+
+/* Rendi l'header leggermente trasparente affinché non blocchi totalmente il vetro */
+.modal-header {
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Assicurati che lo sfondo delle classi di bootstrap sia leggermente opaco */
+.bg-success {
+    background-color: rgba(25, 135, 84, 0.85) !important;
+}
+
+.bg-danger {
+    background-color: rgba(220, 53, 69, 0.85) !important;
+}
+
+.bg-warning {
+    background-color: rgba(255, 193, 7, 0.85) !important;
+}
+
+.bg-info {
+    background-color: rgba(13, 202, 240, 0.85) !important;
+}

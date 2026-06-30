@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Menu icon">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>HomeStyle</span>
+    <span class="example-spacer"></span>
+
+    <!-- Bottoni per utenti non autenticati -->
+    <ng-container *ngIf="!isLoggedIn">
+        <button mat-button (click)="login()">Sign In</button>
+        <button mat-raised-button color="accent" (click)="register()">Sign Up</button>
+    </ng-container>
+
+    <!-- Bottoni per utenti autenticati -->
+    <ng-container *ngIf="isLoggedIn">
+        <button mat-icon-button aria-label="User Profile" (click)="goToDashboard()">
+            <mat-icon>account_circle</mat-icon>
+        </button>
+        <button mat-button (click)="logout()">Logout</button>
+    </ng-container>
+</mat-toolbar>

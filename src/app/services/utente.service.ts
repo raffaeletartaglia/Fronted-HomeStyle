@@ -5,7 +5,7 @@ import {Router} from "@angular/router";
 import { UserRegistration } from '../models/utenteRegistrazione.model';
 import { Utente } from '../models/utente.model';
 import { PasswordChange } from '../models/passwordChange';
-import { KeyCloakService } from './keyCloack.service';
+import Keycloak from 'keycloak-js';
 import { PopupService } from './popUp.service';
 
 
@@ -16,10 +16,37 @@ import { PopupService } from './popUp.service';
 export class UtenteService {
 
   private profileURL = 'http://localhost:8080/api/utenti/me';
+  private logoutURL = 'http://localhost:8080/api/auth/logout';
 
-   constructor( private http: HttpClient, private keycloakService: KeyCloakService, private popUp: PopupService) { }
+   constructor( private http: HttpClient, private keycloak: Keycloak, private popUp: PopupService) { }
 
   /**
+   * Aggiorna i dati del profilo chiamando l'endpoint del DB Spring Boot
+   */
+  aggiornaProfilo(nome: string, cognome: string, numeroTelefono: string): Observable<any> {
+    const payload = {
+      nome: nome,
+      cognome: cognome,
+      numeroTelefono: numeroTelefono
+    };
+    return this.http.post(this.profileURL, payload);
+  }
+
+  /**
+   * Effettua il logout lato backend: invia access e refresh token
+   * all'endpoint /api/auth/logout per inserirli nella blacklist.
+   * Questo impedisce che token rubati o scaduti vengano riutilizzati.
+   */
+  logoutBackend(accessToken: string, refreshToken: string): Observable<any> {
+    const payload = {
+      accessToken: accessToken,
+      refreshToken: refreshToken
+    };
+    return this.http.post(this.logoutURL, payload);
+  }
+
+  /**
+   * (Vecchio metodo deprecato da quando c'è Keycloak)
    * Crea o aggiorna il profilo dell'utente loggato
    */
    
@@ -36,7 +63,7 @@ export class UtenteService {
         this.popUp.updateStringa("Account creato correttamente! Verrai reinderizzato")
         this.popUp.openPopups(103, true)
         setTimeout(() => {
-          this.keycloakService.login();
+          this.keycloak.login();
         }, 3000);
       },
       error => {

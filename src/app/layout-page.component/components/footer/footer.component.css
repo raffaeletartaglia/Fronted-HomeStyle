@@ -1,7 +1,6 @@
 .footer-container {
   background-color: #f4f4f4;
-  padding: 60px 40px;
-  margin-top: 150px;
+  width: 100%;
   font-family: inherit;
   color: #111;
 }
@@ -10,7 +9,6 @@
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 50px;
-  max-width: 1400px;
   margin: 0 auto;
 }
 

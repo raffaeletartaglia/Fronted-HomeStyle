@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h3>Area Personale</h3>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <!-- Sezione Utente Base -->
+      <h6 class="nav-section-title">Utente</h6>
+      <a routerLink="/dashboard/profile" routerLinkActive="active-link" class="nav-item">Il Mio Profilo</a>
+      <a routerLink="/dashboard/orders" routerLinkActive="active-link" class="nav-item">I Miei Ordini</a>
+      <a routerLink="/dashboard/wishlist" routerLinkActive="active-link" class="nav-item">Wishlist</a>
+
+      <!-- Sezione Admin -->
+      <ng-container *ngIf="isAdmin">
+        <h6 class="nav-section-title admin-section mt-4">Amministrazione</h6>
+        <a routerLink="/dashboard/admin/products" routerLinkActive="active-link" class="nav-item">Gestione Prodotti</a>
+        <a routerLink="/dashboard/admin/categories" routerLinkActive="active-link" class="nav-item">Gestione Categorie</a>
+        <a routerLink="/dashboard/admin/rooms" routerLinkActive="active-link" class="nav-item">Gestione Stanze</a>
+        <a routerLink="/dashboard/admin/all-orders" routerLinkActive="active-link" class="nav-item">Tutti gli Ordini</a>
+        <a routerLink="/dashboard/admin/returns" routerLinkActive="active-link" class="nav-item">Gestione Resi</a>
+        <a routerLink="/dashboard/admin/shipments" routerLinkActive="active-link" class="nav-item">Gestione Spedizioni</a>
+        <a routerLink="/dashboard/admin/inventory" routerLinkActive="active-link" class="nav-item">Log Magazzino</a>
+      </ng-container>
+    </nav>
+  </aside>
+
+  <!-- Contenuto principale -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { UtenteService } from "./utente.service";
 import { PopupService } from "./popUp.service";
 import { Wishlist } from "../models/wishlist.model";
-import { KeyCloakService } from "./keyCloack.service";
+import Keycloak from 'keycloak-js';
 
 
 
@@ -15,7 +15,7 @@ export class WishListService{
 
     wishlistUtente: Wishlist[] = [];
 
-    constructor(private utenteService: UtenteService, private http: HttpClient, private popUpService:PopupService, private keycloakService: KeyCloakService) {}
+    constructor(private utenteService: UtenteService, private http: HttpClient, private popUpService:PopupService, private keycloak: Keycloak) {}
 
     private getWishListUtentesURL = 'http://localhost:8080/api/v1/wishlist/utente';
 

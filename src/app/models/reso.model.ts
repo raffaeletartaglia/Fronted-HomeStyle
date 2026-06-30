@@ -9,4 +9,5 @@ export interface Reso {
   motivo: string;
 
   indirizzoId: string;
+  statoReso: string;
 }
