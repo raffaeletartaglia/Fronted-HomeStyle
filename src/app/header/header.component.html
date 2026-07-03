@@ -1,13 +1,45 @@
-<div class="card flex flex-wrap justify-center gap-4">
-            <p-iconfield>
-                <p-inputicon class="pi pi-search" />
-                <input type="text" pInputText placeholder="Search" />
-            </p-iconfield>
-            <p-iconfield>
-                <input type="text" pInputText />
-                <p-inputicon class="pi pi-spinner pi-spin" />
-            </p-iconfield>
+<div class="header-wrapper">
+  <p-menubar [model]="items">
+    <!-- Inizio: Logo -->
+    <ng-template pTemplate="start">
+      <div class="brand-logo" (click)="goHomepage()" style="cursor: pointer;">
+        <i class="pi pi-home" style="font-size: 1.5rem; color: #C87965"></i>
+        <span class="brand-text">HomeStyle</span>
+      </div>
+    </ng-template>
+
+    <!-- Fine: Azioni (Ricerca, Utente, Cuore, Carrello) -->
+    <ng-template pTemplate="end">
+      <div class="header-actions">
+
+        <!-- Barra di Ricerca -->
+        <p-iconfield>
+          <p-inputicon class="pi pi-search" />
+          <input type="text" pInputText placeholder="Cerca nello store..." class="search-input" />
+        </p-iconfield>
+
+        <div class="icons-container">
+          <!-- Icona Utente -->
+          <!-- Al click, invoca il metodo toggle sul p-menu identificato come #userMenu -->
+          <button class="icon-btn" (click)="userMenu.toggle($event)">
+            <i class="pi pi-user"></i>
+          </button>
+
+          <!-- Icona Wishlist (Cuore) -->
+          <button class="icon-btn">
+            <i class="pi pi-heart"></i>
+          </button>
+
+          <!-- Icona Carrello -->
+          <button class="icon-btn">
+            <i class="pi pi-shopping-cart"></i>
+          </button>
         </div>
-         <div class="card">
-            <p-menubar [model]="items" />
-        </div>
+        
+        <!-- Menù a tendina a comparsa collegato al bottone utente -->
+        <p-menu #userMenu [popup]="true" [model]="userMenuItems"></p-menu>
+
+      </div>
+    </ng-template>
+  </p-menubar>
+</div>

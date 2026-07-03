@@ -1,0 +1,84 @@
+.header-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+:host ::ng-deep .p-menubar {
+  background: transparent !important;
+  border: none !important;
+  padding: 1rem 2rem;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 2rem;
+}
+
+.brand-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  letter-spacing: 1px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.search-input {
+  border-radius: 50px !important;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #C87965;
+  box-shadow: 0 0 0 2px rgba(200, 121, 101, 0.2) !important;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 2.2rem;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  color: #C87965;
+  transform: scale(1.1);
+}
+
+.icons-container {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* Stili per ingrandire il sottomenu utente */
+:host ::ng-deep .p-menu {
+  width: 17rem !important;
+}
+
+:host ::ng-deep .p-menuitem-text {
+  font-size: 1.1rem !important;
+}
+
+:host ::ng-deep .center-menu-item .p-menuitem-link {
+  justify-content: center !important;
+}
+
+:host ::ng-deep .center-menu-item .p-menuitem-text {
+  width: 100%;
+  text-align: center !important;
+}

@@ -3,25 +3,25 @@ import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
-  { 
-    path: '', 
+  {
+    path: '',
     loadComponent: () => import('./layout-page.component/layout-page.component').then(m => m.LayoutPageComponent),
     children: [
-      { 
-        path: '', 
-        loadComponent: () => import('./homepage/homepage.component').then(m => m.HomepageComponent)
+      {
+        path: '',
+        loadComponent: () => import('./homepage-real/homepage-real').then(m => m.HomepageReal)
       },
       {
         path: 'product/:id',
         loadComponent: () => import('./pages/products/product-detail/product-detail').then(m => m.ProductDetailComponent)
       },
-      { 
-        path: 'dashboard', 
+      {
+        path: 'dashboard',
         loadComponent: () => import('./pages/dashboard/dashboard-layout/dashboard-layout').then(m => m.DashboardLayout),
         canActivate: [authGuard], // Protezione: accessibile solo se loggati
         children: [
-          { 
-            path: 'profile', 
+          {
+            path: 'profile',
             loadComponent: () => import('./pages/dashboard/user-profile/user-profile').then(m => m.UserProfile)
           },
           { path: '', redirectTo: 'profile', pathMatch: 'full' },
@@ -64,8 +64,8 @@ export const routes: Routes = [
       }
     ]
   },
-  { 
-    path: 'not-found', 
+  {
+    path: 'not-found',
     loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound)
   },
   { path: '**', redirectTo: 'not-found' }

@@ -3,12 +3,13 @@
   width: 100%;
   font-family: inherit;
   color: #111;
+  padding: 2rem 3rem; /* Aggiunto padding ma contenuto */
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 50px;
+  gap: 30px;
   margin: 0 auto;
 }
 
@@ -21,8 +22,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
-  font-size: 22px;
+  margin-bottom: 16px;
+  font-size: 20px;
   font-weight: 400;
 }
 

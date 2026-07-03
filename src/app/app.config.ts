@@ -5,7 +5,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';import {
+import Aura from '@primeng/themes/aura'; import {
   provideKeycloak,
   createInterceptorCondition,
   IncludeBearerTokenCondition,
@@ -48,9 +48,9 @@ export const appConfig: ApplicationConfig = {
     },
     provideAnimationsAsync(),
     providePrimeNG({
-        theme: {
-            preset: Aura
-        }
+      theme: {
+        preset: Aura
+      }
     })
   ]
 };

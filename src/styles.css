@@ -68,3 +68,17 @@ tr.mat-mdc-row:hover {
 td.mat-mdc-cell button {
   margin: 0 0.25rem;
 }
+
+/* Forzatura globale per centrare elementi nel p-menu di PrimeNG */
+.center-menu-item > .p-menuitem-content > .p-menuitem-link,
+.center-menu-item > .p-menuitem-link,
+.center-menu-item .p-menuitem-link {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.center-menu-item .p-menuitem-text {
+  width: 100% !important;
+  text-align: center !important;
+  display: block !important;
+}
