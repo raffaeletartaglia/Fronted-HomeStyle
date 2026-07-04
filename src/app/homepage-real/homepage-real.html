@@ -2,3 +2,64 @@
     <!-- IL NOSTRO CAROSELLO AL CENTRO DELLA PAGINA -->
     <app-hero-carousel></app-hero-carousel>
 </div>
+
+<div class="scroll-container">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 4rem;">
+        <div style="font-size: 2rem; font-weight: 500;">Scopri l'Eleganza</div>
+        <div style="animation: enter 1s infinite alternate; width: 3rem; height: 3rem; background: #C87965; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+            <i class="pi pi-arrow-down"></i>
+        </div>
+    </div>
+    
+    <!-- Prima Riga di Elementi -->
+    <div class="promo-grid">
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card">
+            <div class="icon-box"><i class="pi pi-home"></i></div>
+            <span class="promo-title">Stile da Vivere</span>
+            <span class="promo-desc">Arreda i tuoi spazi con eleganza, comfort e stile in ogni singolo dettaglio.</span>
+        </div>
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card">
+            <div class="icon-box"><i class="pi pi-heart"></i></div>
+            <span class="promo-title">Oltre l'Estetica</span>
+            <span class="promo-desc">Dove il design incontra l'emozione per farti vivere appieno la tua casa.</span>
+        </div>
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card">
+            <div class="icon-box"><i class="pi pi-star"></i></div>
+            <span class="promo-title">Armonia degli Spazi</span>
+            <span class="promo-desc">L'arte di abitare prende forma con accessori pensati su misura per te.</span>
+        </div>
+    </div>
+    
+    <!-- Immagini Esistenti Animate -->
+    <div class="promo-grid">
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card">
+            <img src="assets/images/camera1.jpg" alt="Camera 1" class="img-card" onerror="this.src='https://primefaces.org/cdn/primeng/images/demo/nature/nature1.jpg'"/>
+            <span class="promo-title">Arredo Moderno</span>
+            <span class="promo-desc">Mobili e complementi dal design innovativo.</span>
+        </div>
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card">
+            <img src="assets/images/camera2.jpg" alt="Camera 2" class="img-card" onerror="this.src='https://primefaces.org/cdn/primeng/images/demo/nature/nature2.jpg'"/>
+            <span class="promo-title">Relax Quotidiano</span>
+            <span class="promo-desc">Trasforma ogni momento in un'esperienza di relax.</span>
+        </div>
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card">
+            <img src="assets/images/camera3.jpg" alt="Camera 3" class="img-card" onerror="this.src='https://primefaces.org/cdn/primeng/images/demo/nature/nature3.jpg'"/>
+            <span class="promo-title">Design da Vivere</span>
+            <span class="promo-desc">Creiamo ambienti che rispecchiano la tua personalità.</span>
+        </div>
+    </div>
+    
+    <!-- Banner Statistiche -->
+    <div class="promo-grid">
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card bg-primary-custom">
+            <span style="background: rgba(255,255,255,0.2); font-size: 1.2rem; font-weight: 500; border-radius: 0.5rem; padding: 0.5rem 1rem;">15K+</span>
+            <span class="promo-title">Clienti Soddisfatti</span>
+            <span class="promo-desc">Arredano con noi ogni giorno.</span>
+        </div>
+        <div pAnimateOnScroll enterClass="animate-enter" leaveClass="animate-leave" class="promo-card bg-primary-custom">
+            <span style="background: rgba(255,255,255,0.2); font-size: 1.2rem; font-weight: 500; border-radius: 0.5rem; padding: 0.5rem 1rem;">100%</span>
+            <span class="promo-title">Qualità Italiana</span>
+            <span class="promo-desc">Selezioniamo solo i materiali migliori per la tua casa.</span>
+        </div>
+    </div>
+</div>

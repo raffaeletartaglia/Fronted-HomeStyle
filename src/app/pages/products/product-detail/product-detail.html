@@ -48,12 +48,19 @@
 
         <ng-container *ngIf="!isAdmin">
           <!-- User Actions -->
-          <button mat-raised-button class="action-btn user-btn cart-btn">
-            <mat-icon>add_shopping_cart</mat-icon> Aggiungi al Carrello
-          </button>
-          <button mat-raised-button class="action-btn user-btn buy-btn">
-            <mat-icon>shopping_bag</mat-icon> Compra Ora
-          </button>
+          <ng-container *ngIf="(product.giacenza || 0) > 0; else outOfStock">
+            <button mat-raised-button class="action-btn user-btn cart-btn" (click)="aggiungiAlCarrello()">
+              <mat-icon>add_shopping_cart</mat-icon> Aggiungi al Carrello
+            </button>
+            <button mat-raised-button class="action-btn user-btn buy-btn" (click)="aggiungiAlCarrello(); router.navigate(['/checkout'])">
+              <mat-icon>shopping_bag</mat-icon> Compra Ora
+            </button>
+          </ng-container>
+          <ng-template #outOfStock>
+            <button mat-raised-button color="accent" class="action-btn user-btn" (click)="prenotaProdotto()">
+              <mat-icon>event_available</mat-icon> Prenota Prodotto
+            </button>
+          </ng-template>
         </ng-container>
       </div>
     </div>

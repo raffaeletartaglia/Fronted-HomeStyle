@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Prodotto } from '../models/prodotto.model';
 import { PaginatedResponse } from '../models/pagination.model';
@@ -8,9 +8,9 @@ import { PaginatedResponse } from '../models/pagination.model';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8080/api/v1/prodotto';
+  private readonly apiUrl = 'http://localhost:8080/api/v1/prodotto';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getAllProdotti(page: number = 0, size: number = 10): Observable<PaginatedResponse<Prodotto>> {
     return this.http.get<PaginatedResponse<Prodotto>>(`${this.apiUrl}?page=${page}&size=${size}`);
@@ -18,6 +18,29 @@ export class ProductService {
 
   getProdottoById(id: string): Observable<Prodotto> {
     return this.http.get<Prodotto>(`${this.apiUrl}/${id}`);
+  }
+
+  /**
+   * Filtra i prodotti per stanza, categoria e/o testo di ricerca.
+   * Tutti i parametri sono opzionali e combinabili.
+   * Mappa: GET /api/v1/prodotto/filtra
+   */
+  getProdottiFiltrati(
+    stanzaId?: string,
+    categoriaId?: string,
+    query?: string,
+    page: number = 0,
+    size: number = 12
+  ): Observable<PaginatedResponse<Prodotto>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    if (stanzaId)    params = params.set('stanzaId', stanzaId);
+    if (categoriaId) params = params.set('categoriaId', categoriaId);
+    if (query)       params = params.set('query', query);
+
+    return this.http.get<PaginatedResponse<Prodotto>>(`${this.apiUrl}/filtra`, { params });
   }
 
   createProdotto(prodotto: any): Observable<Prodotto> {
@@ -30,5 +53,9 @@ export class ProductService {
 
   deleteProdotto(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  ricercaSuggerimenti(query: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/ricerca-suggerimenti`, { params: { query } });
   }
 }

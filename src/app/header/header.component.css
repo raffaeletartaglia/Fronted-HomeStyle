@@ -1,84 +1,408 @@
 .header-wrapper {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.85); /* Sfondo bianco trasparente */
+  backdrop-filter: blur(10px); /* Effetto vetro/sfocatura dello sfondo sottostante */
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: 'Roboto', sans-serif;
 }
 
-:host ::ng-deep .p-menubar {
-  background: transparent !important;
-  border: none !important;
-  padding: 1rem 2rem;
+.custom-navbar {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
 
+/* --- LOGO --- */
 .brand-logo {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-right: 2rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.brand-logo i {
+  font-size: 1.8rem;
+  color: #C87965; /* Brand color */
 }
 
 .brand-text {
-  font-family: 'Playfair Display', serif;
   font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  letter-spacing: 1px;
+  font-weight: 700;
+  color: #333; /* Testo scuro su sfondo chiaro */
+  letter-spacing: 0.5px;
 }
 
+/* --- MOBILE TOGGLE --- */
+.mobile-toggle-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+/* --- CENTER NAV (Stanze) --- */
+.nav-items-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem; /* Distanza uguale tra tutte le stanze */
+}
+
+.nav-item-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-item-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #555; /* Testo scuro per leggerlo sul bianco */
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  white-space: nowrap; /* Mantiene la scritta su una riga dritta */
+  transition: all 0.3s ease;
+}
+
+.nav-item-label:hover {
+  color: #C87965;
+  transform: scale(1.05);
+}
+
+/* --- DROPDOWN CONTENT (Categorie) --- */
+.dropdown-content {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background-color: #ffffff; /* Sfondo bianco per il dropdown */
+  min-width: 200px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #eee;
+}
+
+.nav-item-dropdown:hover .dropdown-content {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-item {
+  padding: 0.8rem 1.2rem;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.95rem;
+  white-space: nowrap; /* Anche qui testo dritto su una linea */
+  transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f9f9f9;
+  color: #C87965;
+  padding-left: 1.5rem;
+}
+
+/* --- RIGHT ACTIONS --- */
 .header-actions {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
-.search-input {
-  border-radius: 50px !important;
-  border: 1px solid #e0e0e0;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: #C87965;
-  box-shadow: 0 0 0 2px rgba(200, 121, 101, 0.2) !important;
+.icons-container {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .icon-btn {
-  background: none;
+  background: transparent;
   border: none;
-  color: #666;
-  font-size: 2.2rem;
+  font-size: 1.25rem;
+  color: #555;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .icon-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
   color: #C87965;
   transform: scale(1.1);
 }
 
-.icons-container {
+:host ::ng-deep .search-input .p-inputtext {
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.05); /* Sfondo input chiaro */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333;
+  width: 250px;
+  transition: width 0.3s ease;
+}
+
+:host ::ng-deep .search-input .p-inputtext:focus {
+  width: 300px;
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 0 2px rgba(200, 121, 101, 0.5) !important;
+  outline: none !important;
+  border-color: rgba(200, 121, 101, 0.5) !important;
+}
+
+:host ::ng-deep .search-input .p-inputtext::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* --- RESPONSIVE MOBILE (< 991px) --- */
+@media screen and (max-width: 991px) {
+  .mobile-toggle-btn {
+    display: block;
+  }
+
+  .nav-items-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+  }
+
+  .nav-items-container.mobile-open {
+    max-height: 800px;
+    padding: 1rem 0;
+  }
+
+  .nav-item-dropdown {
+    width: 100%;
+  }
+
+  .nav-item-label {
+    padding: 1rem 1.5rem;
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+  }
+
+  .dropdown-content {
+    position: static;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    box-shadow: none;
+    background: #f9f9f9;
+    border-radius: 0;
+    padding: 0;
+    display: none;
+    border: none;
+  }
+
+  .nav-item-dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown-item {
+    padding-left: 2.5rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .header-actions {
+    gap: 0.8rem;
+  }
+
+  :host ::ng-deep .search-input .p-inputtext {
+    width: 130px;
+  }
+  
+  :host ::ng-deep .search-input .p-inputtext:focus {
+    width: 160px;
+  }
+}
+
+/* Stili Custom User Dropdown */
+.custom-user-dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background-color: #ffffff;
+  min-width: 220px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 0.5rem 0;
+  z-index: 1050;
+  border: 1px solid #eaeaea;
+  animation: fadeInUserMenu 0.2s ease-out;
+}
+
+@keyframes fadeInUserMenu {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.custom-user-dropdown .dropdown-item {
+  padding: 0.75rem 1.25rem;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 10px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-/* Stili per ingrandire il sottomenu utente */
-:host ::ng-deep .p-menu {
-  width: 17rem !important;
+.custom-user-dropdown .dropdown-item i {
+  color: #C87965;
+  font-size: 1.1rem;
 }
 
-:host ::ng-deep .p-menuitem-text {
-  font-size: 1.1rem !important;
+.custom-user-dropdown .dropdown-item:hover {
+  background-color: rgba(200, 121, 101, 0.15) !important;
+  color: #C87965;
 }
 
-:host ::ng-deep .center-menu-item .p-menuitem-link {
-  justify-content: center !important;
+.custom-user-dropdown .dropdown-divider {
+  height: 1px;
+  background-color: #eaeaea;
+  margin: 0.5rem 0;
 }
 
-:host ::ng-deep .center-menu-item .p-menuitem-text {
+.custom-user-dropdown .text-danger, 
+.custom-user-dropdown .text-danger i {
+  color: #d32f2f !important;
+}
+
+.custom-user-dropdown .text-center {
+  text-align: center;
+  justify-content: center;
+}
+
+.login-btn-item strong {
+  font-size: 1.05rem;
+}
+
+.register-btn-item {
+  flex-direction: column;
+  gap: 2px !important;
+  padding-top: 0 !important;
+}
+
+/* Stili Custom per il Popup di Auth (PrimeNG p-dialog) */
+:host ::ng-deep .custom-auth-dialog .p-dialog-header {
+  background: transparent !important;
+  border-bottom: none !important;
+  padding: 2rem 2rem 0.5rem 2rem !important;
+  justify-content: center;
+}
+
+:host ::ng-deep .custom-auth-dialog .p-dialog-content {
+  padding: 0 2rem 2.5rem 2rem !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .custom-auth-dialog {
+  border-radius: 20px !important;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.auth-dialog-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  text-align: center !important;
+}
+
+.auth-dialog-header i {
+  font-size: 3.5rem;
+  color: #C87965;
+  background: rgba(200, 121, 101, 0.1);
+  padding: 1rem;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.auth-dialog-header span {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+
+.auth-dialog-content {
+  text-align: center;
+}
+
+.auth-dialog-content p {
+  font-size: 1.05rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.btn-accedi {
+  width: 100%;
+  padding: 12px !important;
+  border-radius: 30px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  background-color: #C87965 !important;
+  color: white !important;
+  letter-spacing: 0.5px;
+}
+
+.register-prompt {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.register-link {
+  color: #C87965;
+  font-weight: 800;
+  margin-left: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.register-link:hover {
+  text-decoration: underline;
 }

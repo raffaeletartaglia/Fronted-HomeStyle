@@ -42,6 +42,11 @@ export class CarrelloService {
     );
   }
 
+  getCarrelloUtenteObservable(idUtente: string) {
+    const url = `${this.baseUrl}/utente/${idUtente}`;
+    return this.http.get<Carrello>(url);
+  }
+
   // ==========================================
   // 2. RECUPERA CARRELLO TRAMITE ID
   // Endpoint: GET /{idCarrello}

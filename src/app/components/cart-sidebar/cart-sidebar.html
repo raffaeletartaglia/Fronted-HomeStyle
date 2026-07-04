@@ -1,0 +1,24 @@
+<p-drawer [(visible)]="visible" position="right" (onHide)="onHide()" styleClass="w-full md:w-25rem lg:w-30rem">
+    <h3>Il tuo Carrello</h3>
+    
+    <div *ngIf="cartItems.length === 0" class="empty-cart">
+        Il carrello è vuoto.
+    </div>
+    
+    <div *ngIf="cartItems.length > 0" class="cart-items">
+        <div *ngFor="let item of cartItems" class="cart-item">
+            <div class="item-details">
+                <h4>{{ item.prodotto.nomeProdotto }}</h4>
+                <p>Quantità: {{ item.quantita }}</p>
+                <p>Prezzo unitario: €{{ item.prodotto.prezzo | number:'1.2-2' }}</p>
+                <p class="font-bold">Subtotale: €{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</p>
+            </div>
+        </div>
+        
+        <div class="cart-total">
+            <h4>Totale Carrello: €{{ total | number:'1.2-2' }}</h4>
+        </div>
+        
+        <p-button label="Procedi al Checkout" styleClass="p-button-success w-full mt-3" (onClick)="goToCheckout()"></p-button>
+    </div>
+</p-drawer>

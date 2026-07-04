@@ -2,7 +2,7 @@ export interface Wishlist {
   id: string;
 
   utenteId: string;
-  prodottoId: string;
+  prodotto: any;
 
   dataAggiunta: string;
 

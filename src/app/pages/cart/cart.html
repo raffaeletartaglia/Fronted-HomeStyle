@@ -1,0 +1,70 @@
+<div class="cart-page-container">
+  <div class="cart-header">
+    <h1>Il Tuo Carrello</h1>
+  </div>
+
+  <div class="cart-content">
+    <!-- Elenco prodotti -->
+    <div class="cart-items-section">
+      <div *ngIf="cartItems.length === 0" class="empty-cart-message">
+        <i class="pi pi-shopping-cart empty-cart-icon"></i>
+        <h2>Il tuo carrello è vuoto</h2>
+        <p>Aggiungi dei prodotti per completare il tuo ordine.</p>
+        <p-button label="Torna allo shopping" icon="pi pi-arrow-left" (onClick)="router.navigate(['/'])" styleClass="p-button-outlined"></p-button>
+      </div>
+
+      <div *ngIf="cartItems.length > 0" class="cart-items-list">
+        <p-card *ngFor="let item of cartItems" styleClass="cart-item-card mb-3">
+          <div class="cart-item-flex">
+            <!-- Immagine (placeholder o futura) -->
+            <div class="item-img-placeholder">
+              <i class="pi pi-image" style="font-size: 2rem; color: #ccc;"></i>
+            </div>
+            
+            <div class="item-details">
+              <h3>{{ item.prodotto.nomeProdotto }}</h3>
+              <p class="text-color-secondary">{{ item.prodotto.categoria?.nomeCategoria || 'Categoria generica' }}</p>
+            </div>
+
+            <div class="item-quantity">
+              <span class="qty-label">Qtà:</span>
+              <span class="qty-value">{{ item.quantita }}</span>
+            </div>
+
+            <div class="item-price">
+              <span class="price-single">€{{ item.prodotto.prezzo | number:'1.2-2' }} cad.</span>
+              <span class="price-subtotal">€{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+
+    <!-- Riepilogo e Checkout -->
+    <div class="cart-summary-section" *ngIf="cartItems.length > 0">
+      <p-card styleClass="summary-card">
+        <h2>Riepilogo Ordine</h2>
+        <div class="summary-row">
+          <span>Subtotale ({{ cartItems.length }} articoli)</span>
+          <span>€{{ total | number:'1.2-2' }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Spedizione</span>
+          <span>Gratuita</span>
+        </div>
+        
+        <p-divider></p-divider>
+        
+        <div class="summary-row total-row">
+          <span>Totale</span>
+          <span>€{{ total | number:'1.2-2' }}</span>
+        </div>
+
+        <p-button label="Procedi al Checkout" icon="pi pi-check" styleClass="checkout-btn w-full mt-4" (onClick)="goToCheckout()"></p-button>
+        <div class="secure-checkout">
+          <i class="pi pi-lock"></i> Pagamento sicuro
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

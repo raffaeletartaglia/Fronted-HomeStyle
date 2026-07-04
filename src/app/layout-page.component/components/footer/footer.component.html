@@ -1,109 +1,62 @@
 <footer class="footer-container">
   <div class="footer-grid">
 
+    <!-- Brand e Descrizione -->
+    <div class="footer-column brand-column">
+      <div class="brand-logo" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; cursor: pointer;">
+        <i class="pi pi-home" style="font-size: 1.8rem; color: #C87965"></i>
+        <span style="font-size: 1.5rem; font-weight: bold; color: #333;">HomeStyle</span>
+      </div>
+      <p style="color: #666; line-height: 1.5; font-size: 0.95rem;">
+        Il tuo punto di riferimento per l'arredamento d'interni. <br/>
+        Eleganza, comfort e stile in ogni singolo dettaglio per trasformare la tua casa.
+      </p>
+      <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+        <i class="pi pi-facebook" style="font-size: 1.5rem; color: #C87965; cursor: pointer;"></i>
+        <i class="pi pi-instagram" style="font-size: 1.5rem; color: #C87965; cursor: pointer;"></i>
+        <i class="pi pi-twitter" style="font-size: 1.5rem; color: #C87965; cursor: pointer;"></i>
+      </div>
+    </div>
+
     <!-- Aiuto e contatti -->
     <div class="footer-column">
       <div class="block-title">
-        <mat-icon>help_outline</mat-icon>
+        <i class="pi pi-question-circle" style="color: #C87965"></i>
         <span>Aiuto e contatti</span>
       </div>
-
-      <div class="two-columns">
-
-        <ul>
-          <li class="bold-title">Domande frequenti</li>
-
-          <li>
-            <a [routerLink]="['/aiuto']"
-               [queryParams]="{cat: 'ordini', faq: 'come-effettuare-ordine'}">
-              Come effettuare un ordine
-            </a>
-          </li>
-
-          <li>
-            <a [routerLink]="['/aiuto']"
-               [queryParams]="{cat: 'consegna', faq: 'tempi-spedizione'}">
-              Tempi di spedizione
-            </a>
-          </li>
-
-          <li>
-            <a [routerLink]="['/aiuto']"
-               [queryParams]="{cat: 'reso', faq: 'come-effettuare-reso'}">
-              Come effettuare un reso
-            </a>
-          </li>
-        </ul>
-
-        <ul>
-          <li class="spacer-item"></li>
-
-          <li>
-            <a [routerLink]="['/aiuto']"
-               [queryParams]="{cat: 'pagamento', faq: 'opzioni-pagamento'}">
-              Metodi di pagamento
-            </a>
-          </li>
-
-          <li>
-            <a [routerLink]="['/aiuto']"
-               [queryParams]="{cat: 'consegna', faq: 'dove-ordine'}">
-              Dove si trova il mio ordine
-            </a>
-          </li>
-
-          <li>
-            <a [routerLink]="['/aiuto']"
-               [queryParams]="{cat: 'account', faq: 'modifica-dati'}">
-              Come modifico i dati in account
-            </a>
-          </li>
-        </ul>
-
-      </div>
+      <ul class="footer-links">
+        <li><a [routerLink]="['/aiuto']" [queryParams]="{cat: 'ordini', faq: 'come-effettuare-ordine'}">Come effettuare un ordine</a></li>
+        <li><a [routerLink]="['/aiuto']" [queryParams]="{cat: 'consegna', faq: 'tempi-spedizione'}">Tempi di spedizione</a></li>
+        <li><a [routerLink]="['/aiuto']" [queryParams]="{cat: 'reso', faq: 'come-effettuare-reso'}">Come effettuare un reso</a></li>
+        <li><a [routerLink]="['/aiuto']" [queryParams]="{cat: 'pagamento', faq: 'opzioni-pagamento'}">Metodi di pagamento</a></li>
+      </ul>
     </div>
 
-    <!-- Spedito da -->
+    <!-- Pagamenti e Spedizioni -->
     <div class="footer-column">
       <div class="block-title">
-        <mat-icon>local_shipping</mat-icon>
-        <span>Spedito da</span>
+        <i class="pi pi-credit-card" style="color: #C87965"></i>
+        <span>Pagamenti & Spedizioni</span>
       </div>
-
-      <div class="logos-container">
-
-        <img
-          class="shipping-logo"
-          src="https://upload.wikimedia.org/wikipedia/commons/a/ac/DHL_Logo.svg"
-          alt="DHL">
-
-        <img
-          class="shipping-logo"
-          src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Logo_SDA.jpg"
-          alt="SDA">
-
-        <img
-          class="shipping-logo"
-          src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Logo_Poste_Italiane.png"
-          alt="Poste Italiane">
-
-      </div>
-    </div>
-
-    <!-- Pagamenti -->
-    <div class="footer-column">
-      <div class="block-title">
-        <mat-icon>credit_card</mat-icon>
-        <span>Modalità di pagamento</span>
-      </div>
-
-      <div class="logos-container">
+      <div class="logos-container" style="margin-bottom: 1.5rem;">
         <span class="logo-box">Visa</span>
         <span class="logo-box">Mastercard</span>
         <span class="logo-box">PayPal</span>
-        <span class="logo-box">Pagamento alla consegna</span>
+      </div>
+      <div class="block-title" style="margin-top: 1rem;">
+        <i class="pi pi-truck" style="color: #C87965"></i>
+        <span>Spedito con</span>
+      </div>
+      <div class="logos-container">
+        <img class="shipping-logo" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/DHL_Logo.svg" alt="DHL">
+        <img class="shipping-logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Logo_SDA.jpg" alt="SDA">
+        <img class="shipping-logo" src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Logo_Poste_Italiane.png" alt="Poste Italiane">
       </div>
     </div>
 
+  </div>
+  
+  <div style="text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #ddd; color: #888; font-size: 0.9rem;">
+    &copy; 2026 HomeStyle. Tutti i diritti riservati.
   </div>
 </footer>

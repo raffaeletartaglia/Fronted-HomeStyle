@@ -1,0 +1,86 @@
+<div class="checkout-container m-4">
+    <h2 class="text-3xl mb-4 font-bold">Checkout</h2>
+    <p-stepper [(value)]="activeStep">
+        <p-step-list>
+            <p-step [value]="1">Spedizione</p-step>
+            <p-step [value]="2">Pagamento</p-step>
+            <p-step [value]="3">Riepilogo</p-step>
+        </p-step-list>
+        
+        <p-step-panels>
+            <!-- STEP 1: Indirizzo -->
+            <p-step-panel [value]="1">
+                <ng-template #content>
+                    <div class="flex flex-column gap-3 mb-4">
+                        <h3>Seleziona Indirizzo di Spedizione</h3>
+                        <div *ngIf="indirizzoService.indirizziUtente.length === 0">
+                            Nessun indirizzo trovato. Aggiungine uno nel profilo.
+                        </div>
+                        <div *ngFor="let ind of indirizzoService.indirizziUtente" class="field-radiobutton">
+                            <p-radioButton [inputId]="ind.id" name="indirizzo" [value]="ind" [(ngModel)]="indirizzoSelezionato"></p-radioButton>
+                            <label [for]="ind.id" class="ml-2">{{ ind.via }} {{ ind.numeroCivico }}, {{ ind.citta }} ({{ ind.provincia }}) - {{ ind.cap }}</label>
+                        </div>
+                    </div>
+                    <div class="flex pt-4 justify-content-end">
+                        <p-button label="Avanti" icon="pi pi-arrow-right" iconPos="right" (onClick)="activeStep = 2" [disabled]="!indirizzoSelezionato"></p-button>
+                    </div>
+                </ng-template>
+            </p-step-panel>
+
+            <!-- STEP 2: Pagamento -->
+            <p-step-panel [value]="2">
+                <ng-template #content>
+                    <div class="flex flex-column gap-3 mb-4">
+                        <h3>Seleziona Metodo di Pagamento</h3>
+                        <div *ngIf="cartaPagamentoService.carteUtente.length === 0">
+                            Nessuna carta trovata. Aggiungine una nel profilo.
+                        </div>
+                        <div *ngFor="let carta of cartaPagamentoService.carteUtente" class="field-radiobutton">
+                            <p-radioButton [inputId]="carta.id" name="carta" [value]="carta" [(ngModel)]="cartaSelezionata"></p-radioButton>
+                            <label [for]="carta.id" class="ml-2">Carta terminante con {{ carta.ultime4Cifre }} (Scad. {{ carta.scadenza }})</label>
+                        </div>
+                    </div>
+                    <div class="flex pt-4 justify-content-between">
+                        <p-button label="Indietro" icon="pi pi-arrow-left" severity="secondary" (onClick)="activeStep = 1"></p-button>
+                        <p-button label="Avanti" icon="pi pi-arrow-right" iconPos="right" (onClick)="activeStep = 3" [disabled]="!cartaSelezionata"></p-button>
+                    </div>
+                </ng-template>
+            </p-step-panel>
+
+            <!-- STEP 3: Riepilogo -->
+            <p-step-panel [value]="3">
+                <ng-template #content>
+                    <div class="flex flex-column gap-3 mb-4">
+                        <h3>Riepilogo Ordine</h3>
+                        
+                        <p-card header="Prodotti">
+                            <div *ngFor="let item of cartItems" class="flex justify-content-between mb-2">
+                                <span>{{ item.quantita }}x {{ item.prodotto.nomeProdotto }}</span>
+                                <span>€{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</span>
+                            </div>
+                            <div class="text-xl font-bold mt-3 text-right border-top-1 pt-2">Totale: €{{ totale | number:'1.2-2' }}</div>
+                        </p-card>
+
+                        <div class="flex gap-4 mt-3">
+                            <p-card header="Spedizione" class="flex-1" *ngIf="indirizzoSelezionato">
+                                <p>{{ indirizzoSelezionato.via }} {{ indirizzoSelezionato.numeroCivico }}</p>
+                                <p>{{ indirizzoSelezionato.citta }} ({{ indirizzoSelezionato.provincia }})</p>
+                                <p>{{ indirizzoSelezionato.cap }}</p>
+                            </p-card>
+                            
+                            <p-card header="Pagamento" class="flex-1" *ngIf="cartaSelezionata">
+                                <p>Carta: **** **** **** {{ cartaSelezionata.ultime4Cifre }}</p>
+                                <p>Intestatario: {{ cartaSelezionata.titolareCarta }}</p>
+                            </p-card>
+                        </div>
+                    </div>
+                    
+                    <div class="flex pt-4 justify-content-between">
+                        <p-button label="Indietro" icon="pi pi-arrow-left" severity="secondary" (onClick)="activeStep = 2"></p-button>
+                        <p-button label="Conferma Ordine" icon="pi pi-check" iconPos="right" severity="success" (onClick)="confermaOrdine()"></p-button>
+                    </div>
+                </ng-template>
+            </p-step-panel>
+        </p-step-panels>
+    </p-stepper>
+</div>

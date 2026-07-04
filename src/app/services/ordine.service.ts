@@ -29,4 +29,17 @@ export class OrdineService {
     return this.http.put<Ordine>(`${this.apiUrl}/${idOrdine}/stato?nuovoStato=${nuovoStato}`, {});
   }
 
+  /**
+   * Crea un nuovo ordine per un utente, partendo dal suo carrello attivo.
+   */
+  creaOrdine(idUtente: string, idIndirizzoSpedizione: string): Observable<Ordine> {
+    return this.http.post<Ordine>(`${this.apiUrl}/utente/${idUtente}?idIndirizzoSpedizione=${idIndirizzoSpedizione}`, {});
+  }
+
+  /**
+   * Recupera lo storico ordini di un utente specifico.
+   */
+  getOrdiniPerUtente(idUtente: string): Observable<Ordine[]> {
+    return this.http.get<Ordine[]>(`${this.apiUrl}/utente/${idUtente}`);
+  }
 }

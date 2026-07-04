@@ -1,4 +1,99 @@
-:host {
-    display: block;
-    width: 100%;
+:host.scroll-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: 4rem 1rem;
+}
+
+.promo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 6rem;
+}
+
+.promo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  padding: 2rem;
+  gap: 1rem;
+  max-width: 320px;
+  background: white;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+}
+
+.icon-box {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: #C87965;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.icon-box i {
+  font-size: 1.5rem;
+}
+
+.promo-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.promo-desc {
+  color: #666;
+}
+
+.bg-primary-custom {
+  background-color: #C87965 !important;
+  color: white !important;
+  border-color: #C87965 !important;
+}
+
+.bg-primary-custom .promo-title, .bg-primary-custom .promo-desc {
+  color: white !important;
+}
+
+.img-card {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Animations */
+.animate-enter {
+  animation: enter 1s ease-out forwards;
+}
+.animate-leave {
+  opacity: 0;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

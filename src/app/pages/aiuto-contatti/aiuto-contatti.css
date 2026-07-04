@@ -1,0 +1,164 @@
+.aiuto-contatti-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* STORIA SECTION */
+.storia-section {
+  background: white;
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+  margin-bottom: 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+.storia-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 5px; height: 100%;
+  background: #C87965;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 25px;
+}
+
+.storia-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #475569;
+  margin-bottom: 15px;
+}
+
+/* CONTATTI SECTION */
+.contatti-section {
+  margin-bottom: 50px;
+}
+
+.contatti-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.contatti-info {
+  background: #f8fafc;
+  padding: 40px;
+  border-radius: 20px;
+}
+
+.contatti-info h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+}
+
+.contatti-info p {
+  font-size: 1.05rem;
+  color: #64748b;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.info-item mat-icon {
+  color: #C87965;
+  font-size: 28px;
+  width: 28px; height: 28px;
+}
+
+.info-item span {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.contatti-form-box {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+}
+
+.w-full {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  background-color: #C87965;
+  color: white;
+}
+
+/* FAQ SECTION */
+.faq-section {
+  background: white;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+}
+
+.faq-section h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.faq-accordion {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+:host ::ng-deep .mat-expansion-panel {
+  box-shadow: none !important;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 10px !important;
+  border-radius: 12px !important;
+}
+
+:host ::ng-deep .mat-expansion-panel-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  padding: 20px !important;
+}
+
+:host ::ng-deep .mat-expansion-panel-body p {
+  color: #475569;
+  line-height: 1.7;
+  font-size: 1.05rem;
+  padding: 0 10px 10px 10px;
+}
+
+@media (max-width: 768px) {
+  .contatti-grid {
+    grid-template-columns: 1fr;
+  }
+}

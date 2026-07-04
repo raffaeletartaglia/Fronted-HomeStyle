@@ -1,33 +1,47 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { MenubarModule } from 'primeng/menubar';
-import { MenuModule } from 'primeng/menu'; // <--- IMPORTANTE: Aggiungi il MenuModule
+import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
-import { inject } from '@angular/core';
+import { inject, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import Keycloak from 'keycloak-js';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { WishListService } from '../services/wishList.service'; // Adjust path if needed
 import { UtenteService } from '../services/utente.service';
+import { ProductService } from '../services/productService';
 import { IfAuthenticatedDirective } from '../directives/if-authenticated.directive';
+import { CartSidebar } from '../components/cart-sidebar/cart-sidebar';
+import { StanzaService } from '../services/stanza.service';
+import { CategoriaService } from '../services/categoria.service';
+import { Stanza } from '../models/stanza.model';
+import { Categoria } from '../models/categoria.model';
+import { forkJoin } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'my-header',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    MenubarModule,
-    MenuModule, // <--- Aggiungilo qui
+    MenuModule,
+    AutoCompleteModule,
     DialogModule,
     ButtonModule,
-    IfAuthenticatedDirective
+    IfAuthenticatedDirective,
+    CartSidebar,
+    MatIconModule,
+    MatButtonModule
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css', '../../styles.css']
@@ -42,7 +56,30 @@ export class headerComponent implements OnInit {
   isLoggedIn: boolean = false;
   userProfile: any = null;
 
-  constructor(private keycloak: Keycloak, private utenteService: UtenteService, private router: Router, private wishlistService: WishListService) { }
+  ricercaTesto: string = '';
+  suggerimenti: any[] = [];
+  cartSidebarVisible: boolean = false;
+  isMobileMenuOpen: boolean = false; // Flag per il menu su mobile
+  isUserMenuOpen: boolean = false; // Flag per il custom user menu
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.isUserMenuOpen = false;
+    }
+  }
+
+  constructor(
+    private keycloak: Keycloak, 
+    private utenteService: UtenteService, 
+    private productService: ProductService, 
+    public router: Router, 
+    private wishlistService: WishListService,
+    private stanzaService: StanzaService,
+    private categoriaService: CategoriaService,
+    private cdr: ChangeDetectorRef,
+    private eRef: ElementRef
+  ) { }
 
   /**
    * Inizializza il componente leggendo lo stato di autenticazione
@@ -52,7 +89,8 @@ export class headerComponent implements OnInit {
    */
   ngOnInit() {
     this.isLoggedIn = this.keycloak.authenticated ?? false;
-    this.updateUserMenu();
+    this.loadHeaderMenu();
+
     if (this.isLoggedIn) {
       // Proviamo a ottenere i dati dal nostro backend (database locale)
       this.utenteService.getUserData().subscribe({
@@ -63,7 +101,6 @@ export class headerComponent implements OnInit {
             lastName: datiDb.cognome,
             email: datiDb.email
           };
-          this.updateUserMenu();
         },
         error: (err) => {
           // Se il server risponde 404 (utente non trovato), significa che
@@ -87,50 +124,115 @@ export class headerComponent implements OnInit {
       });
     }
   }
-  updateUserMenu() {
-    if (this.keycloak.authenticated) {
-      // VOCI SE L'UTENTE È LOGGATO
-      this.userMenuItems = [
-        { label: 'Il mio profilo', icon: 'pi pi-user' },
-        { label: 'Ordini', icon: 'pi pi-box' },
-        { label: 'Effettua un reso', icon: 'pi pi-refresh' },
-        { label: 'Aiuti e contatti', icon: 'pi pi-envelope' },
-        { separator: true }, // Linea di separazione
-        { label: 'Disconnettiti', icon: 'pi pi-sign-out', command: () => this.logout() }
-      ];
-    } else {
-      // VOCI SE L'UTENTE NON È LOGGATO
-      this.userMenuItems = [
-        {
-          label: `<div style="display: block; width: 100%; text-align: center; padding: 0.2rem 0; cursor: pointer;"><strong style="font-size: 1rem; color: #333; text-decoration: underline; text-decoration-color: #d32f2f; text-decoration-thickness: 2px;">ACCEDI</strong></div>`,
-          escape: false,
-          styleClass: 'center-menu-item',
-          command: () => this.login()
-        },
-        {
-          label: `<div style="padding: 0.2rem 0; cursor: pointer; text-align: center;"><span style="font-size: 0.85rem; color: #666;">se non sei registrato : </span><strong style="font-size: 1rem; color: #d32f2f; text-decoration: underline; text-decoration-color: #d32f2f; text-decoration-thickness: 2px;">REGISTRATI</strong></div>`,
-          escape: false,
-          command: () => this.register()
-        },
-        { separator: true },
-        { label: 'Il mio profilo', icon: 'pi pi-user' },
-        { label: 'Ordini', icon: 'pi pi-box' },
-        { label: 'Effettua un reso', icon: 'pi pi-refresh' },
-        { label: 'Aiuto e contatti', icon: 'pi pi-envelope' }
-      ];
+  loadHeaderMenu() {
+    forkJoin({
+      stanzeRes: this.stanzaService.getAllStanze(0, 100),
+      categorieRes: this.categoriaService.getAllCategorie(0, 500)
+    }).subscribe({
+      next: ({ stanzeRes, categorieRes }) => {
+        // @ts-ignore - Assuming PaginatedResponse structure has 'content' or fallback to array if it's already array
+        const stanze: Stanza[] = stanzeRes.content || stanzeRes || [];
+        // @ts-ignore
+        const categorie: Categoria[] = categorieRes.content || categorieRes || [];
+
+        const menuItems: MenuItem[] = [];
+        const MAX_VISIBLE = 3;
+
+        const stanzeVisibili = stanze.slice(0, MAX_VISIBLE);
+        const stanzeNascoste = stanze.slice(MAX_VISIBLE);
+
+        const buildMenuStanza = (stanza: Stanza): MenuItem => {
+          const catDiStanza = categorie.filter(c => c.stanze?.some(s => s.id === stanza.id));
+          const items = catDiStanza.map(cat => ({
+            label: cat.nomeCategoria,
+            command: () => this.router.navigate(['/risultati-ricerca'], { queryParams: { stanzaId: stanza.id, categoriaId: cat.id } })
+          }));
+
+          const labelSanitized = stanza.tipologia.replace(/_/g, ' ');
+
+          return {
+            label: labelSanitized,
+            items: items.length > 0 ? items : undefined,
+            command: items.length === 0 ? () => this.router.navigate(['/risultati-ricerca'], { queryParams: { stanzaId: stanza.id } }) : undefined
+          };
+        };
+
+        stanzeVisibili.forEach(s => {
+          menuItems.push(buildMenuStanza(s));
+        });
+
+        if (stanzeNascoste.length > 0) {
+          const hiddenItems = stanzeNascoste.map(s => buildMenuStanza(s));
+          menuItems.push({
+            label: 'Altre',
+            items: hiddenItems
+          });
+        }
+
+        this.items = menuItems;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  toggleUserMenu(event?: Event) {
+    if (event) {
+      event.stopPropagation();
     }
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  closeUserMenu() {
+    this.isUserMenuOpen = false;
   }
 
   goToWishlist() {
     const idUtente = this.keycloak.tokenParsed?.sub;
     if (idUtente) {
       this.wishlistService.getUserWishList(idUtente);
-      this.router.navigate(['/wishlist']);
+      this.router.navigate(['/dashboard/wishlist']);
     }
+  }
+
+  goToCart() {
+    this.router.navigate(['/dashboard/carrello']);
   }
 
   showWishlistDialog() {
     this.mostraDialogWishlist = true;
+  }
+
+  cercaSuggerimenti(event: any) {
+    const query = event.query;
+    if (query && query.length >= 2) {
+      this.productService.ricercaSuggerimenti(query).subscribe({
+        next: (res) => {
+          this.suggerimenti = res;
+        },
+        error: (err) => {
+          console.error("Errore suggerimenti (l'endpoint backend potrebbe non esistere):", err);
+          this.suggerimenti = [];
+        }
+      });
+    } else {
+      this.suggerimenti = [];
+    }
+  }
+
+  onProdottoSelezionato(event: any) {
+    const idProdotto = event.value.id;
+    this.router.navigate(['/product', idProdotto]);
+  }
+
+  onSearchEnter() {
+    const queryStr = typeof this.ricercaTesto === 'string' ? this.ricercaTesto : this.ricercaTesto?.['nome'];
+    
+    if (queryStr && queryStr.trim().length > 0) {
+      this.router.navigate(['/risultati-ricerca'], { queryParams: { query: queryStr.trim() } });
+    } else {
+      // Ricerca vuota: porta alla pagina risultati mostrando tutti i prodotti
+      this.router.navigate(['/risultati-ricerca']);
+    }
   }
 
   goHomepage() {
@@ -172,6 +274,21 @@ export class headerComponent implements OnInit {
 
   goToDashboard() {
     this.router.navigate(['/dashboard']);
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+  }
+
+  executeItemCommand(item: any) {
+    if (item.command) {
+      item.command();
+    }
+    this.closeMobileMenu();
   }
 }
 

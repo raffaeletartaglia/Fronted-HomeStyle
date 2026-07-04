@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgIf, NgFor, NgClass } from '@angular/common';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-hero-carousel',
   standalone: true,
-  imports: [NgIf, NgFor, NgClass],
+  imports: [NgFor],
   templateUrl: './hero-carousel.html',
   styleUrls: ['./hero-carousel.css']
 })

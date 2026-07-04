@@ -1,0 +1,63 @@
+<p-toast></p-toast>
+
+<div class="search-results-page">
+  <div class="search-header">
+    <h1>Risultati della Ricerca</h1>
+    <p class="search-summary" *ngIf="!isLoading">
+      Abbiamo trovato <strong>{{totalElements}}</strong> prodotti
+      <span *ngIf="currentQuery"> per "<strong>{{currentQuery}}</strong>"</span>
+    </p>
+  </div>
+
+  <!-- Caricamento -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Ricerca in corso...</p>
+  </div>
+
+  <!-- Nessun risultato -->
+  <div class="no-results" *ngIf="!isLoading && prodotti.length === 0">
+    <i class="pi pi-search" style="font-size: 3rem; color: #ccc;"></i>
+    <h2>Nessun prodotto trovato.</h2>
+    <p>Prova a cercare usando parole chiave diverse o esplora le nostre categorie.</p>
+  </div>
+
+  <!-- Griglia Prodotti -->
+  <div class="products-grid" *ngIf="!isLoading && prodotti.length > 0">
+    <div class="product-card" *ngFor="let p of prodotti" (click)="goToDetail(p.id)">
+      
+      <div class="product-image">
+        <img *ngIf="p.immagine" [src]="'data:image/jpeg;base64,' + p.immagine" [alt]="p.nomeProdotto">
+        <div *ngIf="!p.immagine" class="no-image">
+          <i class="pi pi-image" style="font-size: 2rem; color: #ccc;"></i>
+        </div>
+      </div>
+      
+      <div class="product-info">
+        <h3 class="product-brand">{{p.marca}}</h3>
+        <h2 class="product-name">{{p.nomeProdotto}}</h2>
+        <div class="product-price">€ {{p.prezzo | number:'1.2-2'}}</div>
+        
+        <p-button label="Vedi Dettagli" 
+                  icon="pi pi-eye" 
+                  styleClass="p-button-outlined" 
+                  [style]="{'width': '100%', 'margin-top': '1rem'}">
+        </p-button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Paginatore (Stile Material) -->
+  <div class="paginator-container" *ngIf="!isLoading && totalElements > 0">
+    <mat-paginator 
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[12, 24, 48]"
+      [pageIndex]="pageIndex"
+      (page)="onPageChange($event)"
+      aria-label="Seleziona pagina">
+    </mat-paginator>
+  </div>
+
+</div>

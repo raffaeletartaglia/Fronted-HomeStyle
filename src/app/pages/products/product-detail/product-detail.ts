@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../services/productService';
 import { Prodotto } from '../../../models/prodotto.model';
 import Keycloak from 'keycloak-js';
+import { PrenotazioneService } from '../../../services/prenotazione.service';
+import { CarrelloService } from '../../../services/carrello.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -35,10 +37,12 @@ export class ProductDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    public router: Router,
     private productService: ProductService,
     private keycloak: Keycloak,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private prenotazioneService: PrenotazioneService,
+    private carrelloService: CarrelloService
   ) {}
 
   ngOnInit(): void {
@@ -107,5 +111,33 @@ export class ProductDetailComponent implements OnInit {
         });
       }
     });
+  }
+
+  aggiungiAlCarrello() {
+    if (!this.product) return;
+    if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
+      const prodottoDaAggiungere = {
+        prodottoId: this.product.id,
+        quantita: 1
+      };
+      this.carrelloService.aggiungiProdotti(this.keycloak.tokenParsed.sub, [prodottoDaAggiungere]);
+    } else {
+      this.keycloak.login();
+    }
+  }
+
+  prenotaProdotto() {
+    if (!this.product) return;
+    if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
+      const payload = {
+        utenteId: this.keycloak.tokenParsed.sub,
+        prodottoId: this.product.id,
+        quantita: 1,
+        stato: 'ATTIVA'
+      };
+      this.prenotazioneService.creaPrenotazione(payload);
+    } else {
+      this.keycloak.login();
+    }
   }
 }

@@ -1,0 +1,100 @@
+<p-toast></p-toast>
+<div class="aiuto-contatti-container">
+  
+  <!-- HERO SECTION / STORIA -->
+  <section class="storia-section">
+    <div class="storia-content">
+      <h1 class="page-title">La Nostra Storia</h1>
+      <p class="storia-text">
+        <strong>HomeStyle</strong> nasce nel 2021 dall'idea di un piccolo team appassionato di interior design. 
+        In un periodo storico in cui le persone passavano sempre più tempo in casa, abbiamo sentito l'esigenza 
+        di creare una piattaforma che non offrisse semplicemente "mobili", ma un vero e proprio ecosistema di stile.
+      </p>
+      <p class="storia-text">
+        Ci occupiamo di selezionare i migliori elementi d'arredo per ogni stanza, garantendo alta qualità, 
+        sostenibilità e un design al passo coi tempi. Il nostro obiettivo? Trasformare le case dei nostri clienti in veri rifugi di comfort ed eleganza.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTATTI E FORM MAIL -->
+  <section class="contatti-section">
+    <div class="contatti-grid">
+      <div class="contatti-info">
+        <h2>Restiamo in Contatto</h2>
+        <p>Hai domande sui nostri prodotti? Vuoi assistenza su un ordine o suggerirci nuove collaborazioni? Compila il form e il nostro team ti risponderà entro 24-48 ore lavorative.</p>
+        
+        <div class="info-item">
+          <mat-icon>location_on</mat-icon>
+          <span>Via Roma 123, 00100 Roma (RM)</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>email</mat-icon>
+          <span>supporto&#64;homestyle.it</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>phone</mat-icon>
+          <span>+39 06 1234 5678</span>
+        </div>
+      </div>
+
+      <div class="contatti-form-box">
+        <form (ngSubmit)="inviaMessaggio()" #contactFrm="ngForm">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Nome Completo</mat-label>
+            <input matInput [(ngModel)]="contactForm.nome" name="nome" required>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Indirizzo Email</mat-label>
+            <input matInput type="email" [(ngModel)]="contactForm.email" name="email" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Il tuo Messaggio</mat-label>
+            <textarea matInput rows="4" [(ngModel)]="contactForm.messaggio" name="messaggio" required></textarea>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="!contactFrm.valid">
+            <mat-icon>send</mat-icon> Invia Messaggio
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq-section">
+    <h2>Domande Frequenti (FAQ)</h2>
+    <mat-accordion class="faq-accordion">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Quali sono i tempi di spedizione?</mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Solitamente processiamo gli ordini entro 24 ore. La spedizione standard impiega 3-5 giorni lavorativi, mentre quella express 1-2 giorni lavorativi per l'Italia continentale.</p>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Come posso effettuare un reso?</mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Se non sei soddisfatto del tuo acquisto, puoi effettuare un reso entro 30 giorni dalla ricezione. Basterà andare nella sezione "Il mio profilo > Effettua un reso" e seguire la procedura guidata.</p>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>I mobili arrivano già montati?</mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Per limitare l'impatto ambientale legato al trasporto, gran parte dei nostri arredi viaggia "flat-pack" e richiede un semplice montaggio. All'interno di ogni pacco troverai istruzioni dettagliate e la ferramenta necessaria.</p>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Offrite un servizio di progettazione d'interni?</mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Certamente! Contattaci tramite il modulo qui sopra o scrivici un'email, un nostro esperto di interior design ti risponderà per fissare una consulenza personalizzata.</p>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </section>
+
+</div>

@@ -1,66 +1,149 @@
 <div class="header-wrapper">
-  <p-menubar [model]="items">
-    <!-- Inizio: Logo -->
-    <ng-template pTemplate="start">
-      <div class="brand-logo" (click)="goHomepage()" style="cursor: pointer;">
-        <i class="pi pi-home" style="font-size: 1.5rem; color: #C87965"></i>
-        <span class="brand-text">HomeStyle</span>
+  <nav class="custom-navbar">
+    
+    <!-- Left: Logo -->
+    <div class="brand-logo" (click)="goHomepage()">
+      <i class="pi pi-home"></i>
+      <span class="brand-text">HomeStyle</span>
+    </div>
+
+    <!-- Hamburger Menu (Mobile Only) -->
+    <button class="mobile-toggle-btn" (click)="toggleMobileMenu()">
+      <i [class]="isMobileMenuOpen ? 'pi pi-times' : 'pi pi-bars'"></i>
+    </button>
+
+    <!-- Center: Nav Items (Stanze e Categorie) -->
+    <div class="nav-items-container" [class.mobile-open]="isMobileMenuOpen">
+      <!-- Generazione dinamica basata su this.items -->
+      <div class="nav-item-dropdown" *ngFor="let item of items">
+        <span class="nav-item-label" (click)="executeItemCommand(item)">
+          {{ item.label }}
+          <i *ngIf="item.items" class="pi pi-angle-down"></i>
+        </span>
+        
+        <!-- Sottomenu (Categorie) - si apre in Hover -->
+        <div class="dropdown-content" *ngIf="item.items">
+          <div class="dropdown-item" *ngFor="let subItem of item.items" (click)="executeItemCommand(subItem)">
+            {{ subItem.label }}
+          </div>
+        </div>
       </div>
-    </ng-template>
+    </div>
 
-    <!-- Fine: Azioni (Ricerca, Utente, Cuore, Carrello) -->
-    <ng-template pTemplate="end">
-      <div class="header-actions">
+    <!-- Right: Actions (Ricerca, Utente, Cuore, Carrello) -->
+    <div class="header-actions">
+      <!-- Barra di Ricerca -->
+      <p-autoComplete [(ngModel)]="ricercaTesto" [suggestions]="suggerimenti"
+        (completeMethod)="cercaSuggerimenti($event)" (onSelect)="onProdottoSelezionato($event)" field="nome"
+        (keyup.enter)="onSearchEnter()"
+        placeholder="Cerca nello store..." class="search-input">
+        <ng-template let-prodotto pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>{{ prodotto.nome }}</div>
+          </div>
+        </ng-template>
+      </p-autoComplete>
 
-        <!-- Barra di Ricerca -->
-        <p-iconfield>
-          <p-inputicon class="pi pi-search" />
-          <input type="text" pInputText placeholder="Cerca nello store..." class="search-input" />
-        </p-iconfield>
-
-        <div class="icons-container">
-          <!-- Icona Utente -->
-          <!-- Al click, invoca il metodo toggle sul p-menu identificato come #userMenu -->
-          <button class="icon-btn" (click)="userMenu.toggle($event)">
+      <div class="icons-container">
+        <!-- Utente -->
+        <div style="position: relative; display: inline-block;">
+          <button class="icon-btn" (click)="toggleUserMenu($event)">
             <i class="pi pi-user"></i>
           </button>
-
-          <!-- Icona Wishlist (Cuore) per UTENTI LOGGATI -->
-          <button *ifAuthenticated="true" class="icon-btn" (click)="goToWishlist()">
-            <i class="pi pi-heart"></i>
-          </button>
-
-          <!-- Icona Wishlist (Cuore) per VISITATORI (mostra il dialog) -->
-          <button *ifAuthenticated="false" class="icon-btn" (click)="showWishlistDialog()">
-            <i class="pi pi-heart"></i>
-          </button>
-
-          <!-- Icona Carrello -->
-          <button class="icon-btn">
-            <i class="pi pi-shopping-cart"></i>
-          </button>
+          
+          <!-- Custom User Dropdown -->
+          <div class="custom-user-dropdown" *ngIf="isUserMenuOpen">
+            <ng-container *ngIf="isLoggedIn">
+              <div class="dropdown-item" (click)="router.navigate(['/dashboard/profile']); closeUserMenu()">
+                <i class="pi pi-user"></i> Il mio profilo
+              </div>
+              <div class="dropdown-item" (click)="router.navigate(['/dashboard/profile']); closeUserMenu()">
+                <i class="pi pi-box"></i> Ordini
+              </div>
+              <div class="dropdown-item" (click)="closeUserMenu()">
+                <i class="pi pi-refresh"></i> Effettua un reso
+              </div>
+              <div class="dropdown-item" (click)="router.navigate(['/aiuto-contatti']); closeUserMenu()">
+                <i class="pi pi-envelope"></i> Aiuto e contatti
+              </div>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-item text-danger" (click)="logout(); closeUserMenu()">
+                <i class="pi pi-sign-out"></i> Disconnettiti
+              </div>
+            </ng-container>
+            
+            <ng-container *ngIf="!isLoggedIn">
+              <div class="dropdown-item login-btn-item text-center" (click)="login(); closeUserMenu()">
+                <strong>ACCEDI</strong>
+              </div>
+              <div class="dropdown-item register-btn-item text-center" (click)="register(); closeUserMenu()">
+                <span style="font-size: 0.85rem; color: #666;">se non sei registrato: </span><br>
+                <strong style="color: #C87965;">REGISTRATI</strong>
+              </div>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-item" (click)="closeUserMenu()">
+                <i class="pi pi-user"></i> Il mio profilo
+              </div>
+              <div class="dropdown-item" (click)="closeUserMenu()">
+                <i class="pi pi-box"></i> Ordini
+              </div>
+              <div class="dropdown-item" (click)="closeUserMenu()">
+                <i class="pi pi-refresh"></i> Effettua un reso
+              </div>
+              <div class="dropdown-item" (click)="router.navigate(['/aiuto-contatti']); closeUserMenu()">
+                <i class="pi pi-envelope"></i> Aiuto e contatti
+              </div>
+            </ng-container>
+          </div>
         </div>
-        
-        <!-- Menù a tendina a comparsa collegato al bottone utente -->
-        <p-menu #userMenu [popup]="true" [model]="userMenuItems"></p-menu>
 
+        <!-- Wishlist -->
+        <button *ifAuthenticated="true" class="icon-btn" (click)="goToWishlist()">
+          <i class="pi pi-heart"></i>
+        </button>
+        <button *ifAuthenticated="false" class="icon-btn" (click)="showWishlistDialog()">
+          <i class="pi pi-heart"></i>
+        </button>
+
+        <!-- Carrello -->
+        <button *ifAuthenticated="true" class="icon-btn" (click)="goToCart()">
+          <i class="pi pi-shopping-cart"></i>
+        </button>
+        <button *ifAuthenticated="false" class="icon-btn" (click)="showWishlistDialog()">
+          <i class="pi pi-shopping-cart"></i>
+        </button>
       </div>
-    </ng-template>
-  </p-menubar>
+
+      <!-- Fine Right Actions -->
+    </div>
+  </nav>
 </div>
 
+<!-- Cart Sidebar (Legacy se usata altrove) -->
+<app-cart-sidebar [(visible)]="cartSidebarVisible"></app-cart-sidebar>
+
 <!-- Popup Wishlist per utenti non loggati -->
-<p-dialog header="Attenzione" [(visible)]="mostraDialogWishlist" [modal]="true" [style]="{width: '400px'}" [closable]="true" [draggable]="false" [resizable]="false">
-    <div style="text-align: center;">
-        <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #d32f2f; margin-bottom: 1rem;"></i>
-        <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #333;">Non puoi vedere la WishList perché non hai effettuato l'accesso.</p>
-        
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <p-button label="Accedi" icon="pi pi-sign-in" (onClick)="login()" [style]="{'width': '100%', 'background': '#C87965', 'border-color': '#C87965'}"></p-button>
-            <div style="font-size: 0.9rem; color: #666;">
-                se non sei registrato :
-                <span (click)="register()" style="color: #d32f2f; cursor: pointer; text-decoration: underline; font-weight: bold;">REGISTRATI</span>
-            </div>
-        </div>
+<p-dialog [(visible)]="mostraDialogWishlist" [modal]="true" [style]="{width: '450px'}"
+  [closable]="true" [draggable]="false" [resizable]="false" styleClass="custom-auth-dialog">
+  <ng-template pTemplate="header">
+    <div class="auth-dialog-header">
+      <i class="pi pi-lock"></i>
+      <span>Accesso Richiesto</span>
     </div>
+  </ng-template>
+
+  <div class="auth-dialog-content">
+    <p>Non puoi vedere questa sezione perché non hai effettuato l'accesso. Accedi per continuare a esplorare.</p>
+
+    <div class="auth-actions">
+      <button mat-raised-button class="btn-accedi" (click)="login()">
+        <mat-icon>login</mat-icon> ACCEDI
+      </button>
+      
+      <div class="register-prompt">
+        <span>Nuovo su HomeStyle?</span>
+        <span class="register-link" (click)="register()">REGISTRATI</span>
+      </div>
+    </div>
+  </div>
 </p-dialog>

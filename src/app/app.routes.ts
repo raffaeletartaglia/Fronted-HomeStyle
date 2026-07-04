@@ -16,6 +16,14 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/products/product-detail/product-detail').then(m => m.ProductDetailComponent)
       },
       {
+        path: 'risultati-ricerca',
+        loadComponent: () => import('./pages/risultati-ricerca/risultati-ricerca').then(m => m.RisultatiRicerca)
+      },
+      {
+        path: 'aiuto-contatti',
+        loadComponent: () => import('./pages/aiuto-contatti/aiuto-contatti').then(m => m.AiutoContattiComponent)
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./pages/dashboard/dashboard-layout/dashboard-layout').then(m => m.DashboardLayout),
         canActivate: [authGuard], // Protezione: accessibile solo se loggati
@@ -23,6 +31,14 @@ export const routes: Routes = [
           {
             path: 'profile',
             loadComponent: () => import('./pages/dashboard/user-profile/user-profile').then(m => m.UserProfile)
+          },
+          {
+            path: 'wishlist',
+            loadComponent: () => import('./pages/dashboard/wishlist/wishlist').then(m => m.Wishlist)
+          },
+          {
+            path: 'carrello',
+            loadComponent: () => import('./pages/cart/cart').then(m => m.Cart)
           },
           { path: '', redirectTo: 'profile', pathMatch: 'full' },
           {
