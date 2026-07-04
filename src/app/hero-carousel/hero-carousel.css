@@ -1,0 +1,113 @@
+/* IL CONTENITORE PRINCIPALE CENTRATO */
+.carousel-container {
+  position: relative;
+  width: 90%; /* Occupa quasi tutto lo schermo ma lascia un bordino ai lati */
+  max-width: 1400px; /* Non diventa troppo gigante su schermi enormi */
+  height: 60vh; /* L'altezza è il 60% dello schermo */
+  margin: 40px auto; /* Centra il carosello nella pagina e dà spazio sopra e sotto */
+  overflow: hidden;
+  border-radius: 16px; /* Angoli arrotondati molto eleganti */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* LE SINGOLE DIAPOSITIVE */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Di base sono invisibili */
+  transition: opacity 0.8s ease-in-out; /* Effetto sfumato morbido quando cambiano */
+}
+
+/* LA DIAPOSITIVA ATTIVA (Visibile) */
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* LE IMMAGINI */
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Taglia l'immagine in modo perfetto senza deformarla */
+}
+
+/* IL RIQUADRO DEL TESTO A DESTRA */
+.testo-pubblicitario {
+  position: absolute;
+  top: 50%; /* Lo mettiamo a metà altezza */
+  right: 5%; /* Spostato tutto a destra */
+  transform: translateY(-50%); /* Centratura verticale perfetta */
+  background: rgba(255, 255, 255, 0.85); /* Sfondo bianco semi-trasparente elegante */
+  padding: 40px;
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.testo-pubblicitario h1 {
+  font-size: 2.2rem;
+  color: #333;
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', serif; /* Font elegante */
+}
+
+.testo-pubblicitario p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* BOTTONE "SCOPRI DI PIÙ" */
+.btn-scopri {
+  background-color: #C87965; /* Terracotta (lo stesso dell'header!) */
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-scopri:hover {
+  background-color: #b06653;
+}
+
+/* LE FRECCE DIREZIONALI */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.5); /* Cerchio bianco semi-trasparente */
+  color: #333;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10; /* Per stare sempre sopra l'immagine */
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.left-arrow {
+  left: 20px; /* Distanza dal bordo sinistro */
+}
+
+.right-arrow {
+  right: 20px; /* Distanza dal bordo destro */
+}

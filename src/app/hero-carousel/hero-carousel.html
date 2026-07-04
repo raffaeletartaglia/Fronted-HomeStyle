@@ -1,0 +1,22 @@
+<div class="carousel-container">
+
+  <!-- LE FRECCE DIREZIONALI -->
+  <button class="arrow left-arrow" (click)="manualPrev()">&#10094;</button>
+  <button class="arrow right-arrow" (click)="manualNext()">&#10095;</button>
+
+  <!-- LE DIAPOSITIVE -->
+  <!-- Creiamo un div per ogni foto nell'array 'slides'. La variabile 'i' è il numero della foto (0, 1, 2...) -->
+  <div *ngFor="let slide of slides; let i = index" class="slide" [class.active]="i === currentIndex">
+
+    <!-- L'immagine di sfondo -->
+    <img [src]="slide.image" alt="Immagine Carosello">
+
+    <!-- IL TESTO SULLA DESTRA -->
+    <div class="testo-pubblicitario">
+      <h1>{{ slide.title }}</h1>
+      <p>{{ slide.slogan }}</p>
+      <button class="btn-scopri">Scopri di più</button>
+    </div>
+
+  </div>
+</div>
