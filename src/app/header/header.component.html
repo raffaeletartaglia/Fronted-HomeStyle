@@ -25,8 +25,13 @@
             <i class="pi pi-user"></i>
           </button>
 
-          <!-- Icona Wishlist (Cuore) -->
-          <button class="icon-btn">
+          <!-- Icona Wishlist (Cuore) per UTENTI LOGGATI -->
+          <button *ifAuthenticated="true" class="icon-btn" (click)="goToWishlist()">
+            <i class="pi pi-heart"></i>
+          </button>
+
+          <!-- Icona Wishlist (Cuore) per VISITATORI (mostra il dialog) -->
+          <button *ifAuthenticated="false" class="icon-btn" (click)="showWishlistDialog()">
             <i class="pi pi-heart"></i>
           </button>
 
@@ -43,3 +48,19 @@
     </ng-template>
   </p-menubar>
 </div>
+
+<!-- Popup Wishlist per utenti non loggati -->
+<p-dialog header="Attenzione" [(visible)]="mostraDialogWishlist" [modal]="true" [style]="{width: '400px'}" [closable]="true" [draggable]="false" [resizable]="false">
+    <div style="text-align: center;">
+        <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #d32f2f; margin-bottom: 1rem;"></i>
+        <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #333;">Non puoi vedere la WishList perché non hai effettuato l'accesso.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <p-button label="Accedi" icon="pi pi-sign-in" (onClick)="login()" [style]="{'width': '100%', 'background': '#C87965', 'border-color': '#C87965'}"></p-button>
+            <div style="font-size: 0.9rem; color: #666;">
+                se non sei registrato :
+                <span (click)="register()" style="color: #d32f2f; cursor: pointer; text-decoration: underline; font-weight: bold;">REGISTRATI</span>
+            </div>
+        </div>
+    </div>
+</p-dialog>
