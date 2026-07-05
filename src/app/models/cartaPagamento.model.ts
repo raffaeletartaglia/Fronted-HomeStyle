@@ -7,4 +7,5 @@ export interface CartaPagamento {
   tipoCarta: tipo;
   ultime4Cifre: string;
   scadenza: string;
+  isDefault?: boolean;
 }

@@ -6,6 +6,7 @@ import { Prodotto } from '../../../models/prodotto.model';
 import Keycloak from 'keycloak-js';
 import { PrenotazioneService } from '../../../services/prenotazione.service';
 import { CarrelloService } from '../../../services/carrello.service';
+import { WishListService } from '../../../services/wishList.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -42,7 +43,8 @@ export class ProductDetailComponent implements OnInit {
     private keycloak: Keycloak,
     private dialog: MatDialog,
     private prenotazioneService: PrenotazioneService,
-    private carrelloService: CarrelloService
+    private carrelloService: CarrelloService,
+    private wishListService: WishListService
   ) {}
 
   ngOnInit(): void {
@@ -126,6 +128,28 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
+  compraOra() {
+    if (!this.product) return;
+    if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
+      const prodottoDaAggiungere = {
+        prodottoId: this.product.id,
+        quantita: 1
+      };
+      // Usiamo l'observable per aspettare che l'inserimento sia andato a buon fine
+      this.carrelloService.aggiungiProdottiObservable(this.keycloak.tokenParsed.sub, [prodottoDaAggiungere]).subscribe({
+        next: () => {
+          this.router.navigate(['/checkout']);
+        },
+        error: (err) => {
+          console.error("Errore aggiunta al carrello durante Compra Ora", err);
+          this.dialog.open(NotificationModal, { data: { title: 'Errore', message: 'Non è stato possibile preparare l\'ordine.', level: 'error' } });
+        }
+      });
+    } else {
+      this.keycloak.login();
+    }
+  }
+
   prenotaProdotto() {
     if (!this.product) return;
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
@@ -136,6 +160,15 @@ export class ProductDetailComponent implements OnInit {
         stato: 'ATTIVA'
       };
       this.prenotazioneService.creaPrenotazione(payload);
+    } else {
+      this.keycloak.login();
+    }
+  }
+
+  aggiungiAllaWishlist() {
+    if (!this.product) return;
+    if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
+      this.wishListService.aggiungiProdottoAWishlist(this.keycloak.tokenParsed.sub, this.product.id!);
     } else {
       this.keycloak.login();
     }

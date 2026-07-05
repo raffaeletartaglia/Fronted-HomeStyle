@@ -1,6 +1,149 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================================
+   SISTEMA DI DESIGN GLOBALE (GLASSMORPHISM)
+   ========================================= */
+:root {
+  --primary-color: #C87965;
+  --primary-hover: #b06552;
+  --secondary-color: #4b5563;
+  --success-color: #4caf50;
+  --success-hover: #388e3c;
+  --danger-color: #ef4444;
+  --danger-bg: #fee2e2;
+  --danger-hover-bg: #fecaca;
+  --danger-hover: #b91c1c;
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg-hover: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --glass-shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.08);
+  
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+}
+
+body { 
+  margin: 0; 
+  font-family: 'Roboto', "Helvetica Neue", sans-serif; 
+  background: linear-gradient(135deg, #f6f8fa 0%, #e9ecef 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* =========================================
+   CLASSI DI UTILITÀ GLOBALI (GLASSMORPHISM)
+   ========================================= */
+
+/* Glass Card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+}
+
+.glass-card:hover {
+  background: var(--glass-bg-hover);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+/* Bottoni */
+.glass-btn, .btn-primary, .btn-secondary, .btn-success, .danger-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  box-shadow: 0 4px 15px rgba(200, 121, 101, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(200, 121, 101, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: var(--success-color);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: var(--success-hover);
+  transform: translateY(-2px);
+}
+
+.danger-btn {
+  background: var(--danger-bg);
+  color: var(--danger-color);
+}
+
+.danger-btn:hover:not(:disabled) {
+  background: var(--danger-hover-bg);
+  color: var(--danger-hover);
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Input Styles */
+.custom-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(200, 121, 101, 0.2);
+}
+
+.custom-input::placeholder {
+  color: #9ca3af;
+}
+
+/* ========================================= */
+
 
 /* Custom styles for MatDialog with Bootstrap */
 .bootstrap-dialog-container .mdc-dialog__surface {

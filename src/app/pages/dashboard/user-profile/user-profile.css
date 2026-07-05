@@ -1,7 +1,9 @@
 .profile-container {
-  max-width: 600px;
+  max-width: 1200px;
+  min-height: 70vh;
+  margin: 0 auto;
+  padding: 2rem;
   background: white;
-  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
@@ -40,4 +42,91 @@
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
+}
+
+/* --- GLASSMORPHISM MODULES --- */
+.divider {
+  border: 0;
+  height: 1px;
+  background: rgba(0,0,0,0.1);
+  margin: 40px 0;
+}
+
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.module-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.mt-3 { margin-top: 15px; }
+.mt-4 { margin-top: 25px; }
+.ml-3 { margin-left: 15px; }
+.text-right { text-align: right; }
+.flex-align-center { display: flex; align-items: center; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card-header {
+  margin-bottom: 15px;
+}
+
+.badge {
+  background: #eee;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.default-badge {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+/* Credti Card style */
+.cc-card {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  border: none;
+}
+
+.cc-card .cc-type {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  text-align: right;
+  opacity: 0.9;
+}
+
+.cc-card .cc-number {
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  font-family: monospace;
+}
+
+.cc-card .cc-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.cc-card .delete-btn {
+  color: #ffcccc;
+  border-color: rgba(255,255,255,0.2);
+}
+.cc-card .delete-btn:hover {
+  background: rgba(255,255,255,0.2);
 }

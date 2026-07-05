@@ -63,6 +63,17 @@
 
 .main-content {
   flex: 1;
-  padding: 30px;
+  padding: 2rem;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Applica la dimensione perfetta a tutti i pannelli (admin e user) */
+.main-content > :not(router-outlet) {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 70vh;
+  margin: 0 auto;
+  display: block;
 }

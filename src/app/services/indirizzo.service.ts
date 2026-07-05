@@ -109,8 +109,8 @@ export class IndirizzoService {
 
     this.http.post<Indirizzo>(url, nuovoIndirizzo).subscribe(
       (response) => {
-        // AGGIORNAMENTO ISTANTANEO
-        this.indirizziUtente.push(response);
+        // AGGIORNAMENTO ISTANTANEO: nuova referenza per triggerare change detection
+        this.indirizziUtente = [...this.indirizziUtente, response];
 
         this.popUpService.updateStringa("Indirizzo aggiunto con successo!");
         this.popUpService.openPopups(999, false);
@@ -134,8 +134,8 @@ export class IndirizzoService {
 
     this.http.post<Indirizzo[]>(url, listaIndirizzi).subscribe(
       (response) => {
-        // AGGIORNAMENTO ISTANTANEO: Aggiungiamo tutti i nuovi indirizzi alla vetrina
-        this.indirizziUtente.push(...response);
+        // AGGIORNAMENTO ISTANTANEO: nuova referenza per triggerare change detection
+        this.indirizziUtente = [...this.indirizziUtente, ...response];
 
         this.popUpService.updateStringa("Indirizzi multipli aggiunti con successo!");
         this.popUpService.openPopups(999, false);
@@ -159,11 +159,8 @@ export class IndirizzoService {
 
     this.http.put<Indirizzo>(url, datiAggiornati).subscribe(
       (response) => {
-        // AGGIORNAMENTO ISTANTANEO: Cerchiamo il vecchio indirizzo e lo sostituiamo con quello nuovo
-        const index = this.indirizziUtente.findIndex(i => i.id === idIndirizzo);
-        if (index !== -1) {
-          this.indirizziUtente[index] = response;
-        }
+        // Ricarica tutta la lista: il backend potrebbe aver modificato isDefault su più record
+        this.getIndirizziUtente(idUtente);
 
         this.popUpService.updateStringa("Indirizzo modificato con successo!");
         this.popUpService.openPopups(999, false);

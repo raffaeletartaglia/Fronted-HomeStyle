@@ -6,15 +6,29 @@
   <div class="cart-content">
     <!-- Elenco prodotti -->
     <div class="cart-items-section">
-      <div *ngIf="cartItems.length === 0" class="empty-cart-message">
+      <div *ngIf="cartItems.length === 0 && totalPages === 0" class="empty-cart-message">
         <i class="pi pi-shopping-cart empty-cart-icon"></i>
         <h2>Il tuo carrello è vuoto</h2>
         <p>Aggiungi dei prodotti per completare il tuo ordine.</p>
-        <p-button label="Torna allo shopping" icon="pi pi-arrow-left" (onClick)="router.navigate(['/'])" styleClass="p-button-outlined"></p-button>
+        <button class="btn-secondary mt-3" (click)="router.navigate(['/'])">
+          <i class="pi pi-arrow-left"></i> Torna allo shopping
+        </button>
+      </div>
+
+      <div class="cart-items-header-bar" *ngIf="totalPages > 1">
+        <div class="pagination-controls">
+          <button class="btn-icon" (click)="prevPage()" [disabled]="currentPage === 0">
+            <i class="pi pi-chevron-left"></i>
+          </button>
+          <span class="page-info">{{ currentPage + 1 }} di {{ totalPages }}</span>
+          <button class="btn-icon" (click)="nextPage()" [disabled]="currentPage === totalPages - 1">
+            <i class="pi pi-chevron-right"></i>
+          </button>
+        </div>
       </div>
 
       <div *ngIf="cartItems.length > 0" class="cart-items-list">
-        <p-card *ngFor="let item of cartItems" styleClass="cart-item-card mb-3">
+        <div *ngFor="let item of cartItems" class="glass-card cart-item-card mb-3">
           <div class="cart-item-flex">
             <!-- Immagine (placeholder o futura) -->
             <div class="item-img-placeholder">
@@ -26,23 +40,35 @@
               <p class="text-color-secondary">{{ item.prodotto.categoria?.nomeCategoria || 'Categoria generica' }}</p>
             </div>
 
-            <div class="item-quantity">
-              <span class="qty-label">Qtà:</span>
-              <span class="qty-value">{{ item.quantita }}</span>
+            <div class="item-quantity d-flex align-items-center">
+              <span class="qty-label mr-2">Qtà:</span>
+              <button class="icon-btn" (click)="updateQuantity(item, item.quantita - 1)" [disabled]="item.quantita <= 1">
+                <i class="pi pi-minus"></i>
+              </button>
+              <span class="qty-value px-2 font-bold">{{ item.quantita }}</span>
+              <button class="icon-btn" (click)="updateQuantity(item, item.quantita + 1)">
+                <i class="pi pi-plus"></i>
+              </button>
             </div>
 
-            <div class="item-price">
-              <span class="price-single">€{{ item.prodotto.prezzo | number:'1.2-2' }} cad.</span>
-              <span class="price-subtotal">€{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</span>
+            <div class="item-price" style="display: flex; flex-direction: column; align-items: flex-end;">
+              <span class="price-single text-color-secondary" style="font-size: 0.9rem;">€{{ item.prodotto.prezzo | number:'1.2-2' }} cad.</span>
+              <span class="price-subtotal font-bold" style="font-size: 1.2rem;">€{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</span>
+            </div>
+
+            <div class="item-actions ml-3" style="display: flex; align-items: center;">
+              <button class="icon-btn danger-btn" (click)="removeItem(item)">
+                <i class="pi pi-trash"></i>
+              </button>
             </div>
           </div>
-        </p-card>
+        </div>
       </div>
     </div>
 
     <!-- Riepilogo e Checkout -->
     <div class="cart-summary-section" *ngIf="cartItems.length > 0">
-      <p-card styleClass="summary-card">
+      <div class="glass-card summary-card">
         <h2>Riepilogo Ordine</h2>
         <div class="summary-row">
           <span>Subtotale ({{ cartItems.length }} articoli)</span>
@@ -53,18 +79,22 @@
           <span>Gratuita</span>
         </div>
         
-        <p-divider></p-divider>
+        <hr class="custom-divider">
         
         <div class="summary-row total-row">
           <span>Totale</span>
           <span>€{{ total | number:'1.2-2' }}</span>
         </div>
 
-        <p-button label="Procedi al Checkout" icon="pi pi-check" styleClass="checkout-btn w-full mt-4" (onClick)="goToCheckout()"></p-button>
+        <button class="btn-primary w-full mt-4" (click)="goToCheckout()">
+          <i class="pi pi-check"></i> Procedi al Checkout
+        </button>
         <div class="secure-checkout">
           <i class="pi pi-lock"></i> Pagamento sicuro
         </div>
-      </p-card>
+      </div>
     </div>
   </div>
 </div>
+
+<p-toast position="top-right"></p-toast>

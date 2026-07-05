@@ -64,6 +64,15 @@ export class ResoService {
     return reso ? of(reso) : this.http.get<Reso>(`${this.apiUrl}/${idReso}`);
   }
 
+  creaReso(idDettaglioOrdine: string, idIndirizzoReso: string, dataResoPrevista: string, oraRitiroReso: string, motivo: string): Observable<Reso> {
+    const params = new HttpParams()
+      .set('idIndirizzoReso', idIndirizzoReso)
+      .set('dataResoPrevista', dataResoPrevista)
+      .set('oraRitiroReso', oraRitiroReso)
+      .set('motivo', motivo);
+    return this.http.post<Reso>(`${this.apiUrl}/dettaglio-ordine/${idDettaglioOrdine}`, null, { params });
+  }
+
   modificaStatoReso(idReso: string, nuovoStato: string): Observable<Reso> {
     const reso = this.mockResi.find(r => r.id === idReso);
     if (reso) {

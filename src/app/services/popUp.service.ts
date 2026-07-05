@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { BehaviorSubject } from "rxjs";
 import { WarningMessageComponent } from "../warning-message/warning-message.component";
+import { MessageService } from "primeng/api";
 
 import { AllPopup } from "../all-popup/all-popup";
 
@@ -30,7 +31,7 @@ export class PopupService {
 
   currentStringa = this.stringaSource.asObservable();
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private messageService: MessageService) {
   }
 
 
@@ -80,17 +81,18 @@ export class PopupService {
 
       default:
         this.isAvviso = avviso;
-        this.dialog.open(WarningMessageComponent);
+        if (avviso) {
+          this.messageService.add({ severity: 'error', summary: 'Attenzione', detail: this.stringaSource.getValue() });
+        } else {
+          this.messageService.add({ severity: 'success', summary: 'Successo', detail: this.stringaSource.getValue() });
+        }
         break;
     }
   }
 
 
-
-
   closePopup() {
     this.dialog.closeAll()
   }
-
 
 }

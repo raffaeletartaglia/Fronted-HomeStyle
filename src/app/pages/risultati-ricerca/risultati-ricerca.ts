@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../services/productService';
@@ -42,7 +42,8 @@ export class RisultatiRicerca implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -60,6 +61,8 @@ export class RisultatiRicerca implements OnInit {
 
   fetchProdotti() {
     this.isLoading = true;
+    this.cdr.detectChanges(); // Forza aggiornamento della view per mostrare lo spinner
+    
     this.productService.getProdottiFiltrati(
       this.currentStanzaId,
       this.currentCategoriaId,
@@ -71,34 +74,18 @@ export class RisultatiRicerca implements OnInit {
         // @ts-ignore
         const prods = response.content || [];
         
-        // Se non troviamo prodotti e stiamo usando dei filtri (non è una ricerca vuota globale)
-        if (prods.length === 0 && (this.currentQuery || this.currentStanzaId || this.currentCategoriaId)) {
-          
-          this.messageService.add({
-            severity: 'warn', 
-            summary: 'Nessun risultato', 
-            detail: 'Nessun prodotto correlato trovato. Ti mostriamo l\'intero catalogo.'
-          });
-          
-          // Resettiamo i filtri e rifacciamo la chiamata globale
-          this.currentQuery = undefined;
-          this.currentStanzaId = undefined;
-          this.currentCategoriaId = undefined;
-          this.pageIndex = 0;
-          this.fetchProdotti();
-          return;
-        }
-
         this.prodotti = prods;
         // @ts-ignore
         this.totalElements = response.totalElements || 0;
         this.isLoading = false;
+        this.cdr.detectChanges(); // Risolve il problema di dover cliccare per aggiornare la view
       },
       error: (err) => {
         console.error("Errore durante il recupero dei prodotti:", err);
         this.prodotti = [];
         this.totalElements = 0;
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

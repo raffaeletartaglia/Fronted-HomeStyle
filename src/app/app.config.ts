@@ -18,10 +18,13 @@ const urlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
   bearerPrefix: 'Bearer'
 });
 
+import { MessageService } from 'primeng/api';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
+    MessageService,
 
     // HTTP CLIENT con interceptor
     provideHttpClient(

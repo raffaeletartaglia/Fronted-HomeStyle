@@ -6,7 +6,7 @@
     </button>
   </div>
 
-  <div class="product-card">
+  <div class="product-card glass-card">
     <div class="product-image-section">
       <img *ngIf="product.immagine" [src]="'data:image/jpeg;base64,' + product.immagine" alt="Prodotto" class="product-img">
       <div *ngIf="!product.immagine" class="no-image">Nessuna Immagine</div>
@@ -38,10 +38,10 @@
       <div class="actions-section">
         <ng-container *ngIf="isAdmin">
           <!-- Admin Actions -->
-          <button mat-raised-button color="primary" class="action-btn" (click)="openEditDialog()">
+          <button class="btn-primary" (click)="openEditDialog()">
             <mat-icon>edit</mat-icon> Modifica Prodotto
           </button>
-          <button mat-raised-button color="warn" class="action-btn" (click)="deleteProduct()">
+          <button class="danger-btn" (click)="deleteProduct()">
             <mat-icon>delete</mat-icon> Elimina Prodotto
           </button>
         </ng-container>
@@ -49,18 +49,22 @@
         <ng-container *ngIf="!isAdmin">
           <!-- User Actions -->
           <ng-container *ngIf="(product.giacenza || 0) > 0; else outOfStock">
-            <button mat-raised-button class="action-btn user-btn cart-btn" (click)="aggiungiAlCarrello()">
+            <button class="btn-success" (click)="aggiungiAlCarrello()">
               <mat-icon>add_shopping_cart</mat-icon> Aggiungi al Carrello
             </button>
-            <button mat-raised-button class="action-btn user-btn buy-btn" (click)="aggiungiAlCarrello(); router.navigate(['/checkout'])">
+            <button class="btn-primary" (click)="compraOra()">
               <mat-icon>shopping_bag</mat-icon> Compra Ora
             </button>
           </ng-container>
           <ng-template #outOfStock>
-            <button mat-raised-button color="accent" class="action-btn user-btn" (click)="prenotaProdotto()">
+            <button class="btn-secondary" (click)="prenotaProdotto()">
               <mat-icon>event_available</mat-icon> Prenota Prodotto
             </button>
           </ng-template>
+          
+          <button class="btn-secondary ml-2" (click)="aggiungiAllaWishlist()" title="Aggiungi alla Wishlist">
+            <mat-icon color="warn">favorite</mat-icon>
+          </button>
         </ng-container>
       </div>
     </div>
@@ -71,7 +75,7 @@
   <mat-spinner diameter="50"></mat-spinner>
 </div>
 
-<div *ngIf="!product && !isLoading()" class="not-found-container">
+<div *ngIf="!product && !isLoading()" class="not-found-container glass-card mt-5">
   <h2>Prodotto non trovato</h2>
-  <button mat-raised-button color="primary" (click)="goBack()">Torna Indietro</button>
+  <button class="btn-primary mt-3" (click)="goBack()">Torna Indietro</button>
 </div>

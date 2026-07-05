@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { UtenteService } from "./utente.service";
 import { PopupService } from "./popUp.service";
 import { Wishlist } from "../models/wishlist.model";
+import { PaginatedResponse } from "../models/pagination.model";
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { Wishlist } from "../models/wishlist.model";
 export class WishListService{
 
     wishlistUtente: Wishlist[] = [];
+    wishlistPaginated: PaginatedResponse<Wishlist> | null = null;
 
     constructor(private utenteService: UtenteService, private http: HttpClient, private popUpService:PopupService) {}
 
@@ -24,7 +26,7 @@ export class WishListService{
 
     private svuotaWishlistUtenteURL = 'http://localhost:8080/api/v1/wishlist/utente/{{idUtente}}/svuota';
 
-  getUserWishList(idUtente: string) {
+  getUserWishList(idUtente: string, page: number = 0, size: number = 5) {
     // 1. CONTROLLO INPUT: L'ID è valido?
     if (!idUtente || idUtente.trim() === '') {
       console.warn("Attenzione: hai provato a cercare una wishlist senza passare l'ID utente!");
@@ -35,11 +37,12 @@ export class WishListService{
     this.wishlistUtente = [];
 
     // CHIAMATA VERA E PROPRIA
-    const urlCompleto = `${this.getWishListUtentesURL}/${idUtente}`;
+    const urlCompleto = `${this.getWishListUtentesURL}/${idUtente}?page=${page}&size=${size}`;
 
-    this.http.get<Wishlist[]>(urlCompleto).subscribe(
+    this.http.get<PaginatedResponse<Wishlist>>(urlCompleto).subscribe(
       (response) => {
-        this.wishlistUtente = response;
+        this.wishlistPaginated = response;
+        this.wishlistUtente = response.content;
         console.log("Wishlist caricata!", this.wishlistUtente);
       },
       (error) => {

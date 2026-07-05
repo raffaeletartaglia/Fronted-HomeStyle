@@ -24,6 +24,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/aiuto-contatti/aiuto-contatti').then(m => m.AiutoContattiComponent)
       },
       {
+        path: 'checkout',
+        loadComponent: () => import('./pages/checkout/checkout').then(m => m.Checkout)
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./pages/dashboard/dashboard-layout/dashboard-layout').then(m => m.DashboardLayout),
         canActivate: [authGuard], // Protezione: accessibile solo se loggati
@@ -33,12 +37,24 @@ export const routes: Routes = [
             loadComponent: () => import('./pages/dashboard/user-profile/user-profile').then(m => m.UserProfile)
           },
           {
+            path: 'addresses',
+            loadComponent: () => import('./pages/dashboard/user-addresses/user-addresses').then(m => m.UserAddressesComponent)
+          },
+          {
+            path: 'cards',
+            loadComponent: () => import('./pages/dashboard/user-cards/user-cards').then(m => m.UserCardsComponent)
+          },
+          {
             path: 'wishlist',
             loadComponent: () => import('./pages/dashboard/wishlist/wishlist').then(m => m.Wishlist)
           },
           {
             path: 'carrello',
             loadComponent: () => import('./pages/cart/cart').then(m => m.Cart)
+          },
+          {
+            path: 'orders',
+            loadComponent: () => import('./pages/dashboard/user-orders/user-orders').then(m => m.UserOrdersComponent)
           },
           { path: '', redirectTo: 'profile', pathMatch: 'full' },
           {

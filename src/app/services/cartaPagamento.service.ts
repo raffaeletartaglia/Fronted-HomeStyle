@@ -34,8 +34,13 @@ export class CartaPagamentoService {
     // Passiamo i dati della carta (il RequestDTO) come body della richiesta
     this.http.post<CartaPagamento>(this.baseUrl, nuovaCarta).subscribe(
       (response) => {
-        // AGGIORNAMENTO ISTANTANEO: Aggiungiamo la carta appena salvata alla vetrina!
-        this.carteUtente.push(response);
+        // AGGIORNAMENTO ISTANTANEO con spread operator per Change Detection
+        this.carteUtente = [...this.carteUtente, response];
+
+        // Se la nuova carta era predefinita, ricarichiamo la lista per allineare le altre
+        if (response.isDefault) {
+          this.getCarteUtente(response.utenteId);
+        }
 
         this.popUpService.updateStringa("Carta di pagamento aggiunta con successo!");
         this.popUpService.openPopups(999, false);
@@ -105,6 +110,46 @@ export class CartaPagamentoService {
       (error) => {
         console.error("Errore eliminazione carta", error);
         this.popUpService.updateStringa("Impossibile eliminare la carta.");
+        this.popUpService.openPopups(999, true);
+      }
+    );
+  }
+
+  // ==========================================
+  // 5. IMPOSTA COME PREDEFINITO
+  // Endpoint: PUT /api/v1/carta-pagamento/{idCartaPagamento}
+  // ==========================================
+  /**
+   * Imposta o rimuove una carta come predefinita.
+   * @param carta   La carta da modificare
+   * @param valore  true = imposta come predefinita, false = rimuovi default (default: true)
+   */
+  impostaComePredefinito(carta: CartaPagamento, valore: boolean = true) {
+    if (!carta) return;
+
+    const url = `${this.baseUrl}/${carta.id}/predefinita?predefinita=${valore}`;
+
+    this.http.patch<CartaPagamento>(url, null).subscribe(
+      (response) => {
+        // Aggiornamento locale istantaneo: se stiamo impostando una nuova predefinita,
+        // azzeriamo il flag su tutte le altre carte e aggiorniamo quella modificata
+        if (valore) {
+          this.carteUtente = this.carteUtente.map(c => ({
+            ...c,
+            isDefault: c.id === carta.id
+          }));
+        } else {
+          this.carteUtente = this.carteUtente.map(c =>
+            c.id === carta.id ? { ...c, isDefault: false } : c
+          );
+        }
+        const msg = valore ? 'Carta impostata come predefinita!' : 'Carta rimossa dai predefiniti.';
+        this.popUpService.updateStringa(msg);
+        this.popUpService.openPopups(999, false);
+      },
+      (error) => {
+        console.error('Errore toggle predefinita carta', error);
+        this.popUpService.updateStringa("Errore durante l'aggiornamento della carta.");
         this.popUpService.openPopups(999, true);
       }
     );

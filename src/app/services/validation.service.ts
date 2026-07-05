@@ -53,4 +53,34 @@ export class ValidationService {
     return null; // Nessun errore
   }
 
+  /**
+   * Valida il tipo di carta in base al numero.
+   * Ritorna 'VISA', 'MASTERCARD', 'MAESTRO' se valido.
+   * Se la stringa è vuota o il formato non corrisponde a queste, lancia un errore o ritorna null.
+   */
+  validateCardType(numeroCarta: string): 'VISA' | 'MASTERCARD' | 'MAESTRO' | null {
+    if (!numeroCarta) return null;
+    
+    // Rimuoviamo gli spazi vuoti
+    const numero = numeroCarta.replace(/\s+/g, '');
+
+    // VISA: Inizia con 4, lunghezza 13 o 16
+    const visaRegex = /^4\d{12}(?:\d{3})?$/;
+    
+    // MASTERCARD: Inizia con 51-55 o 2221-2720, lunghezza 16
+    const mastercardRegex = /^(?:5[1-5]\d{2}|222[1-9]|22[3-9]\d|2[3-6]\d{2}|27[01]\d|2720)\d{12}$/;
+    
+    // MAESTRO: Inizia con prefissi specifici (5018, 5020, 5038, 5893, 6304, 6759, 6761, 6762, 6763), lunghezza 12-19
+    const maestroRegex = /^(5018|5020|5038|5893|6304|6759|676[1-3])\d{8,15}$/;
+
+    if (visaRegex.test(numero)) {
+      return 'VISA';
+    } else if (mastercardRegex.test(numero)) {
+      return 'MASTERCARD';
+    } else if (maestroRegex.test(numero)) {
+      return 'MAESTRO';
+    }
+    
+    return null;
+  }
 }

@@ -1,4 +1,4 @@
-<div class="profile-container">
+<div class="profile-container glass-card">
   <h2>Il Mio Profilo</h2>
   <p class="subtitle">Gestisci le tue informazioni personali e i contatti.</p>
 
@@ -33,9 +33,14 @@
     </div>
 
     <div class="form-actions">
-      <button mat-flat-button color="primary" type="submit" [disabled]="isLoading">
+      <button class="btn-primary" type="submit" [disabled]="isLoading">
         {{ isLoading ? 'Salvataggio...' : 'Salva Modifiche' }}
       </button>
     </div>
   </form>
+
+  <hr class="divider">
+
+
+
 </div>

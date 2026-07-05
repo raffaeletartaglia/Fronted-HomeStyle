@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
 import { WishListService } from '../../../services/wishList.service';
 import Keycloak from 'keycloak-js';
 
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CardModule],
+  imports: [CommonModule],
   templateUrl: './wishlist.html',
   styleUrls: ['./wishlist.css']
 })
 export class Wishlist implements OnInit {
   idUtente: string = '';
+  currentPage: number = 0;
+  pageSize: number = 4;
 
   constructor(
     public wishlistService: WishListService,
@@ -23,11 +23,29 @@ export class Wishlist implements OnInit {
   ngOnInit() {
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;
-      this.wishlistService.getUserWishList(this.idUtente);
+      this.caricaWishlist();
     }
+  }
+
+  caricaWishlist() {
+    this.wishlistService.getUserWishList(this.idUtente, this.currentPage, this.pageSize);
   }
 
   rimuoviDaWishlist(idWishlist: string) {
     this.wishlistService.rimuoviDaWishlist(idWishlist);
+  }
+
+  nextPage() {
+    if (this.wishlistService.wishlistPaginated && this.currentPage < this.wishlistService.wishlistPaginated.totalPages - 1) {
+      this.currentPage++;
+      this.caricaWishlist();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.caricaWishlist();
+    }
   }
 }

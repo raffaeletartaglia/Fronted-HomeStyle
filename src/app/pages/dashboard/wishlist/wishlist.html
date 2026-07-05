@@ -1,7 +1,19 @@
 <div class="wishlist-container">
   <div class="wishlist-header">
-    <h2>La Mia Wishlist</h2>
-    <p>Gli articoli che hai salvato per i tuoi futuri acquisti.</p>
+    <div class="header-content">
+      <h2>La Mia Wishlist</h2>
+      <p>Gli articoli che hai salvato per i tuoi futuri acquisti.</p>
+    </div>
+    
+    <div class="pagination-controls" *ngIf="wishlistService.wishlistPaginated && wishlistService.wishlistPaginated.totalPages > 1">
+      <button class="btn-icon" (click)="prevPage()" [disabled]="currentPage === 0">
+        <i class="pi pi-chevron-left"></i>
+      </button>
+      <span class="page-info">{{ currentPage + 1 }} di {{ wishlistService.wishlistPaginated.totalPages }}</span>
+      <button class="btn-icon" (click)="nextPage()" [disabled]="currentPage === wishlistService.wishlistPaginated.totalPages - 1">
+        <i class="pi pi-chevron-right"></i>
+      </button>
+    </div>
   </div>
 
   <div *ngIf="wishlistService.wishlistUtente.length === 0" class="empty-wishlist">
@@ -11,7 +23,7 @@
   </div>
 
   <div class="wishlist-grid" *ngIf="wishlistService.wishlistUtente.length > 0">
-    <p-card *ngFor="let item of wishlistService.wishlistUtente" styleClass="wishlist-card">
+    <div *ngFor="let item of wishlistService.wishlistUtente" class="glass-card wishlist-card">
       <div class="wishlist-item-content">
         <!-- Placeholder immagine -->
         <div class="img-placeholder">
@@ -25,10 +37,12 @@
         </div>
         
         <div class="item-actions">
-          <p-button icon="pi pi-trash" label="Rimuovi" styleClass="p-button-outlined p-button-danger w-full" (onClick)="rimuoviDaWishlist(item.id)"></p-button>
+          <button class="danger-btn w-full" (click)="rimuoviDaWishlist(item.id)">
+            <i class="pi pi-trash"></i> Rimuovi
+          </button>
           <!-- Il bottone aggiungi al carrello richiederà l'integrazione del carrello in futuro -->
         </div>
       </div>
-    </p-card>
+    </div>
   </div>
 </div>

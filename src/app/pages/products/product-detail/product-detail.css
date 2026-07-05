@@ -28,12 +28,8 @@
 .product-card {
   display: flex;
   flex-direction: row;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
   overflow: hidden;
   gap: 30px;
-  padding: 30px;
 }
 
 .product-image-section {

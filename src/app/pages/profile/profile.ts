@@ -51,7 +51,7 @@ export class Profile implements OnInit {
       this.wishlistService.getUserWishList(this.idUtente);
       
       this.ordineService.getOrdiniPerUtente(this.idUtente).subscribe(res => {
-        this.ordini = res;
+        this.ordini = res.content || [];
       });
     } else {
       this.router.navigate(['/']);

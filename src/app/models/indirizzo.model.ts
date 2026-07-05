@@ -9,4 +9,5 @@ export interface Indirizzo{
     citta: string;
     cap: string;
     tipo: TipoIndirizzo;
+    isDefault: boolean;
 }

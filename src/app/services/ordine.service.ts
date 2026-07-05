@@ -39,7 +39,7 @@ export class OrdineService {
   /**
    * Recupera lo storico ordini di un utente specifico.
    */
-  getOrdiniPerUtente(idUtente: string): Observable<Ordine[]> {
-    return this.http.get<Ordine[]>(`${this.apiUrl}/utente/${idUtente}`);
+  getOrdiniPerUtente(idUtente: string, page: number = 0, size: number = 5): Observable<PaginatedResponse<Ordine>> {
+    return this.http.get<PaginatedResponse<Ordine>>(`${this.apiUrl}/utente/${idUtente}?page=${page}&size=${size}`);
   }
 }

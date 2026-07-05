@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { PopupService } from './popUp.service';
 import { Carrello } from '../models/carrello.model';
+import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class CarrelloService {
 
   // LA NOSTRA VETRINA: Qui salviamo il carrello dell'utente attualmente loggato
   carrelloAttivo: Carrello | null = null;
+  carrelloProdottiPaginated: PaginatedResponse<any> | null = null;
 
   // L'URL di base (da cui derivano tutti gli altri)
   private baseUrl = 'http://localhost:8080/api/v1/carrello';
@@ -68,19 +70,25 @@ export class CarrelloService {
   // 3. RECUPERA SOLO LA LISTA DEI PRODOTTI
   // Endpoint: GET /{idCarrello}/prodotti
   // ==========================================
-  getSoloProdotti(idCarrello: string) {
+  getSoloProdotti(idCarrello: string, page: number = 0, size: number = 5) {
     if (!idCarrello) return;
 
-    const url = `${this.baseUrl}/${idCarrello}/prodotti`;
+    const url = `${this.baseUrl}/${idCarrello}/prodotti?page=${page}&size=${size}`;
 
-    this.http.get<any[]>(url).subscribe(
+    this.http.get<PaginatedResponse<any>>(url).subscribe(
       (response) => {
+        this.carrelloProdottiPaginated = response;
         if (this.carrelloAttivo) {
-          this.carrelloAttivo.prodotti = response;
+          this.carrelloAttivo.prodotti = response.content;
         }
       },
       (error) => console.error("Errore recupero prodotti", error)
     );
+  }
+
+  getSoloProdottiObservable(idCarrello: string, page: number = 0, size: number = 5) {
+    const url = `${this.baseUrl}/${idCarrello}/prodotti?page=${page}&size=${size}`;
+    return this.http.get<PaginatedResponse<any>>(url);
   }
 
   // ==========================================
@@ -98,6 +106,11 @@ export class CarrelloService {
       },
       (error) => console.error("Errore calcolo totale", error)
     );
+  }
+
+  getTotaleCarrelloObservable(idCarrello: string) {
+    const url = `${this.baseUrl}/${idCarrello}/totale`;
+    return this.http.get<number>(url);
   }
 
   // ==========================================
@@ -121,6 +134,11 @@ export class CarrelloService {
         this.popUpService.openPopups(999, true);
       }
     );
+  }
+
+  aggiungiProdottiObservable(idUtente: string, prodottiDaAggiungere: any[]) {
+    const url = `${this.baseUrl}/utente/${idUtente}/prodotti`;
+    return this.http.post<Carrello>(url, prodottiDaAggiungere);
   }
 
   // ==========================================
@@ -149,6 +167,11 @@ export class CarrelloService {
     );
   }
 
+  aggiornaQuantitaObservable(idCarrelloProdotto: string, nuovaQuantita: number) {
+    const url = `${this.baseUrl}/prodotti/${idCarrelloProdotto}/quantita?quantita=${nuovaQuantita}`;
+    return this.http.put<any>(url, null);
+  }
+
   // ==========================================
   // 7. RIMUOVI UN PRODOTTO DAL CARRELLO
   // Endpoint: DELETE /prodotti/{idCarrelloProdotto}
@@ -168,6 +191,11 @@ export class CarrelloService {
       },
       (error) => console.error("Errore rimozione prodotto", error)
     );
+  }
+
+  rimuoviProdottoObservable(idCarrelloProdotto: string) {
+    const url = `${this.baseUrl}/prodotti/${idCarrelloProdotto}`;
+    return this.http.delete<void>(url);
   }
 
   // ==========================================

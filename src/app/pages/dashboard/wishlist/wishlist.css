@@ -1,28 +1,76 @@
 .wishlist-container {
-  padding: 1rem;
+  max-width: 1200px;
+  min-height: 70vh;
+  margin: 0 auto;
+  padding: 2rem;
   font-family: 'Roboto', sans-serif;
 }
 
 .wishlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
 }
 
-.wishlist-header h2 {
-  font-size: 1.8rem;
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.page-info {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
   color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.btn-icon:hover:not([disabled]) {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.btn-icon[disabled] {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.wishlist-header h2 {
+  font-size: 2.2rem;
+  color: #1f2937;
   margin-bottom: 0.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .wishlist-header p {
-  color: #666;
+  color: #6b7280;
+  font-size: 1.05rem;
 }
 
 .empty-wishlist {
   text-align: center;
   padding: 5rem 2rem;
-  background: #f9fafb;
-  border-radius: 12px;
-  border: 1px dashed #e5e7eb;
+  background: rgba(249, 250, 251, 0.5);
+  border-radius: 16px;
+  border: 2px dashed #e5e7eb;
 }
 
 .empty-heart-icon {
@@ -35,6 +83,7 @@
   color: #4b5563;
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .empty-wishlist p {
@@ -47,54 +96,4 @@
   gap: 1.5rem;
 }
 
-:host ::ng-deep .wishlist-card .p-card-body {
-  padding: 1rem;
-}
-
-.wishlist-item-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.img-placeholder {
-  width: 100%;
-  height: 180px;
-  background-color: #f3f4f6;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.item-info {
-  flex-grow: 1;
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.item-title {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.15rem;
-  color: #333;
-}
-
-.item-category {
-  display: block;
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin-bottom: 0.75rem;
-}
-
-.item-price {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #C87965; /* Colore brand HomeStyle */
-}
-
-.item-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+/* RIMOSSO STILI CUSTOM IN FAVORE DI QUELLI GLOBALI */

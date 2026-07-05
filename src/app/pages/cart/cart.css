@@ -7,10 +7,11 @@
 }
 
 .cart-header h1 {
-  font-size: 2rem;
-  color: #333;
+  font-size: 2.2rem;
+  color: #1f2937;
   margin-bottom: 2rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .cart-content {
@@ -29,24 +30,72 @@
   top: 100px; /* Rimane visibile scorrendo i prodotti */
 }
 
+/* Header Paginazione */
+.cart-items-header-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.page-info {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.pagination-controls .btn-icon {
+  background: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.pagination-controls .btn-icon:hover:not([disabled]) {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.pagination-controls .btn-icon[disabled] {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
 /* Messaggio Carrello Vuoto */
 .empty-cart-message {
   text-align: center;
-  padding: 4rem 2rem;
-  background: #f9fafb;
-  border-radius: 12px;
-  border: 1px dashed #e5e7eb;
+  padding: 5rem 2rem;
+  background: rgba(249, 250, 251, 0.5);
+  border-radius: 16px;
+  border: 2px dashed #e5e7eb;
 }
 
 .empty-cart-icon {
   font-size: 4rem;
   color: #d1d5db;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .empty-cart-message h2 {
   color: #4b5563;
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .empty-cart-message p {
@@ -54,85 +103,14 @@
   margin-bottom: 2rem;
 }
 
-/* Elenco Prodotti */
-:host ::ng-deep .cart-item-card .p-card-body {
-  padding: 1.2rem;
-}
-
-.cart-item-flex {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.item-img-placeholder {
-  width: 100px;
-  height: 100px;
-  background-color: #f3f4f6;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.item-details {
-  flex: 1;
-}
-
-.item-details h3 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.item-quantity {
-  text-align: center;
-  background: #f9fafb;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-}
-
-.qty-label {
-  font-size: 0.85rem;
-  color: #6b7280;
-  display: block;
-}
-
-.qty-value {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.item-price {
-  text-align: right;
-  min-width: 120px;
-}
-
-.price-single {
-  display: block;
-  font-size: 0.85rem;
-  color: #6b7280;
-}
-
-.price-subtotal {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #C87965; /* Colore brand HomeStyle */
-}
+/* RIMOSSO CLASSI CUSTOM GLOBALI */
 
 /* Riepilogo */
-:host ::ng-deep .summary-card .p-card-body {
-  padding: 1.5rem;
-}
-
 .summary-card h2 {
   margin: 0 0 1.5rem 0;
-  font-size: 1.25rem;
-  color: #333;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
 }
 
 .summary-row {
@@ -140,38 +118,32 @@
   justify-content: space-between;
   margin-bottom: 1rem;
   color: #4b5563;
+  font-size: 1rem;
 }
 
 .total-row {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #111827;
   margin-top: 1rem;
   margin-bottom: 0;
 }
 
-:host ::ng-deep .checkout-btn {
-  background-color: #C87965 !important;
-  border-color: #C87965 !important;
-  padding: 0.75rem !important;
-  font-size: 1.1rem !important;
-  font-weight: 600 !important;
-  border-radius: 8px !important;
-  transition: background-color 0.3s ease !important;
-}
-
-:host ::ng-deep .checkout-btn:hover {
-  background-color: #b06552 !important;
-  border-color: #b06552 !important;
+.custom-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+  margin: 1.5rem 0;
 }
 
 .secure-checkout {
   text-align: center;
-  margin-top: 1rem;
-  font-size: 0.85rem;
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
   color: #10b981; /* Verde sicurezza */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  font-weight: 500;
 }
