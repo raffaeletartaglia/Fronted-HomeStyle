@@ -32,17 +32,27 @@
 
     <!-- Right: Actions (Ricerca, Utente, Cuore, Carrello) -->
     <div class="header-actions">
-      <!-- Barra di Ricerca -->
-      <p-autoComplete [(ngModel)]="ricercaTesto" [suggestions]="suggerimenti"
-        (completeMethod)="cercaSuggerimenti($event)" (onSelect)="onProdottoSelezionato($event)" field="nome"
-        (keyup.enter)="onSearchEnter()"
-        placeholder="Cerca nello store..." class="search-input">
-        <ng-template let-prodotto pTemplate="item">
-          <div class="flex align-items-center gap-2">
-            <div>{{ prodotto.nome }}</div>
+      <!-- Barra di Ricerca Custom -->
+      <div class="custom-search-wrapper">
+        <span class="p-input-icon-left search-input-container">
+          <i class="pi pi-search" (click)="onSearchEnter()"></i>
+          <input type="text" pInputText [(ngModel)]="ricercaTesto" 
+                 (input)="cercaSuggerimentiCustom($event)"
+                 (keyup.enter)="onSearchEnter()" 
+                 (focus)="onSearchFocus()"
+                 placeholder="Cerca nello store..." 
+                 class="custom-search-input"
+                 autocomplete="off">
+        </span>
+
+        <!-- Dropdown suggerimenti -->
+        <div class="custom-suggestions-dropdown" *ngIf="isSearchDropdownOpen && suggerimenti.length > 0">
+          <div class="suggestion-item" *ngFor="let prod of suggerimenti" (click)="onProdottoSelezionatoCustom(prod)">
+            <i class="pi pi-search" style="margin-right: 10px; color: #ccc;"></i>
+            {{ prod.nomeProdotto }}
           </div>
-        </ng-template>
-      </p-autoComplete>
+        </div>
+      </div>
 
       <div class="icons-container">
         <!-- Utente -->

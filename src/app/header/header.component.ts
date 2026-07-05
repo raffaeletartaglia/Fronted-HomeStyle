@@ -61,11 +61,13 @@ export class headerComponent implements OnInit {
   cartSidebarVisible: boolean = false;
   isMobileMenuOpen: boolean = false; // Flag per il menu su mobile
   isUserMenuOpen: boolean = false; // Flag per il custom user menu
+  isSearchDropdownOpen: boolean = false; // Flag per il dropdown di ricerca
 
   @HostListener('document:click', ['$event'])
   clickout(event: any) {
     if (!this.eRef.nativeElement.contains(event.target)) {
       this.isUserMenuOpen = false;
+      this.isSearchDropdownOpen = false;
     }
   }
 
@@ -202,30 +204,41 @@ export class headerComponent implements OnInit {
     this.mostraDialogWishlist = true;
   }
 
-  cercaSuggerimenti(event: any) {
-    const query = event.query;
+  cercaSuggerimentiCustom(event: any) {
+    const query = event.target.value;
     if (query && query.length >= 2) {
       this.productService.ricercaSuggerimenti(query).subscribe({
         next: (res) => {
           this.suggerimenti = res;
+          this.isSearchDropdownOpen = this.suggerimenti.length > 0;
         },
         error: (err) => {
-          console.error("Errore suggerimenti (l'endpoint backend potrebbe non esistere):", err);
+          console.error("Errore suggerimenti:", err);
           this.suggerimenti = [];
+          this.isSearchDropdownOpen = false;
         }
       });
     } else {
       this.suggerimenti = [];
+      this.isSearchDropdownOpen = false;
     }
   }
 
-  onProdottoSelezionato(event: any) {
-    const idProdotto = event.value.id;
-    this.router.navigate(['/product', idProdotto]);
+  onSearchFocus() {
+    if (this.suggerimenti.length > 0) {
+      this.isSearchDropdownOpen = true;
+    }
+  }
+
+  onProdottoSelezionatoCustom(prod: any) {
+    this.isSearchDropdownOpen = false;
+    this.ricercaTesto = prod.nomeProdotto;
+    this.router.navigate(['/product', prod.id]);
   }
 
   onSearchEnter() {
-    const queryStr = typeof this.ricercaTesto === 'string' ? this.ricercaTesto : this.ricercaTesto?.['nome'];
+    this.isSearchDropdownOpen = false;
+    const queryStr = typeof this.ricercaTesto === 'string' ? this.ricercaTesto : this.ricercaTesto?.['nomeProdotto'];
     
     if (queryStr && queryStr.trim().length > 0) {
       this.router.navigate(['/risultati-ricerca'], { queryParams: { query: queryStr.trim() } });

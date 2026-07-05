@@ -28,8 +28,13 @@
   align-items: center;
   justify-content: center;
   height: 300px;
-  color: #666;
+  color: #ffffff;
   gap: 1rem;
+}
+
+/* Rendi bianco lo spinner di Material */
+:host ::ng-deep .loading-container .mat-mdc-progress-spinner circle {
+  stroke: #ffffff !important;
 }
 
 .no-results {
@@ -48,21 +53,29 @@
 /* GRIGLIA PRODOTTI */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* 2 per riga per renderle molto più larghe */
   gap: 2rem;
   margin-bottom: 3rem;
 }
 
+@media screen and (max-width: 991px) {
+  .products-grid {
+    grid-template-columns: 1fr; /* Su tablet e mobile 1 per riga (orizzontale) */
+  }
+}
+
 .product-card {
   background: #fff;
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* Layout orizzontale (Immagine a sinistra, Info a destra) */
+  padding: 1.5rem; /* Distacca tutto dai bordi */
+  gap: 1.5rem;
   border: 1px solid #eee;
+  align-items: center;
 }
 
 .product-card:hover {
@@ -71,13 +84,17 @@
 }
 
 .product-image {
-  height: 250px;
-  width: 100%;
+  height: 160px; /* Più bassa */
+  width: 200px;  /* Larghezza fissa */
+  min-width: 200px;
+  border-radius: 12px; /* Angoli arrotondati sull'immagine stessa */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12); /* Effetto profondità forte */
   background: #f4f4f4;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 
 .product-image img {
@@ -88,7 +105,7 @@
 }
 
 .product-card:hover .product-image img {
-  transform: scale(1.05);
+  transform: scale(1.08); /* Piccolo zoom al passaggio del mouse */
 }
 
 .no-image {
@@ -100,10 +117,10 @@
 }
 
 .product-info {
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  padding: 0;
 }
 
 .product-brand {
@@ -115,10 +132,10 @@
 }
 
 .product-name {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   color: #333;
-  margin-bottom: 1rem;
-  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -127,10 +144,11 @@
 }
 
 .product-price {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #C87965;
-  margin-top: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 /* PAGINATOR */
@@ -145,4 +163,16 @@
 :host ::ng-deep .mat-mdc-paginator {
   background: transparent;
   font-family: 'Roboto', sans-serif;
+}
+
+/* CUSTOM BUTTON VEDI DETTAGLI (Giallo) */
+:host ::ng-deep .detail-btn.p-button-outlined {
+  color: #d4ac0d !important;
+  border-color: #d4ac0d !important;
+}
+
+:host ::ng-deep .detail-btn.p-button-outlined:enabled:hover {
+  background: rgba(212, 172, 13, 0.1) !important;
+  color: #b8960b !important;
+  border-color: #b8960b !important;
 }
