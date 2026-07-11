@@ -96,5 +96,10 @@ export class UtenteService {
 
 
 
-  
+  /**
+   * Elimina il profilo dell'utente autenticato dal backend
+   */
+  eliminaProfilo(): Observable<any> {
+    return this.http.delete(this.profileURL);
+  }
 }

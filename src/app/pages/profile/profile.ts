@@ -67,4 +67,26 @@ export class Profile implements OnInit {
     this.cartaPagamentoService.aggiungiCarta(this.nuovaCarta);
     this.nuovaCarta = { titolareCarta: '', numeroCarta: '', scadenza: '', cvv: '' };
   }
+
+  cambiaPassword() {
+    if (this.keycloak.authenticated) {
+      this.keycloak.accountManagement();
+    }
+  }
+
+  eliminaProfilo() {
+    if (confirm("Attenzione: Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione è irreversibile e cancellerà anche tutti i tuoi ordini e dati salvati.")) {
+      this.utenteService.eliminaProfilo().subscribe(
+        () => {
+          alert("Account eliminato con successo.");
+          // Logout user after deletion
+          this.keycloak.logout();
+        },
+        error => {
+          console.error("Errore durante l'eliminazione dell'account", error);
+          alert("Si è verificato un errore durante l'eliminazione dell'account.");
+        }
+      );
+    }
+  }
 }

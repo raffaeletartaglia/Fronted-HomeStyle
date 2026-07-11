@@ -26,6 +26,10 @@
                         <label>Email</label>
                         <input type="text" pInputText [value]="utente.email" disabled />
                     </div>
+                    <div class="flex gap-3 mt-4">
+                        <p-button label="Cambia Password" icon="pi pi-key" severity="info" (onClick)="cambiaPassword()"></p-button>
+                        <p-button label="Elimina Profilo" icon="pi pi-user-minus" severity="danger" (onClick)="eliminaProfilo()"></p-button>
+                    </div>
                 </div>
             </p-tabpanel>
             

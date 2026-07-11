@@ -85,4 +85,33 @@ export class UserProfile implements OnInit {
       });
     }
   }
+
+  async cambiaPassword() {
+    if (this.keycloak.authenticated) {
+      try {
+        await this.keycloak.login({ action: 'UPDATE_PASSWORD' });
+      } catch (err) {
+        console.error('Errore durante il cambio password, fallback su accountManagement', err);
+        await this.keycloak.accountManagement();
+      }
+    }
+  }
+
+  eliminaProfilo() {
+    if (confirm("Attenzione: Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione è irreversibile e cancellerà anche tutti i tuoi ordini e dati salvati.")) {
+      this.isLoading = true;
+      this.utenteService.eliminaProfilo().subscribe({
+        next: () => {
+          this.notification.success('Successo', 'Account eliminato con successo.');
+          // Logout user after deletion
+          this.keycloak.logout();
+        },
+        error: (err) => {
+          console.error("Errore durante l'eliminazione dell'account", err);
+          this.notification.error('Errore', 'Si è verificato un errore durante l\'eliminazione dell\'account.');
+          this.isLoading = false;
+        }
+      });
+    }
+  }
 }
