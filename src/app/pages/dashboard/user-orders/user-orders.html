@@ -1,0 +1,97 @@
+<p-toast></p-toast>
+
+<div class="orders-container">
+  <div class="header-section">
+    <h2 class="section-title">I Miei Ordini</h2>
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+      <button class="btn-icon" (click)="prevPage()" [disabled]="currentPage === 0">
+        <i class="pi pi-chevron-left"></i>
+      </button>
+      <span class="page-info">{{ currentPage + 1 }} di {{ totalPages }}</span>
+      <button class="btn-icon" (click)="nextPage()" [disabled]="currentPage === totalPages - 1">
+        <i class="pi pi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Caricamento ordini in corso...</p>
+  </div>
+
+  <div *ngIf="!isLoading && ordini.length === 0" class="empty-state">
+    <div class="empty-icon"><i class="pi pi-box"></i></div>
+    <h3>Non hai ancora effettuato ordini.</h3>
+    <p>Inizia a esplorare i nostri prodotti!</p>
+    <button class="btn-primary" routerLink="/risultati-ricerca">Vai allo Shop</button>
+  </div>
+
+  <div *ngIf="!isLoading && ordini.length > 0" class="orders-list">
+    <div *ngFor="let ordine of ordini" class="glass-card order-item">
+      <div class="order-header">
+        <div class="order-info">
+          <span class="order-date">Ordine del: {{ ordine.dataOrdine | date:'dd/MM/yyyy' }}</span>
+          <span class="order-total">Totale: €{{ ordine.totaleOrdine | number:'1.2-2' }}</span>
+        </div>
+        <div class="order-status" [ngClass]="ordine.statoOrdine.toLowerCase()">
+          {{ ordine.statoOrdine }}
+        </div>
+      </div>
+
+      <div class="order-body">
+        <div class="shipping-info">
+          <h4>Spedizione</h4>
+          <div *ngIf="ordine.spedizione">
+            <p>Stato: <strong>{{ ordine.spedizione.statoSpedizione }}</strong></p>
+            <p>{{ ordine.spedizione.indirizzoSpedizione?.via }} {{ ordine.spedizione.indirizzoSpedizione?.numeroCivico }}, {{ ordine.spedizione.indirizzoSpedizione?.citta }}</p>
+          </div>
+          <div *ngIf="!ordine.spedizione">
+            <p>Dettagli spedizione non ancora disponibili.</p>
+          </div>
+        </div>
+
+        <div class="items-info">
+          <h4>Articoli</h4>
+          <div *ngFor="let dett of ordine.dettagliOrdine" class="item-row">
+            <div class="item-details">
+              <span class="item-name">{{ dett.prodotto.nomeProdotto }}</span>
+              <span class="item-qty">Q.tà: {{ dett.quantita }} x €{{ dett.prezzoAlMomento | number:'1.2-2' }}</span>
+            </div>
+            
+            <button class="btn-secondary btn-sm" 
+                    *ngIf="ordine.spedizione?.statoSpedizione === 'CONSEGNATO'"
+                    (click)="apriDialogReso(dett.id)">
+              <i class="pi pi-undo"></i> Richiedi Reso
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dialog Reso -->
+<p-dialog header="Richiedi Reso" [(visible)]="mostraDialogReso" [modal]="true" [style]="{width: '450px'}" [closable]="true">
+  <div class="p-fluid">
+    <p class="mb-4">Per favore, compila i dati per programmare il ritiro del reso.</p>
+    
+    <div class="field">
+      <label>Data di ritiro prevista</label>
+      <p-datepicker [(ngModel)]="dataResoPrevista" [minDate]="dataResoPrevista" dateFormat="yy-mm-dd" appendTo="body"></p-datepicker>
+    </div>
+
+    <div class="field mt-3">
+      <label>Ora di ritiro (indicativa)</label>
+      <p-datepicker [(ngModel)]="oraRitiroReso" [timeOnly]="true" hourFormat="24" appendTo="body"></p-datepicker>
+    </div>
+
+    <div class="field mt-3">
+      <label>Motivo del reso</label>
+      <input pInputText [(ngModel)]="motivoReso" placeholder="Es. Prodotto difettoso, Cambio idea" />
+    </div>
+
+    <button class="custom-btn primary-btn mt-4 w-full" (click)="inviaReso()">
+      <i class="pi pi-check"></i> Conferma Reso
+    </button>
+  </div>
+</p-dialog>
