@@ -1,0 +1,122 @@
+.addresses-container {
+  max-width: 1200px;
+  min-height: 70vh;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.addresses-container h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* --- GLASSMORPHISM MODULES --- */
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.module-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.mt-3 { margin-top: 15px; }
+.mt-4 { margin-top: 25px; }
+.ml-3 { margin-left: 15px; }
+.text-right { text-align: right; }
+.flex-align-center { display: flex; align-items: center; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card-header {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  background: #eee;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.default-badge {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.default-card {
+  border: 2px solid #1976d2;
+  background: rgba(33, 150, 243, 0.06);
+  box-shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
+  overflow: hidden;
+  position: relative;
+}
+
+.default-card:hover {
+  box-shadow: 0 8px 30px rgba(33, 150, 243, 0.22);
+}
+
+/* Ribbon angolo in alto a destra */
+.default-ribbon {
+  position: absolute;
+  top: 14px;
+  right: -26px;
+  background: linear-gradient(135deg, #ffd700, #ffaa00);
+  color: #333;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 36px;
+  transform: rotate(35deg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 10;
+}
+
+.default-ribbon span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Label predefinita nella parte bassa della card */
+.default-label {
+  color: #1976d2;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

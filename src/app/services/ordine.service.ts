@@ -42,4 +42,11 @@ export class OrdineService {
   getOrdiniPerUtente(idUtente: string, page: number = 0, size: number = 5): Observable<PaginatedResponse<Ordine>> {
     return this.http.get<PaginatedResponse<Ordine>>(`${this.apiUrl}/utente/${idUtente}?page=${page}&size=${size}`);
   }
+
+  /**
+   * Crea un nuovo ordine per un singolo prodotto.
+   */
+  creaOrdineSingolo(idUtente: string, idIndirizzoSpedizione: string, idProdotto: string, quantita: number): Observable<Ordine> {
+    return this.http.post<Ordine>(`${this.apiUrl}/utente/${idUtente}/singolo?idIndirizzoSpedizione=${idIndirizzoSpedizione}&idProdotto=${idProdotto}&quantita=${quantita}`, {});
+  }
 }

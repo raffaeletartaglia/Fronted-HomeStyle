@@ -131,19 +131,11 @@ export class ProductDetailComponent implements OnInit {
   compraOra() {
     if (!this.product) return;
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
-      const prodottoDaAggiungere = {
-        prodottoId: this.product.id,
-        quantita: 1
-      };
-      // Usiamo l'observable per aspettare che l'inserimento sia andato a buon fine
-      this.carrelloService.aggiungiProdottiObservable(this.keycloak.tokenParsed.sub, [prodottoDaAggiungere]).subscribe({
-        next: () => {
-          this.router.navigate(['/checkout']);
-        },
-        error: (err) => {
-          console.error("Errore aggiunta al carrello durante Compra Ora", err);
-          this.dialog.open(NotificationModal, { data: { title: 'Errore', message: 'Non è stato possibile preparare l\'ordine.', level: 'error' } });
-        }
+      this.router.navigate(['/checkout'], { 
+        state: { 
+          singoloProdotto: this.product,
+          quantita: 1 
+        } 
       });
     } else {
       this.keycloak.login();

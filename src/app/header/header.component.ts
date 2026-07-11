@@ -39,7 +39,6 @@ import { MatButtonModule } from '@angular/material/button';
     DialogModule,
     ButtonModule,
     IfAuthenticatedDirective,
-    CartSidebar,
     MatIconModule,
     MatButtonModule
   ],

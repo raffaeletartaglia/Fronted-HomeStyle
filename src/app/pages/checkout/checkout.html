@@ -94,22 +94,34 @@
         <h3 class="panel-title mb-4">Seleziona Metodo di Pagamento</h3>
         
         <div class="options-grid mb-5">
-          <div *ngFor="let mod of modalitaPagamentoService.modalitaDisponibili" 
-               class="option-card" 
-               [class.selected]="modalitaSelezionata?.id === mod.id"
-               (click)="modalitaSelezionata = mod">
+          <div class="option-card" 
+               [class.selected]="pagamentoOnlineSelezionato === true"
+               (click)="pagamentoOnlineSelezionato = true">
             <div class="option-icon">
-              <i class="pi" [ngClass]="mod.tipo === 'ONLINE' ? 'pi-credit-card' : 'pi-wallet'"></i>
+              <i class="pi pi-credit-card"></i>
             </div>
             <div class="option-details">
-              <strong>{{ mod.tipo === 'ONLINE' ? 'Pagamento Online' : 'Pagamento Fisico' }}</strong>
-              <p class="text-sm text-500">{{ mod.descrizione }}</p>
+              <strong>Paga Subito (Online)</strong>
+              <p class="text-sm text-500">Paga in sicurezza con la tua Carta di Credito</p>
             </div>
-            <div class="option-check" *ngIf="modalitaSelezionata?.id === mod.id"><i class="pi pi-check-circle"></i></div>
+            <div class="option-check" *ngIf="pagamentoOnlineSelezionato === true"><i class="pi pi-check-circle"></i></div>
+          </div>
+          
+          <div class="option-card" 
+               [class.selected]="pagamentoOnlineSelezionato === false"
+               (click)="pagamentoOnlineSelezionato = false; cartaSelezionata = null;">
+            <div class="option-icon">
+              <i class="pi pi-wallet"></i>
+            </div>
+            <div class="option-details">
+              <strong>Paga alla Consegna</strong>
+              <p class="text-sm text-500">Paga in contanti all'arrivo del pacco</p>
+            </div>
+            <div class="option-check" *ngIf="pagamentoOnlineSelezionato === false"><i class="pi pi-check-circle"></i></div>
           </div>
         </div>
 
-        <div *ngIf="modalitaSelezionata?.tipo === 'ONLINE'" class="card-selection-area">
+        <div *ngIf="pagamentoOnlineSelezionato === true" class="card-selection-area">
           <h4 class="mb-3">Seleziona Carta di Credito</h4>
           <div class="options-grid">
             <div *ngFor="let carta of cartaPagamentoService.carteUtente" 
@@ -174,7 +186,7 @@
           <button class="btn-secondary" (click)="activeStep = 1">
             <i class="pi pi-arrow-left"></i> Indietro
           </button>
-          <button class="btn-primary" (click)="activeStep = 3" [disabled]="!modalitaSelezionata || (modalitaSelezionata.tipo === 'ONLINE' && !cartaSelezionata)">
+          <button class="btn-primary" (click)="activeStep = 3" [disabled]="pagamentoOnlineSelezionato === null || (pagamentoOnlineSelezionato === true && !cartaSelezionata)">
             Continua <i class="pi pi-arrow-right"></i>
           </button>
         </div>
@@ -207,16 +219,16 @@
             </div>
             
             <div class="summary-box glass-card p-4 flex-1">
-              <h4><i class="pi" [ngClass]="modalitaSelezionata?.tipo === 'ONLINE' ? 'pi-credit-card' : 'pi-wallet'" class="mr-2"></i> Pagamento</h4>
-              <p class="mt-2"><strong>Modalità:</strong> {{ modalitaSelezionata?.tipo === 'ONLINE' ? 'Online' : 'Fisico' }}</p>
+              <h4><i class="pi" [ngClass]="pagamentoOnlineSelezionato === true ? 'pi-credit-card' : 'pi-wallet'" class="mr-2"></i> Pagamento</h4>
+              <p class="mt-2"><strong>Modalità:</strong> {{ pagamentoOnlineSelezionato === true ? 'Online' : 'Alla Consegna' }}</p>
               
-              <ng-container *ngIf="modalitaSelezionata?.tipo === 'ONLINE'">
+              <ng-container *ngIf="pagamentoOnlineSelezionato === true">
                 <p>Carta terminante con {{ cartaSelezionata?.ultime4Cifre }}</p>
                 <p>Intestatario: {{ cartaSelezionata?.intestatario }}</p>
               </ng-container>
               
-              <ng-container *ngIf="modalitaSelezionata?.tipo === 'FISICO'">
-                <p class="text-500 text-sm mt-2">{{ modalitaSelezionata?.descrizione }}</p>
+              <ng-container *ngIf="pagamentoOnlineSelezionato === false">
+                <p class="text-500 text-sm mt-2">Pagamento in contanti al corriere.</p>
               </ng-container>
             </div>
           </div>

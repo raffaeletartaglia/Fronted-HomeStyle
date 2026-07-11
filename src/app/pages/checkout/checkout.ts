@@ -6,7 +6,6 @@ import { CartaPagamentoService } from '../../services/cartaPagamento.service';
 import { CarrelloService } from '../../services/carrello.service';
 import { OrdineService } from '../../services/ordine.service';
 import { PagamentoService } from '../../services/pagamento.service';
-import { ModalitaPagamentoService } from '../../services/modalitaPagamento.service';
 import { Router } from '@angular/router';
 import Keycloak from 'keycloak-js';
 
@@ -20,7 +19,7 @@ import Keycloak from 'keycloak-js';
 export class Checkout implements OnInit {
   idUtente: string = '';
   indirizzoSelezionato: any = null;
-  modalitaSelezionata: any = null;
+  pagamentoOnlineSelezionato: boolean | null = null;
   cartaSelezionata: any = null;
   cartItems: any[] = [];
   totale: number = 0;
@@ -35,7 +34,6 @@ export class Checkout implements OnInit {
   constructor(
     public indirizzoService: IndirizzoService,
     public cartaPagamentoService: CartaPagamentoService,
-    public modalitaPagamentoService: ModalitaPagamentoService,
     private carrelloService: CarrelloService,
     private ordineService: OrdineService,
     private pagamentoService: PagamentoService,
@@ -48,13 +46,24 @@ export class Checkout implements OnInit {
       this.idUtente = this.keycloak.tokenParsed.sub;
       this.indirizzoService.getIndirizziUtente(this.idUtente);
       this.cartaPagamentoService.getCarteUtente(this.idUtente);
-      this.modalitaPagamentoService.getAllModalita();
-      this.carrelloService.getCarrelloUtenteObservable(this.idUtente).subscribe({
-        next: (res: any) => {
-          this.cartItems = res.prodotti || [];
-          this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
-        }
-      });
+
+      // Controlla se siamo in modalità "Acquisto Singolo"
+      const state = history.state;
+      if (state && state.singoloProdotto) {
+        this.cartItems = [{
+          prodotto: state.singoloProdotto,
+          quantita: state.quantita || 1
+        }];
+        this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
+      } else {
+        // Altrimenti carica il carrello normale
+        this.carrelloService.getCarrelloUtenteObservable(this.idUtente).subscribe({
+          next: (res: any) => {
+            this.cartItems = res.prodotti || [];
+            this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
+          }
+        });
+      }
     } else {
       this.keycloak.login();
     }
@@ -130,26 +139,32 @@ export class Checkout implements OnInit {
   }
 
   confermaOrdine() {
-    if (!this.indirizzoSelezionato || !this.modalitaSelezionata) return;
-    if (this.modalitaSelezionata.tipo === 'ONLINE' && !this.cartaSelezionata) return;
+    if (!this.indirizzoSelezionato || this.pagamentoOnlineSelezionato === null) return;
+    if (this.pagamentoOnlineSelezionato && !this.cartaSelezionata) return;
 
-    this.ordineService.creaOrdine(this.idUtente, this.indirizzoSelezionato.id).subscribe({
+    const state = history.state;
+    const isAcquistoSingolo = state && state.singoloProdotto;
+
+    const ordineObservable = isAcquistoSingolo 
+      ? this.ordineService.creaOrdineSingolo(this.idUtente, this.indirizzoSelezionato.id, state.singoloProdotto.id, state.quantita || 1)
+      : this.ordineService.creaOrdine(this.idUtente, this.indirizzoSelezionato.id);
+
+    ordineObservable.subscribe({
       next: (ordine) => {
         const datiPagamento = {
           importo: this.totale,
-          modalitaPagamentoId: this.modalitaSelezionata.id,
-          cartaPagamentoId: this.modalitaSelezionata.tipo === 'ONLINE' ? this.cartaSelezionata.id : null,
-          pagamentoEffettuato: this.modalitaSelezionata.tipo === 'ONLINE' ? true : false,
-          numeroRate: 1,
-          rataCorrente: 1,
-          importoRata: this.totale,
+          pagamentoOnline: this.pagamentoOnlineSelezionato,
+          cartaPagamentoId: this.pagamentoOnlineSelezionato ? this.cartaSelezionata.id : null,
+          pagamentoEffettuato: this.pagamentoOnlineSelezionato ? true : false,
           ordineId: ordine.id
         };
         this.pagamentoService.creaPagamento(datiPagamento);
         
-        const idCarrello = this.carrelloService.carrelloAttivo?.id;
-        if (idCarrello) {
-          this.carrelloService.svuotaCarrello(idCarrello);
+        if (!isAcquistoSingolo) {
+          const idCarrello = this.carrelloService.carrelloAttivo?.id;
+          if (idCarrello) {
+            this.carrelloService.svuotaCarrello(idCarrello);
+          }
         }
         
         setTimeout(() => this.router.navigateByUrl('/dashboard/orders'), 2000);

@@ -1,12 +1,10 @@
 // pagamento.model.ts
-import { ModalitaPagamento } from './modalitaPagamento.model';
 
 export interface Pagamento {
   id: string;
   ordineId: string;
 
-  modalitaPagamento: ModalitaPagamento; // Ora userà quello importato!
-
+  pagamentoOnline: boolean;
   pagamentoEffettuato: boolean;
   numeroRate: number;
   rataCorrente: number;

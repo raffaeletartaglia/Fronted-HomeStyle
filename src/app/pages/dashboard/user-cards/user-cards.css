@@ -1,0 +1,190 @@
+.cards-container {
+  max-width: 1200px;
+  min-height: 70vh;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.cards-container h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* --- GLASSMORPHISM MODULES --- */
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.module-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mt-2 { margin-top: 10px; }
+.mt-3 { margin-top: 15px; }
+.mt-4 { margin-top: 25px; }
+.ml-3 { margin-left: 15px; }
+.text-right { text-align: right; }
+.flex-align-center { display: flex; align-items: center; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card-header {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  background: #eee;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.default-badge {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.default-card {
+  border: 2px solid #64b5f6 !important;
+  box-shadow: 0 4px 20px rgba(100, 181, 246, 0.4) !important;
+  transform: scale(1.02);
+}
+
+.default-card:hover {
+  box-shadow: 0 8px 30px rgba(100, 181, 246, 0.6) !important;
+  transform: scale(1.03) translateY(-5px);
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Credit Card style */
+.cc-card {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.cc-card .cc-number {
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  font-family: monospace;
+}
+
+.cc-card .cc-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.cc-card .delete-btn {
+  color: #ffcccc;
+  border-color: rgba(255,255,255,0.2);
+}
+.cc-card .delete-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* Chip dorato */
+.card-chip {
+  width: 32px;
+  height: 24px;
+  background: linear-gradient(135deg, #d4af37 0%, #f5e07a 50%, #d4af37 100%);
+  border-radius: 4px;
+  font-size: 1.4rem;
+  line-height: 24px;
+  text-align: center;
+  color: #b8860b;
+}
+
+.cc-type-badge {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+/* Ribbon angolo in alto a destra */
+.default-ribbon {
+  position: absolute;
+  top: 12px;
+  right: -28px;
+  background: linear-gradient(135deg, #ffd700, #ffaa00);
+  color: #333;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 36px;
+  transform: rotate(35deg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 10;
+}
+
+.default-ribbon span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Pulsante "Imposta Predefinita" sulla cc-card */
+.set-default-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border-color: rgba(255,255,255,0.3);
+  font-size: 0.82rem;
+}
+
+.set-default-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Label predefinita attiva */
+.default-label {
+  color: #ffd700;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
