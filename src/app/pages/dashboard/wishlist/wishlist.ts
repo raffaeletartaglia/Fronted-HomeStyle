@@ -12,8 +12,6 @@ import Keycloak from 'keycloak-js';
 })
 export class Wishlist implements OnInit {
   idUtente: string = '';
-  currentPage: number = 0;
-  pageSize: number = 4;
 
   constructor(
     public wishlistService: WishListService,
@@ -28,24 +26,16 @@ export class Wishlist implements OnInit {
   }
 
   caricaWishlist() {
-    this.wishlistService.getUserWishList(this.idUtente, this.currentPage, this.pageSize);
+    this.wishlistService.getUserWishList(this.idUtente);
   }
 
-  rimuoviDaWishlist(idWishlist: string) {
-    this.wishlistService.rimuoviDaWishlist(idWishlist);
+  rimuoviDaWishlist(idProdotto: string) {
+    this.wishlistService.rimuoviDaWishlist(this.idUtente, idProdotto);
   }
 
-  nextPage() {
-    if (this.wishlistService.wishlistPaginated && this.currentPage < this.wishlistService.wishlistPaginated.totalPages - 1) {
-      this.currentPage++;
-      this.caricaWishlist();
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.caricaWishlist();
+  svuotaWishlist() {
+    if(confirm("Sei sicuro di voler svuotare la tua wishlist?")) {
+      this.wishlistService.svuotaWishlistUtente(this.idUtente);
     }
   }
 }

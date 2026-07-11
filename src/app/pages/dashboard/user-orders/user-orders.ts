@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrdineService } from '../../../services/ordine.service';
 import { ResoService } from '../../../services/reso.service';
+import { IndirizzoService } from '../../../services/indirizzo.service';
 import Keycloak from 'keycloak-js';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
@@ -35,11 +36,13 @@ export class UserOrdersComponent implements OnInit {
   motivoReso: string = '';
   dataResoPrevista: Date | null = null;
   oraRitiroReso: Date | null = null;
-  idIndirizzoReso: string = 'fa1b0a88-eeb6-4114-87cf-45123d24268e'; // TODO: Prenderlo dagli indirizzi utente (hardcoded per ora)
+  idIndirizzoReso: string = ''; 
+  today: Date = new Date();
 
   constructor(
     private ordineService: OrdineService,
     private resoService: ResoService,
+    private indirizzoService: IndirizzoService,
     private messageService: MessageService,
     private keycloak: Keycloak
   ) {}
@@ -48,9 +51,18 @@ export class UserOrdersComponent implements OnInit {
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;
       this.caricaOrdini();
+      this.caricaIndirizzi();
     } else {
       this.isLoading = false;
     }
+  }
+
+  get indirizziUtente() {
+    return this.indirizzoService.indirizziUtente;
+  }
+
+  caricaIndirizzi() {
+    this.indirizzoService.getIndirizziUtente(this.idUtente);
   }
 
   caricaOrdini() {
@@ -94,6 +106,12 @@ export class UserOrdersComponent implements OnInit {
       return;
     }
 
+    const ora = this.oraRitiroReso.getHours();
+    if (ora < 9 || ora > 13) {
+      this.messageService.add({severity:'warn', summary:'Orario Non Valido', detail:'L\'orario di ritiro deve essere compreso tra le 09:00 e le 13:00'});
+      return;
+    }
+
     const dataIso = this.dataResoPrevista.toISOString().split('T')[0];
     const oraIso = this.oraRitiroReso.toTimeString().split(' ')[0];
 
@@ -107,10 +125,12 @@ export class UserOrdersComponent implements OnInit {
       next: (res) => {
         this.messageService.add({severity:'success', summary:'Successo', detail:'Reso richiesto correttamente'});
         this.mostraDialogReso = false;
+        this.caricaOrdini(); // Ricarichiamo per vedere lo stato aggiornato
       },
       error: (err) => {
         console.error(err);
-        this.messageService.add({severity:'error', summary:'Errore', detail:'Errore durante la richiesta di reso'});
+        const errorMessage = err.error?.messaggio || 'Errore durante la richiesta di reso';
+        this.messageService.add({severity:'error', summary:'Errore', detail: errorMessage});
       }
     });
   }

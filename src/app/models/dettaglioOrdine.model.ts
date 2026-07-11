@@ -6,4 +6,6 @@ export interface DettaglioOrdine {
   prezzoUnitario: number;
 
   prodotto: Prodotto;
+  resoId?: string;
+  statoReso?: string;
 }

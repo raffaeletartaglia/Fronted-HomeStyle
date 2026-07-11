@@ -104,11 +104,10 @@
             
             <!-- WISHLIST -->
             <p-tabpanel value="4">
-                <div *ngIf="wishlistService.wishlistUtente.length === 0">La tua wishlist è vuota.</div>
-                <div class="flex flex-wrap gap-4" *ngIf="wishlistService.wishlistUtente.length > 0">
-                    <p-card *ngFor="let item of wishlistService.wishlistUtente" [header]="item.prodotto.nomeProdotto" class="w-15rem">
-                        <p>Prezzo: €{{ item.prodotto.prezzo | number:'1.2-2' }}</p>
-                        <p-button icon="pi pi-trash" severity="danger" (onClick)="wishlistService.rimuoviDaWishlist(item.id)"></p-button>
+                <div *ngIf="wishlistService.prodottiWishlist.length === 0">La tua wishlist è vuota.</div>
+                <div class="flex flex-wrap gap-4" *ngIf="wishlistService.prodottiWishlist.length > 0">
+                    <p-card *ngFor="let prodotto of wishlistService.prodottiWishlist" [header]="prodotto.nomeProdotto" class="w-15rem">
+                        <p-button icon="pi pi-trash" severity="danger" (onClick)="wishlistService.rimuoviDaWishlist(idUtente, prodotto.id)"></p-button>
                     </p-card>
                 </div>
             </p-tabpanel>

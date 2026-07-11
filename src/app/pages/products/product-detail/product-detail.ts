@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../services/productService';
 import { Prodotto } from '../../../models/prodotto.model';
 import Keycloak from 'keycloak-js';
-import { PrenotazioneService } from '../../../services/prenotazione.service';
+
 import { CarrelloService } from '../../../services/carrello.service';
 import { WishListService } from '../../../services/wishList.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,7 +42,7 @@ export class ProductDetailComponent implements OnInit {
     private productService: ProductService,
     private keycloak: Keycloak,
     private dialog: MatDialog,
-    private prenotazioneService: PrenotazioneService,
+
     private carrelloService: CarrelloService,
     private wishListService: WishListService
   ) {}
@@ -142,20 +142,7 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  prenotaProdotto() {
-    if (!this.product) return;
-    if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
-      const payload = {
-        utenteId: this.keycloak.tokenParsed.sub,
-        prodottoId: this.product.id,
-        quantita: 1,
-        stato: 'ATTIVA'
-      };
-      this.prenotazioneService.creaPrenotazione(payload);
-    } else {
-      this.keycloak.login();
-    }
-  }
+
 
   aggiungiAllaWishlist() {
     if (!this.product) return;

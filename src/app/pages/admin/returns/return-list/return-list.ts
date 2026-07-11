@@ -77,10 +77,9 @@ export class ReturnListComponent implements OnInit {
 
   getStatoColor(stato: string): string {
     switch (stato) {
-      case 'RICHIESTO': return 'warn';
-      case 'PROGRAMMATO': return 'accent';
-      case 'IN_PREPARAZIONE': return 'accent';
-      case 'RITIRATO': return 'primary';
+      case 'RICHIESTO': return 'accent';
+      case 'ACCETTATO': return 'primary';
+      case 'RIFIUTATO': return 'warn';
       case 'ANNULLATO': return 'warn';
       default: return '';
     }

@@ -57,11 +57,10 @@
             </button>
           </ng-container>
           <ng-template #outOfStock>
-            <button class="btn-secondary" (click)="prenotaProdotto()">
-              <mat-icon>event_available</mat-icon> Prenota Prodotto
-            </button>
+            <div class="out-of-stock-msg" style="color: red; font-weight: bold; margin-right: 15px;">
+              Attualmente Non Acquistabile
+            </div>
           </ng-template>
-          
           <button class="btn-secondary ml-2" (click)="aggiungiAllaWishlist()" title="Aggiungi alla Wishlist">
             <mat-icon color="warn">favorite</mat-icon>
           </button>

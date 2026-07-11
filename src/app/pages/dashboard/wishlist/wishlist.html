@@ -4,26 +4,21 @@
       <h2>La Mia Wishlist</h2>
       <p>Gli articoli che hai salvato per i tuoi futuri acquisti.</p>
     </div>
-    
-    <div class="pagination-controls" *ngIf="wishlistService.wishlistPaginated && wishlistService.wishlistPaginated.totalPages > 1">
-      <button class="btn-icon" (click)="prevPage()" [disabled]="currentPage === 0">
-        <i class="pi pi-chevron-left"></i>
-      </button>
-      <span class="page-info">{{ currentPage + 1 }} di {{ wishlistService.wishlistPaginated.totalPages }}</span>
-      <button class="btn-icon" (click)="nextPage()" [disabled]="currentPage === wishlistService.wishlistPaginated.totalPages - 1">
-        <i class="pi pi-chevron-right"></i>
+    <div class="header-actions">
+      <button class="danger-btn" (click)="svuotaWishlist()" *ngIf="wishlistService.prodottiWishlist.length > 0">
+        <i class="pi pi-trash"></i> Svuota Wishlist
       </button>
     </div>
   </div>
 
-  <div *ngIf="wishlistService.wishlistUtente.length === 0" class="empty-wishlist">
+  <div *ngIf="wishlistService.prodottiWishlist.length === 0" class="empty-wishlist">
     <i class="pi pi-heart empty-heart-icon"></i>
     <h3>La tua wishlist è vuota.</h3>
     <p>Naviga nello store e aggiungi i prodotti che ami cliccando sul cuore!</p>
   </div>
 
-  <div class="wishlist-grid" *ngIf="wishlistService.wishlistUtente.length > 0">
-    <div *ngFor="let item of wishlistService.wishlistUtente" class="glass-card wishlist-card">
+  <div class="wishlist-grid" *ngIf="wishlistService.prodottiWishlist.length > 0">
+    <div *ngFor="let prodotto of wishlistService.prodottiWishlist" class="glass-card wishlist-card">
       <div class="wishlist-item-content">
         <!-- Placeholder immagine -->
         <div class="img-placeholder">
@@ -31,13 +26,13 @@
         </div>
         
         <div class="item-info">
-          <h4 class="item-title">{{ item.prodotto.nomeProdotto }}</h4>
-          <span class="item-category">{{ item.prodotto.categoria?.nomeCategoria || 'Categoria generica' }}</span>
-          <div class="item-price">€{{ item.prodotto.prezzo | number:'1.2-2' }}</div>
+          <h4 class="item-title">{{ prodotto.nomeProdotto }}</h4>
+          <span class="item-category">{{ prodotto.categoria?.nomeCategoria || 'Categoria generica' }}</span>
+          <div class="item-price">€{{ prodotto.prezzo | number:'1.2-2' }}</div>
         </div>
         
         <div class="item-actions">
-          <button class="danger-btn w-full" (click)="rimuoviDaWishlist(item.id)">
+          <button class="danger-btn w-full" (click)="rimuoviDaWishlist(prodotto.id)">
             <i class="pi pi-trash"></i> Rimuovi
           </button>
           <!-- Il bottone aggiungi al carrello richiederà l'integrazione del carrello in futuro -->

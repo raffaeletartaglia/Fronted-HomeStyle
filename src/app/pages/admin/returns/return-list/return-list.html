@@ -47,15 +47,13 @@
       <ng-container matColumnDef="azioni">
         <th mat-header-cell *matHeaderCellDef> Azioni </th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="primary" *ngIf="element.statoReso === 'RICHIESTO' || element.statoReso === 'IN_PREPARAZIONE'" (click)="cambiaStato(element.id, 'PROGRAMMATO')" matTooltip="Programma Ritiro">
-            <mat-icon>schedule</mat-icon>
-          </button>
-          
-          <button mat-icon-button color="primary" *ngIf="element.statoReso === 'PROGRAMMATO'" (click)="cambiaStato(element.id, 'RITIRATO')" matTooltip="Conferma Ritiro (Triggera Magazzino & Rimborso)">
-            <mat-icon>done_all</mat-icon>
+          <!-- Bottone Accetta (Solo se in stato RICHIESTO) -->
+          <button mat-icon-button color="primary" *ngIf="element.statoReso === 'RICHIESTO'" (click)="cambiaStato(element.id, 'ACCETTATO')" matTooltip="Accetta (Avvia Rimborso e Ritiro)">
+            <mat-icon>check_circle</mat-icon>
           </button>
 
-          <button mat-icon-button color="warn" *ngIf="element.statoReso !== 'ANNULLATO' && element.statoReso !== 'RITIRATO'" (click)="cambiaStato(element.id, 'ANNULLATO')" matTooltip="Annulla">
+          <!-- Bottone Rifiuta (Solo se in stato RICHIESTO) -->
+          <button mat-icon-button color="warn" *ngIf="element.statoReso === 'RICHIESTO'" (click)="cambiaStato(element.id, 'RIFIUTATO')" matTooltip="Rifiuta">
             <mat-icon>cancel</mat-icon>
           </button>
         </td>

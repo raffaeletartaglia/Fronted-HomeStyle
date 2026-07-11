@@ -31,7 +31,7 @@
       <div class="order-header">
         <div class="order-info">
           <span class="order-date">Ordine del: {{ ordine.dataOrdine | date:'dd/MM/yyyy' }}</span>
-          <span class="order-total">Totale: €{{ ordine.totaleOrdine | number:'1.2-2' }}</span>
+          <span class="order-total">Totale: €{{ ordine.prezzoTotale | number:'1.2-2' }}</span>
         </div>
         <div class="order-status" [ngClass]="ordine.statoOrdine.toLowerCase()">
           {{ ordine.statoOrdine }}
@@ -41,28 +41,36 @@
       <div class="order-body">
         <div class="shipping-info">
           <h4>Spedizione</h4>
-          <div *ngIf="ordine.spedizione">
-            <p>Stato: <strong>{{ ordine.spedizione.statoSpedizione }}</strong></p>
-            <p>{{ ordine.spedizione.indirizzoSpedizione?.via }} {{ ordine.spedizione.indirizzoSpedizione?.numeroCivico }}, {{ ordine.spedizione.indirizzoSpedizione?.citta }}</p>
+          <div *ngIf="ordine.spedizione && ordine.spedizione.length > 0">
+            <p>Stato: <strong>{{ ordine.spedizione[0].statoSpedizione }}</strong></p>
+            <p>{{ ordine.indirizzoSpedizione?.via }} {{ ordine.indirizzoSpedizione?.numeroCivico }}, {{ ordine.indirizzoSpedizione?.citta }}</p>
           </div>
-          <div *ngIf="!ordine.spedizione">
+          <div *ngIf="!ordine.spedizione || ordine.spedizione.length === 0">
             <p>Dettagli spedizione non ancora disponibili.</p>
           </div>
         </div>
 
         <div class="items-info">
           <h4>Articoli</h4>
-          <div *ngFor="let dett of ordine.dettagliOrdine" class="item-row">
+          <div *ngFor="let dett of ordine.prodotti" class="item-row">
             <div class="item-details">
               <span class="item-name">{{ dett.prodotto.nomeProdotto }}</span>
-              <span class="item-qty">Q.tà: {{ dett.quantita }} x €{{ dett.prezzoAlMomento | number:'1.2-2' }}</span>
+              <span class="item-qty">Q.tà: {{ dett.quantita }} x €{{ dett.prezzoUnitario | number:'1.2-2' }}</span>
             </div>
             
-            <button class="btn-secondary btn-sm" 
-                    *ngIf="ordine.spedizione?.statoSpedizione === 'CONSEGNATO'"
-                    (click)="apriDialogReso(dett.id)">
-              <i class="pi pi-undo"></i> Richiedi Reso
-            </button>
+            <div *ngIf="ordine.statoOrdine === 'CONSEGNATO'">
+              <button class="btn-secondary btn-sm" 
+                      *ngIf="!dett.resoId"
+                      (click)="apriDialogReso(dett.id)">
+                <i class="pi pi-undo"></i> Richiedi Reso
+              </button>
+              <span class="badge-success" *ngIf="dett.resoId" 
+                    [ngStyle]="{'background-color': dett.statoReso === 'RICHIESTO' ? '#f59e0b' : (dett.statoReso === 'ACCETTATO' ? '#10b981' : '#ef4444')}"
+                    style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem; color: white;">
+                <i class="pi" [ngClass]="dett.statoReso === 'RICHIESTO' ? 'pi-clock' : (dett.statoReso === 'ACCETTATO' ? 'pi-check' : 'pi-times')"></i> 
+                Reso {{ dett.statoReso | titlecase }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -75,9 +83,18 @@
   <div class="p-fluid">
     <p class="mb-4">Per favore, compila i dati per programmare il ritiro del reso.</p>
     
+    <div class="field mb-3">
+      <label>Indirizzo di Ritiro</label>
+      <select class="w-full p-2 border-round" style="border: 1px solid #ced4da; height: 40px;" [(ngModel)]="idIndirizzoReso">
+        <option *ngFor="let ind of indirizziUtente" [value]="ind.id">
+          {{ ind.via }} {{ ind.numeroCivico }}, {{ ind.citta }} ({{ ind.provincia }})
+        </option>
+      </select>
+    </div>
+    
     <div class="field">
       <label>Data di ritiro prevista</label>
-      <p-datepicker [(ngModel)]="dataResoPrevista" [minDate]="dataResoPrevista" dateFormat="yy-mm-dd" appendTo="body"></p-datepicker>
+      <p-datepicker [(ngModel)]="dataResoPrevista" [minDate]="today" dateFormat="yy-mm-dd" appendTo="body"></p-datepicker>
     </div>
 
     <div class="field mt-3">
