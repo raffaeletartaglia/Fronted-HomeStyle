@@ -1,8 +1,8 @@
 <div class="product-detail-container" *ngIf="product && !isLoading()">
   
   <div class="header-actions">
-    <button mat-icon-button (click)="goBack()" class="back-btn" title="Torna Indietro">
-      <mat-icon>arrow_back</mat-icon>
+    <button class="back-btn-outlined" (click)="goBack()" title="Torna Indietro">
+      <i class="pi pi-arrow-left"></i>
     </button>
   </div>
 
@@ -19,7 +19,7 @@
       <div class="price-stock-row">
         <span class="product-price">€{{ product.prezzo | number:'1.2-2' }}</span>
         <span class="stock-badge" [ngClass]="{'in-stock': (product.giacenza || 0) > 0, 'out-of-stock': (product.giacenza || 0) === 0}">
-          <mat-icon>{{ (product.giacenza || 0) > 0 ? 'check_circle' : 'cancel' }}</mat-icon>
+          <i class="pi" [ngClass]="(product.giacenza || 0) > 0 ? 'pi-check-circle' : 'pi-times-circle'"></i>
           {{ (product.giacenza || 0) > 0 ? 'Disponibile: ' + (product.giacenza || 0) : 'Esaurito' }}
         </span>
       </div>
@@ -38,31 +38,31 @@
       <div class="actions-section">
         <ng-container *ngIf="isAdmin">
           <!-- Admin Actions -->
-          <button class="btn-primary" (click)="openEditDialog()">
-            <mat-icon>edit</mat-icon> Modifica Prodotto
+          <button class="btn-outlined" (click)="openEditDialog()">
+            <i class="pi pi-pencil"></i> Modifica Prodotto
           </button>
-          <button class="danger-btn" (click)="deleteProduct()">
-            <mat-icon>delete</mat-icon> Elimina Prodotto
+          <button class="btn-outlined danger-outlined" (click)="deleteProduct()">
+            <i class="pi pi-trash"></i> Elimina Prodotto
           </button>
         </ng-container>
 
         <ng-container *ngIf="!isAdmin">
           <!-- User Actions -->
           <ng-container *ngIf="(product.giacenza || 0) > 0; else outOfStock">
-            <button class="btn-success" (click)="aggiungiAlCarrello()">
-              <mat-icon>add_shopping_cart</mat-icon> Aggiungi al Carrello
+            <button class="btn-outlined" (click)="aggiungiAlCarrello()">
+              <i class="pi pi-shopping-cart"></i> Aggiungi al Carrello
             </button>
-            <button class="btn-primary" (click)="compraOra()">
-              <mat-icon>shopping_bag</mat-icon> Compra Ora
+            <button class="btn-outlined highlight-outlined" (click)="compraOra()">
+              <i class="pi pi-credit-card"></i> Compra Ora
             </button>
           </ng-container>
           <ng-template #outOfStock>
-            <div class="out-of-stock-msg" style="color: red; font-weight: bold; margin-right: 15px;">
+            <div class="out-of-stock-msg" style="color: #ef4444; font-weight: bold; margin-right: 15px;">
               Attualmente Non Acquistabile
             </div>
           </ng-template>
-          <button class="btn-secondary ml-2" (click)="aggiungiAllaWishlist()" title="Aggiungi alla Wishlist">
-            <mat-icon color="warn">favorite</mat-icon>
+          <button class="btn-icon-outlined ml-2" (click)="aggiungiAllaWishlist()" title="Aggiungi alla Wishlist">
+            <i class="pi pi-heart"></i>
           </button>
         </ng-container>
       </div>

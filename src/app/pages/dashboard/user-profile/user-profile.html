@@ -53,4 +53,22 @@
         Elimina Profilo
       </button>
     </div>
-  </div></div>
+</div>
+
+<!-- Dialog Conferma Elimina Profilo -->
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaProfilo" (click)="mostraDialogEliminaProfilo = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Elimina Profilo</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaProfilo = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #ef4444;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Attenzione: Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione è irreversibile e cancellerà anche tutti i tuoi ordini e dati salvati.</p>
+    </div>
+    <div class="custom-modal-footer">
+      <button class="btn-dialog-cancel" (click)="mostraDialogEliminaProfilo = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiEliminaProfilo()">Elimina Definitivamente</button>
+    </div>
+  </div>
+</div></div>

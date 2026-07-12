@@ -71,9 +71,10 @@ export class Wishlist implements OnInit {
     }
     
     if (this.filterStanza !== 'TUTTE') {
-      prodotti = prodotti.filter(p => 
-        p.stanze?.some((s: any) => s.id === this.filterStanza)
-      );
+      prodotti = prodotti.filter(p => {
+        const cat = this.categorie.find(c => c.id === p.categoria?.id);
+        return cat?.stanze?.some((s: any) => s.id === this.filterStanza);
+      });
     }
     
     return prodotti;
@@ -93,7 +94,7 @@ export class Wishlist implements OnInit {
   getNomeCategoria(catId: string): string {
     if (catId === 'TUTTE') return 'Tutte Categorie';
     const cat = this.categorie.find(c => c.id === catId);
-    return cat ? cat.nomeCategoria : 'Seleziona Categoria';
+    return cat ? this.formattaNome(cat.nomeCategoria) : 'Seleziona Categoria';
   }
 
   toggleDropdownStanza(event: Event) {
@@ -110,7 +111,12 @@ export class Wishlist implements OnInit {
   getNomeStanza(stanzaId: string): string {
     if (stanzaId === 'TUTTE') return 'Tutte Stanze';
     const st = this.stanze.find(s => s.id === stanzaId);
-    return st ? st.tipologia : 'Seleziona Stanza';
+    return st ? this.formattaNome(st.tipologia) : 'Seleziona Stanza';
+  }
+
+  formattaNome(nome: string): string {
+    if (!nome) return '';
+    return nome.replaceAll('_', ' ');
   }
 
   @HostListener('document:click')

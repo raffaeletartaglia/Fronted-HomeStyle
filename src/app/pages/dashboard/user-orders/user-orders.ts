@@ -83,12 +83,7 @@ export class UserOrdersComponent implements OnInit {
   }
 
   get ordiniFiltrati(): any[] {
-    return this.ordini.filter(o => {
-      const matchSpedizione = this.filterSpedizione === 'TUTTI' || o.statoSpedizione === this.filterSpedizione;
-      const matchReso = this.filterReso === 'TUTTI' || 
-                        (this.filterReso === 'NESSUNO' ? !o.statoReso : o.statoReso === this.filterReso);
-      return matchSpedizione && matchReso;
-    });
+    return this.ordini; // Il filtro ora è applicato lato backend
   }
 
   toggleDropdownSpedizione(event: Event) {
@@ -100,6 +95,8 @@ export class UserOrdersComponent implements OnInit {
   selezionaFiltroSpedizione(stato: string) {
     this.filterSpedizione = stato;
     this.mostraDropdownSpedizione = false;
+    this.currentPage = 0; // Reset paginazione
+    this.caricaOrdini();
   }
 
   toggleDropdownReso(event: Event) {
@@ -111,6 +108,8 @@ export class UserOrdersComponent implements OnInit {
   selezionaFiltroReso(stato: string) {
     this.filterReso = stato;
     this.mostraDropdownReso = false;
+    this.currentPage = 0; // Reset paginazione
+    this.caricaOrdini();
   }
 
   @HostListener('document:click')
@@ -135,19 +134,32 @@ export class UserOrdersComponent implements OnInit {
 
   caricaOrdini() {
     this.isLoading = true;
-    this.ordineService.getOrdiniPerUtente(this.idUtente, this.currentPage, this.pageSize).subscribe({
+    this.ordineService.getOrdiniPerUtente(this.idUtente, this.currentPage, this.pageSize, this.filterSpedizione, this.filterReso).subscribe({
       next: (res) => {
-        this.ordini = res.content;
-        this.totalPages = res.totalPages;
-        this.totalElements = res.totalElements;
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        if (res.content.length === 0 && (this.filterSpedizione !== 'TUTTI' || this.filterReso !== 'TUTTI')) {
+          this.messageService.add({severity:'warn', summary:'Nessun risultato', detail:'Nessun ordine trovato con questi filtri.'});
+          this.filterSpedizione = 'TUTTI';
+          this.filterReso = 'TUTTI';
+          this.currentPage = 0;
+          this.caricaOrdini();
+          return;
+        }
+
+        setTimeout(() => {
+          this.ordini = res.content;
+          this.totalPages = res.totalPages;
+          this.totalElements = res.totalElements;
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
       },
       error: (err) => {
         console.error("Errore caricamento ordini", err);
-        this.isLoading = false;
-        this.cdr.detectChanges();
-        this.messageService.add({severity:'error', summary:'Errore', detail:'Impossibile caricare gli ordini'});
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          this.messageService.add({severity:'error', summary:'Errore', detail:'Impossibile caricare gli ordini'});
+        });
       }
     });
   }

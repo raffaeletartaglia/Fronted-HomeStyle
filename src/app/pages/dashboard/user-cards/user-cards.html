@@ -126,29 +126,37 @@
 </div>
 
 <!-- Dialog Conferma Svuota -->
-<p-dialog header="Svuota Carte" [(visible)]="mostraDialogEliminaTutto" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
-    <p style="margin: 0;">Sei sicuro di voler rimuovere tutte le carte di pagamento?</p>
-  </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaTutto" (click)="mostraDialogEliminaTutto = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Svuota Carte</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaTutto = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler rimuovere tutte le carte di pagamento?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogEliminaTutto = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiSvuotaCarte()">Svuota</button>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>
 
 <!-- Dialog Conferma Elimina Singola -->
-<p-dialog header="Rimuovi Carta" [(visible)]="mostraDialogEliminaSingola" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
-    <p style="margin: 0;">Sei sicuro di voler rimuovere questa carta?</p>
-  </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaSingola" (click)="mostraDialogEliminaSingola = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Rimuovi Carta</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaSingola = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler rimuovere questa carta?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogEliminaSingola = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiEliminaCarta()">Rimuovi</button>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>

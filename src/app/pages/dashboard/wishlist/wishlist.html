@@ -17,7 +17,7 @@
           </div>
           <div class="custom-dropdown-menu" *ngIf="mostraDropdownCategoria">
             <div class="dropdown-option" [ngClass]="{'selected': filterCategoria === 'TUTTE'}" (click)="selezionaCategoria('TUTTE')">Tutte Categorie</div>
-            <div class="dropdown-option" *ngFor="let cat of categorie" [ngClass]="{'selected': filterCategoria === cat.id}" (click)="selezionaCategoria(cat.id!)">{{ cat.nomeCategoria }}</div>
+            <div class="dropdown-option" *ngFor="let cat of categorie" [ngClass]="{'selected': filterCategoria === cat.id}" (click)="selezionaCategoria(cat.id!)">{{ formattaNome(cat.nomeCategoria) }}</div>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
           </div>
           <div class="custom-dropdown-menu" *ngIf="mostraDropdownStanza">
             <div class="dropdown-option" [ngClass]="{'selected': filterStanza === 'TUTTE'}" (click)="selezionaStanza('TUTTE')">Tutte Stanze</div>
-            <div class="dropdown-option" *ngFor="let st of stanze" [ngClass]="{'selected': filterStanza === st.id}" (click)="selezionaStanza(st.id!)">{{ st.tipologia }}</div>
+            <div class="dropdown-option" *ngFor="let st of stanze" [ngClass]="{'selected': filterStanza === st.id}" (click)="selezionaStanza(st.id!)">{{ formattaNome(st.tipologia) }}</div>
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@
       </div>
       
       <div class="product-info">
-        <h3 class="product-brand">{{prodotto.marca || prodotto.categoria?.nomeCategoria || 'Categoria generica'}}</h3>
+        <h3 class="product-brand">{{ formattaNome(prodotto.marca || prodotto.categoria?.nomeCategoria || 'Categoria generica') }}</h3>
         <h2 class="product-name">{{prodotto.nomeProdotto}}</h2>
         <div class="product-price">€{{ prodotto.prezzo | number:'1.2-2' }}</div>
       </div>
@@ -80,28 +80,36 @@
   </div>
 </div>
 
-<p-dialog header="Svuota Wishlist" [(visible)]="mostraDialogEliminaTutto" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
-    <p style="margin: 0;">Sei sicuro di voler svuotare completamente la tua wishlist?</p>
-  </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaTutto" (click)="mostraDialogEliminaTutto = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Svuota Wishlist</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaTutto = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler svuotare completamente la tua wishlist?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogEliminaTutto = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiSvuotaWishlist()">Svuota</button>
     </div>
-  </ng-template>
-</p-dialog>
-
-<p-dialog header="Rimuovi Prodotto" [(visible)]="mostraDialogEliminaSingolo" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
-    <p style="margin: 0;">Sei sicuro di voler rimuovere questo prodotto dalla wishlist?</p>
   </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+</div>
+
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaSingolo" (click)="mostraDialogEliminaSingolo = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Rimuovi Prodotto</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaSingolo = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler rimuovere questo prodotto dalla wishlist?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogEliminaSingolo = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiRimuoviDaWishlist()">Rimuovi</button>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>

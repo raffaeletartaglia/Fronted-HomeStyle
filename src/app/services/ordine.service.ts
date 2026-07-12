@@ -39,8 +39,15 @@ export class OrdineService {
   /**
    * Recupera lo storico ordini di un utente specifico.
    */
-  getOrdiniPerUtente(idUtente: string, page: number = 0, size: number = 5): Observable<PaginatedResponse<Ordine>> {
-    return this.http.get<PaginatedResponse<Ordine>>(`${this.apiUrl}/utente/${idUtente}?page=${page}&size=${size}`);
+  getOrdiniPerUtente(idUtente: string, page: number = 0, size: number = 5, statoSpedizione?: string, statoReso?: string): Observable<PaginatedResponse<Ordine>> {
+    let url = `${this.apiUrl}/utente/${idUtente}?page=${page}&size=${size}`;
+    if (statoSpedizione && statoSpedizione !== 'TUTTI') {
+      url += `&statoSpedizione=${statoSpedizione}`;
+    }
+    if (statoReso && statoReso !== 'TUTTI') {
+      url += `&statoReso=${statoReso}`;
+    }
+    return this.http.get<PaginatedResponse<Ordine>>(url);
   }
 
   /**

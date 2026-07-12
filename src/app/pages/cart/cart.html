@@ -10,8 +10,8 @@
         <i class="pi pi-shopping-cart empty-cart-icon"></i>
         <h2>Il tuo carrello è vuoto</h2>
         <p>Aggiungi dei prodotti per completare il tuo ordine.</p>
-        <button class="btn-secondary mt-3" (click)="router.navigate(['/'])">
-          <i class="pi pi-arrow-left"></i> Torna allo shopping
+        <button class="btn-secondary mt-3" (click)="router.navigate(['/risultati-ricerca'], { queryParams: { query: null } })">
+          <i class="pi pi-arrow-left"></i> Vai allo Shop
         </button>
       </div>
 
@@ -106,28 +106,36 @@
 
 <p-toast position="top-right"></p-toast>
 
-<p-dialog header="Svuota Carrello" [(visible)]="mostraDialogSvuota" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
-    <p style="margin: 0;">Sei sicuro di voler svuotare completamente il tuo carrello?</p>
-  </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+<div class="custom-modal-overlay" *ngIf="mostraDialogSvuota" (click)="mostraDialogSvuota = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Svuota Carrello</h2>
+      <button class="custom-modal-close" (click)="mostraDialogSvuota = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler svuotare completamente il tuo carrello?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogSvuota = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiSvuotaCarrello()">Svuota</button>
     </div>
-  </ng-template>
-</p-dialog>
-
-<p-dialog header="Rimuovi Prodotto" [(visible)]="mostraDialogEliminaSingolo" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
-    <p style="margin: 0;">Sei sicuro di voler rimuovere questo prodotto dal carrello?</p>
   </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+</div>
+
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaSingolo" (click)="mostraDialogEliminaSingolo = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Rimuovi Prodotto</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaSingolo = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler rimuovere questo prodotto dal carrello?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogEliminaSingolo = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiRimuoviItem()">Rimuovi</button>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>

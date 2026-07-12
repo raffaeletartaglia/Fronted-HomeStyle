@@ -73,7 +73,7 @@
   object-fit: contain;
   background: white;
   padding: 5px;
-  border-radius: 4px;
+  border-radius: 25px;
   border: 1px solid #ddd;
 }
 
@@ -82,7 +82,7 @@
   padding: 6px 12px;
   background: #fff;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 25px;
   font-size: 13px;
   font-weight: 600;
   color: #444;
@@ -99,6 +99,7 @@
     grid-template-columns: 1fr;
     gap: 30px;
   }
+
   .footer-container {
     padding: 2rem 1.5rem;
   }

@@ -124,27 +124,29 @@
 <!-- Cart Sidebar removed to prevent automatic fetching -->
 
 <!-- Popup Wishlist per utenti non loggati -->
-<p-dialog [(visible)]="mostraDialogWishlist" [modal]="true" [style]="{width: '450px'}" [closable]="true"
-  [draggable]="false" [resizable]="false" styleClass="custom-auth-dialog">
-  <ng-template pTemplate="header">
-    <div class="auth-dialog-header">
-      <i class="pi pi-lock"></i>
-      <span>Accesso Richiesto</span>
+<div class="custom-modal-overlay" *ngIf="mostraDialogWishlist" (click)="mostraDialogWishlist = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header" style="justify-content: center; position: relative;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="pi pi-lock" style="font-size: 1.2rem;"></i>
+        <h2>Accesso Richiesto</h2>
+      </div>
+      <button class="custom-modal-close" (click)="mostraDialogWishlist = false" style="position: absolute; right: 1.5rem;"><i class="pi pi-times"></i></button>
     </div>
-  </ng-template>
 
-  <div class="auth-dialog-content">
-    <p>Non puoi vedere questa sezione perché non hai effettuato l'accesso. Accedi per continuare a esplorare.</p>
+    <div class="custom-modal-content">
+      <p style="font-size: 1.1rem; margin-bottom: 2rem;">Non puoi vedere questa sezione perché non hai effettuato l'accesso. Accedi per continuare a esplorare.</p>
 
-    <div class="auth-actions">
-      <button mat-raised-button class="btn-accedi" (click)="login()">
-        <mat-icon>login</mat-icon> ACCEDI
-      </button>
+      <div class="auth-actions" style="display: flex; flex-direction: column; width: 100%; gap: 15px;">
+        <button class="btn-primary" (click)="login()" style="width: 100%; padding: 0.8rem; border-radius: 8px;">
+          <i class="pi pi-sign-in" style="margin-right: 5px;"></i> ACCEDI
+        </button>
 
-      <div class="register-prompt">
-        <span>Nuovo su HomeStyle?</span>
-        <span class="register-link" (click)="register()">REGISTRATI</span>
+        <div class="register-prompt" style="margin-top: 10px;">
+          <span style="color: #666;">Nuovo su HomeStyle? </span>
+          <span class="register-link" (click)="register()" style="color: #C87965; font-weight: 600; cursor: pointer; text-decoration: underline;">REGISTRATI</span>
+        </div>
       </div>
     </div>
   </div>
-</p-dialog>
+</div>

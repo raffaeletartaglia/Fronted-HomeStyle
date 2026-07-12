@@ -2,7 +2,7 @@
   padding: 40px;
   max-width: 1200px;
   margin: 0 auto;
-  font-family: 'Inter', 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
   animation: fadeIn 0.4s ease-in-out;
 }
 
@@ -15,13 +15,23 @@
   margin-bottom: 20px;
 }
 
-.back-btn {
-  background-color: rgba(0, 0, 0, 0.05);
+.back-btn-outlined {
+  background: transparent;
+  border: 1px solid #1f2937;
+  color: #1f2937;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.back-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+.back-btn-outlined:hover {
+  background-color: #1f2937;
+  color: white;
   transform: translateX(-3px);
 }
 
@@ -29,7 +39,14 @@
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  gap: 30px;
+  gap: 40px;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .product-image-section {
@@ -37,10 +54,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f8f9fa;
+  background: #e5e5e5;
   border-radius: 16px;
   overflow: hidden;
-  min-height: 400px;
+  min-height: 450px;
 }
 
 .product-img {
@@ -69,22 +86,21 @@
 
 .brand-chip {
   align-self: flex-start;
-  background: #eef2ff;
-  color: #4338ca;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  margin-bottom: 15px;
+  color: #888;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
 }
 
 .product-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #1a1a2e;
-  margin: 0 0 20px 0;
-  line-height: 1.2;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 15px 0;
+  line-height: 1.1;
+  letter-spacing: -1px;
 }
 
 .price-stock-row {
@@ -95,9 +111,9 @@
 }
 
 .product-price {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #e63946;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #C87965;
 }
 
 .stock-badge {
@@ -121,16 +137,15 @@
 }
 
 .product-desc-box {
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.4);
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 30px;
-  border-left: 4px solid #cbd5e1;
 }
 
 .product-desc {
   font-size: 1.05rem;
-  color: #475569;
+  color: #4b5563;
   line-height: 1.6;
   margin: 0;
 }
@@ -160,30 +175,70 @@
 
 .actions-section {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   margin-top: auto;
+  align-items: center;
 }
 
-.action-btn {
-  padding: 8px 24px;
-  font-size: 1.05rem;
-  font-weight: 600;
+.btn-outlined {
+  border: 2px solid #C87965;
+  color: #C87965;
+  background: transparent;
+  padding: 0 16px;
+  height: 52px;
+  font-size: 1rem;
+  font-weight: 700;
   border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
   flex: 1;
+  white-space: nowrap;
 }
 
-.user-btn {
-  height: 54px;
+.btn-outlined:hover {
+  background: #C87965;
+  color: white;
 }
 
-.cart-btn {
-  background-color: #10b981 !important;
-  color: white !important;
+.highlight-outlined {
+  border-color: #1f2937;
+  color: #1f2937;
+}
+.highlight-outlined:hover {
+  background: #1f2937;
+  color: white;
 }
 
-.buy-btn {
-  background-color: #2563eb !important;
-  color: white !important;
+.danger-outlined {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+.danger-outlined:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-icon-outlined {
+  border: 2px solid #C87965;
+  color: #C87965;
+  background: transparent;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-icon-outlined:hover {
+  background: #C87965;
+  color: white;
 }
 
 .loading-spinner {

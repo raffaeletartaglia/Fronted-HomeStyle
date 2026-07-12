@@ -21,7 +21,6 @@
             <div class="dropdown-option" [ngClass]="{'selected': filterSpedizione === 'TUTTI'}" (click)="selezionaFiltroSpedizione('TUTTI')">Tutte le Spedizioni</div>
             <div class="dropdown-option" [ngClass]="{'selected': filterSpedizione === 'IN_ELABORAZIONE'}" (click)="selezionaFiltroSpedizione('IN_ELABORAZIONE')">In Elaborazione</div>
             <div class="dropdown-option" [ngClass]="{'selected': filterSpedizione === 'SPEDITO'}" (click)="selezionaFiltroSpedizione('SPEDITO')">Spedito</div>
-            <div class="dropdown-option" [ngClass]="{'selected': filterSpedizione === 'IN_CONSEGNA'}" (click)="selezionaFiltroSpedizione('IN_CONSEGNA')">In Consegna</div>
             <div class="dropdown-option" [ngClass]="{'selected': filterSpedizione === 'CONSEGNATO'}" (click)="selezionaFiltroSpedizione('CONSEGNATO')">Consegnato</div>
             <div class="dropdown-option" [ngClass]="{'selected': filterSpedizione === 'ANNULLATO'}" (click)="selezionaFiltroSpedizione('ANNULLATO')">Annullato</div>
           </div>
@@ -41,10 +40,9 @@
             <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'TUTTI'}" (click)="selezionaFiltroReso('TUTTI')">Tutti i Resi</div>
             <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'NESSUNO'}" (click)="selezionaFiltroReso('NESSUNO')">Nessun Reso</div>
             <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'RICHIESTO'}" (click)="selezionaFiltroReso('RICHIESTO')">Richiesto</div>
-            <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'APPROVATO'}" (click)="selezionaFiltroReso('APPROVATO')">Approvato</div>
+            <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'ACCETTATO'}" (click)="selezionaFiltroReso('ACCETTATO')">Accettato</div>
             <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'RIFIUTATO'}" (click)="selezionaFiltroReso('RIFIUTATO')">Rifiutato</div>
-            <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'RICEVUTO'}" (click)="selezionaFiltroReso('RICEVUTO')">Ricevuto</div>
-            <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'RIMBORSATO'}" (click)="selezionaFiltroReso('RIMBORSATO')">Rimborsato</div>
+            <div class="dropdown-option" [ngClass]="{'selected': filterReso === 'ANNULLATO'}" (click)="selezionaFiltroReso('ANNULLATO')">Annullato</div>
           </div>
         </div>
       </div>
@@ -127,9 +125,9 @@
         </div>
       </div>
       
-      <div class="order-footer" *ngIf="ordine.statoOrdine === 'IN_ELABORAZIONE'" style="padding-top: 15px; border-top: 1px solid #eee; margin-top: 15px;">
-        <button class="delete-btn-rounded with-text" (click)="confermaAnnullaOrdine(ordine.id)">
-          <i class="pi pi-times"></i> Annulla Ordine
+      <div class="order-footer" *ngIf="ordine.statoOrdine === 'IN_ELABORAZIONE'" style="padding-top: 15px; border-top: 1px solid #eee; margin-top: 15px; display: flex; justify-content: flex-start;">
+        <button class="delete-btn-rounded icon-only" (click)="confermaAnnullaOrdine(ordine.id)" title="Annulla Ordine">
+          <i class="pi pi-trash"></i>
         </button>
       </div>
     </div>
@@ -137,69 +135,78 @@
 </div>
 
 <!-- Dialog Reso -->
-<p-dialog header="Richiedi Reso" [(visible)]="mostraDialogReso" [modal]="true" [style]="{width: '450px'}" [closable]="true" styleClass="reso-dialog">
-  <div class="p-fluid mt-2">
-    <p class="mb-4 text-desc">Per favore, compila i dati per programmare il ritiro del reso.</p>
-    
-    <div class="field mb-3" style="position: relative;">
-      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Indirizzo di Ritiro</label>
-      <div class="custom-select-container" (click)="toggleDropdownIndirizzo($event)" style="width: 100%;">
-        <div class="custom-input select-trigger" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255, 255, 255, 0.95); min-height: 44px;">
-          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;">{{ getIndirizzoDisplay() }}</span>
-          <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownIndirizzo}"></i>
-        </div>
-        
-        <div class="custom-dropdown-menu" *ngIf="mostraDropdownIndirizzo" style="width: 100%; top: calc(100% + 5px); z-index: 1001; position: absolute; max-height: 200px; overflow-y: auto;">
-          <div class="dropdown-option" *ngFor="let ind of indirizziUtente" [ngClass]="{'selected': idIndirizzoReso === ind.id}" (click)="selezionaIndirizzo(ind.id)" style="white-space: normal;">
-            {{ ind.via }} {{ ind.numeroCivico }}, {{ ind.citta }} ({{ ind.provincia }})
+<div class="custom-modal-overlay" *ngIf="mostraDialogReso" (click)="mostraDialogReso = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Richiedi Reso</h2>
+      <button class="custom-modal-close" (click)="mostraDialogReso = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content" style="text-align: left; align-items: stretch;">
+      <p class="mb-4 text-desc" style="text-align: center;">Per favore, compila i dati per programmare il ritiro del reso.</p>
+      
+      <div class="field mb-3" style="position: relative;">
+        <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Indirizzo di Ritiro</label>
+        <div class="custom-select-container" (click)="toggleDropdownIndirizzo($event)" style="width: 100%;">
+          <div class="custom-input select-trigger" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255, 255, 255, 0.95); min-height: 44px;">
+            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;">{{ getIndirizzoDisplay() }}</span>
+            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownIndirizzo}"></i>
+          </div>
+          
+          <div class="custom-dropdown-menu" *ngIf="mostraDropdownIndirizzo" style="width: 100%; top: calc(100% + 5px); z-index: 1001; position: absolute; max-height: 200px; overflow-y: auto;">
+            <div class="dropdown-option" *ngFor="let ind of indirizziUtente" [ngClass]="{'selected': idIndirizzoReso === ind.id}" (click)="selezionaIndirizzo(ind.id)" style="white-space: normal;">
+              {{ ind.via }} {{ ind.numeroCivico }}, {{ ind.citta }} ({{ ind.provincia }})
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    
-    <div class="field mb-3">
-      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Data di ritiro prevista</label>
-      <input type="date" class="custom-input" [(ngModel)]="dataResoPrevista" [min]="todayStr" style="background: rgba(255, 255, 255, 0.95) !important; color-scheme: light;" />
-    </div>
+      
+      <div class="field mb-3">
+        <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Data di ritiro prevista</label>
+        <input type="date" class="custom-input" [(ngModel)]="dataResoPrevista" [min]="todayStr" style="background: rgba(255, 255, 255, 0.95) !important; color-scheme: light;" />
+      </div>
 
-    <div class="field mb-3" style="position: relative;">
-      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Ora di ritiro (indicativa)</label>
-      <div class="custom-select-container" (click)="toggleDropdownOrario($event)" style="width: 100%;">
-        <div class="custom-input select-trigger" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255, 255, 255, 0.95); min-height: 44px;">
-          <span>{{ oraRitiroReso || 'Seleziona un orario' }}</span>
-          <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownOrario}"></i>
-        </div>
-        
-        <div class="custom-dropdown-menu" *ngIf="mostraDropdownOrario" style="width: 100%; top: calc(100% + 5px); z-index: 1001; position: absolute; max-height: 180px; overflow-y: auto;">
-          <div class="dropdown-option" *ngFor="let orario of orariDisponibili" [ngClass]="{'selected': oraRitiroReso === orario}" (click)="selezionaOrario(orario)">
-            {{ orario }}
+      <div class="field mb-3" style="position: relative;">
+        <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Ora di ritiro (indicativa)</label>
+        <div class="custom-select-container" (click)="toggleDropdownOrario($event)" style="width: 100%;">
+          <div class="custom-input select-trigger" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255, 255, 255, 0.95); min-height: 44px;">
+            <span>{{ oraRitiroReso || 'Seleziona un orario' }}</span>
+            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownOrario}"></i>
+          </div>
+          
+          <div class="custom-dropdown-menu" *ngIf="mostraDropdownOrario" style="width: 100%; top: calc(100% + 5px); z-index: 1001; position: absolute; max-height: 180px; overflow-y: auto;">
+            <div class="dropdown-option" *ngFor="let orario of orariDisponibili" [ngClass]="{'selected': oraRitiroReso === orario}" (click)="selezionaOrario(orario)">
+              {{ orario }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="field mb-3">
-      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Motivo del reso</label>
-      <input class="custom-input" [(ngModel)]="motivoReso" placeholder="Es. Prodotto difettoso, Cambio idea" />
+      <div class="field mb-3">
+        <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Motivo del reso</label>
+        <input class="custom-input" [(ngModel)]="motivoReso" placeholder="Es. Prodotto difettoso, Cambio idea" />
+      </div>
     </div>
-
-    <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
-      <button class="btn-secondary mr-2" (click)="mostraDialogReso = false" style="margin-right: 10px;">Annulla</button>
-      <button class="btn-primary" (click)="inviaReso()">Conferma</button>
+    <div class="custom-modal-footer">
+      <button class="btn-dialog-cancel" (click)="mostraDialogReso = false">Annulla</button>
+      <button class="btn-primary" (click)="inviaReso()" style="border-radius: 8px; padding: 0.6rem 1.2rem; margin: 0;">Conferma</button>
     </div>
   </div>
-</p-dialog>
+</div>
 
 <!-- Dialog Conferma Annulla Ordine -->
-<p-dialog header="Annulla Ordine" [(visible)]="mostraDialogAnnulla" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
-    <p style="margin: 0;">Attenzione sei sicuro di voler annullare l'ordine?</p>
-  </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+<div class="custom-modal-overlay" *ngIf="mostraDialogAnnulla" (click)="mostraDialogAnnulla = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Annulla Ordine</h2>
+      <button class="custom-modal-close" (click)="mostraDialogAnnulla = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Attenzione sei sicuro di voler annullare l'ordine?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogAnnulla = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiAnnullaOrdine()">Conferma</button>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>

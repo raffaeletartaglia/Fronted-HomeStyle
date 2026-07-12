@@ -153,29 +153,37 @@
 </div>
 
 <!-- Dialog Conferma Svuota -->
-<p-dialog header="Svuota Indirizzi" [(visible)]="mostraDialogEliminaTutto" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
-    <p style="margin: 0;">Sei sicuro di voler rimuovere tutti i tuoi indirizzi salvati?</p>
-  </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaTutto" (click)="mostraDialogEliminaTutto = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Svuota Indirizzi</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaTutto = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler rimuovere tutti i tuoi indirizzi salvati?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogEliminaTutto = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiSvuotaIndirizzi()">Svuota</button>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>
 
 <!-- Dialog Conferma Elimina Singolo -->
-<p-dialog header="Rimuovi Indirizzo" [(visible)]="mostraDialogEliminaSingolo" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
-  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
-    <p style="margin: 0;">Sei sicuro di voler rimuovere questo indirizzo?</p>
-  </div>
-  <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+<div class="custom-modal-overlay" *ngIf="mostraDialogEliminaSingolo" (click)="mostraDialogEliminaSingolo = false">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+    <div class="custom-modal-header">
+      <h2>Rimuovi Indirizzo</h2>
+      <button class="custom-modal-close" (click)="mostraDialogEliminaSingolo = false"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="custom-modal-content">
+      <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
+      <p style="margin: 0; font-size: 1.1rem;">Sei sicuro di voler rimuovere questo indirizzo?</p>
+    </div>
+    <div class="custom-modal-footer">
       <button class="btn-dialog-cancel" (click)="mostraDialogEliminaSingolo = false">Annulla</button>
       <button class="btn-dialog-confirm" (click)="eseguiEliminaIndirizzo()">Rimuovi</button>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>

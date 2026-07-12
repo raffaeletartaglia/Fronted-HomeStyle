@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +19,7 @@ import { ValidationService } from '../../../services/validation.service';
 })
 export class UserProfile implements OnInit {
   profileForm: FormGroup;
+  private keycloak = inject(Keycloak);
   
   // Flag per mostrare il caricamento
   isLoading = false;
@@ -51,7 +52,6 @@ export class UserProfile implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private keycloak: Keycloak,
     private notification: NotificationService,
     private utenteService: UtenteService
   ) {
@@ -97,21 +97,26 @@ export class UserProfile implements OnInit {
     }
   }
 
+  mostraDialogEliminaProfilo = false;
+
   eliminaProfilo() {
-    if (confirm("Attenzione: Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione è irreversibile e cancellerà anche tutti i tuoi ordini e dati salvati.")) {
-      this.isLoading = true;
-      this.utenteService.eliminaProfilo().subscribe({
-        next: () => {
-          this.notification.success('Successo', 'Account eliminato con successo.');
-          // Logout user after deletion
-          this.keycloak.logout();
-        },
-        error: (err) => {
-          console.error("Errore durante l'eliminazione dell'account", err);
-          this.notification.error('Errore', 'Si è verificato un errore durante l\'eliminazione dell\'account.');
-          this.isLoading = false;
-        }
-      });
-    }
+    this.mostraDialogEliminaProfilo = true;
+  }
+
+  eseguiEliminaProfilo() {
+    this.isLoading = true;
+    this.mostraDialogEliminaProfilo = false;
+    this.utenteService.eliminaProfilo().subscribe({
+      next: () => {
+        this.notification.success('Successo', 'Account eliminato con successo.');
+        // Logout user after deletion
+        this.keycloak.logout();
+      },
+      error: (err) => {
+        console.error("Errore durante l'eliminazione dell'account", err);
+        this.notification.error('Errore', 'Si è verificato un errore durante l\'eliminazione dell\'account.');
+        this.isLoading = false;
+      }
+    });
   }
 }
