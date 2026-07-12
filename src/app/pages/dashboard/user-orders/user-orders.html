@@ -23,7 +23,7 @@
     <div class="empty-icon"><i class="pi pi-box"></i></div>
     <h3>Non hai ancora effettuato ordini.</h3>
     <p>Inizia a esplorare i nostri prodotti!</p>
-    <button class="btn-primary" routerLink="/risultati-ricerca">Vai allo Shop</button>
+    <button class="btn-primary" (click)="vaiAlloShop()">Vai allo Shop</button>
   </div>
 
   <div *ngIf="!isLoading && ordini.length > 0" class="orders-list">
@@ -34,7 +34,7 @@
           <span class="order-total">Totale: €{{ ordine.prezzoTotale | number:'1.2-2' }}</span>
         </div>
         <div class="order-status" [ngClass]="ordine.statoOrdine.toLowerCase()">
-          {{ ordine.statoOrdine }}
+          {{ formattaStato(ordine.statoOrdine) }}
         </div>
       </div>
 
@@ -53,9 +53,9 @@
         <div class="items-info">
           <h4>Articoli</h4>
           <div *ngFor="let dett of ordine.prodotti" class="item-row">
-            <div class="item-details">
-              <span class="item-name">{{ dett.prodotto.nomeProdotto }}</span>
-              <span class="item-qty">Q.tà: {{ dett.quantita }} x €{{ dett.prezzoUnitario | number:'1.2-2' }}</span>
+            <div class="item-details" style="cursor: pointer;" [routerLink]="['/product', dett.prodotto.id]">
+              <span class="item-name" style="font-weight: 600; color: #C87965; display: block;">{{ dett.prodotto.nomeProdotto }}</span>
+              <span class="item-qty" style="color: #666; font-size: 0.9rem;">Q.tà: {{ dett.quantita }} x €{{ dett.prezzoUnitario | number:'1.2-2' }}</span>
             </div>
             
             <div *ngIf="ordine.statoOrdine === 'CONSEGNATO'">
@@ -64,9 +64,8 @@
                       (click)="apriDialogReso(dett.id)">
                 <i class="pi pi-undo"></i> Richiedi Reso
               </button>
-              <span class="badge-success" *ngIf="dett.resoId" 
-                    [ngStyle]="{'background-color': dett.statoReso === 'RICHIESTO' ? '#f59e0b' : (dett.statoReso === 'ACCETTATO' ? '#10b981' : '#ef4444')}"
-                    style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem; color: white;">
+              <span class="reso-status" *ngIf="dett.resoId" 
+                    [ngClass]="dett.statoReso?.toLowerCase()">
                 <i class="pi" [ngClass]="dett.statoReso === 'RICHIESTO' ? 'pi-clock' : (dett.statoReso === 'ACCETTATO' ? 'pi-check' : 'pi-times')"></i> 
                 Reso {{ dett.statoReso | titlecase }}
               </span>
@@ -79,36 +78,56 @@
 </div>
 
 <!-- Dialog Reso -->
-<p-dialog header="Richiedi Reso" [(visible)]="mostraDialogReso" [modal]="true" [style]="{width: '450px'}" [closable]="true">
-  <div class="p-fluid">
-    <p class="mb-4">Per favore, compila i dati per programmare il ritiro del reso.</p>
+<p-dialog header="Richiedi Reso" [(visible)]="mostraDialogReso" [modal]="true" [style]="{width: '450px'}" [closable]="true" styleClass="reso-dialog">
+  <div class="p-fluid mt-2">
+    <p class="mb-4 text-desc">Per favore, compila i dati per programmare il ritiro del reso.</p>
+    
+    <div class="field mb-3" style="position: relative;">
+      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Indirizzo di Ritiro</label>
+      <div class="custom-select-container" (click)="toggleDropdownIndirizzo($event)" style="width: 100%;">
+        <div class="custom-input select-trigger" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255, 255, 255, 0.95); min-height: 44px;">
+          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;">{{ getIndirizzoDisplay() }}</span>
+          <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownIndirizzo}"></i>
+        </div>
+        
+        <div class="custom-dropdown-menu" *ngIf="mostraDropdownIndirizzo" style="width: 100%; top: calc(100% + 5px); z-index: 1001; position: absolute; max-height: 200px; overflow-y: auto;">
+          <div class="dropdown-option" *ngFor="let ind of indirizziUtente" [ngClass]="{'selected': idIndirizzoReso === ind.id}" (click)="selezionaIndirizzo(ind.id)" style="white-space: normal;">
+            {{ ind.via }} {{ ind.numeroCivico }}, {{ ind.citta }} ({{ ind.provincia }})
+          </div>
+        </div>
+      </div>
+    </div>
     
     <div class="field mb-3">
-      <label>Indirizzo di Ritiro</label>
-      <select class="w-full p-2 border-round" style="border: 1px solid #ced4da; height: 40px;" [(ngModel)]="idIndirizzoReso">
-        <option *ngFor="let ind of indirizziUtente" [value]="ind.id">
-          {{ ind.via }} {{ ind.numeroCivico }}, {{ ind.citta }} ({{ ind.provincia }})
-        </option>
-      </select>
-    </div>
-    
-    <div class="field">
-      <label>Data di ritiro prevista</label>
-      <p-datepicker [(ngModel)]="dataResoPrevista" [minDate]="today" dateFormat="yy-mm-dd" appendTo="body"></p-datepicker>
+      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Data di ritiro prevista</label>
+      <input type="date" class="custom-input" [(ngModel)]="dataResoPrevista" [min]="todayStr" style="background: rgba(255, 255, 255, 0.95) !important; color-scheme: light;" />
     </div>
 
-    <div class="field mt-3">
-      <label>Ora di ritiro (indicativa)</label>
-      <p-datepicker [(ngModel)]="oraRitiroReso" [timeOnly]="true" hourFormat="24" appendTo="body"></p-datepicker>
+    <div class="field mb-3" style="position: relative;">
+      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Ora di ritiro (indicativa)</label>
+      <div class="custom-select-container" (click)="toggleDropdownOrario($event)" style="width: 100%;">
+        <div class="custom-input select-trigger" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255, 255, 255, 0.95); min-height: 44px;">
+          <span>{{ oraRitiroReso || 'Seleziona un orario' }}</span>
+          <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownOrario}"></i>
+        </div>
+        
+        <div class="custom-dropdown-menu" *ngIf="mostraDropdownOrario" style="width: 100%; top: calc(100% + 5px); z-index: 1001; position: absolute; max-height: 180px; overflow-y: auto;">
+          <div class="dropdown-option" *ngFor="let orario of orariDisponibili" [ngClass]="{'selected': oraRitiroReso === orario}" (click)="selezionaOrario(orario)">
+            {{ orario }}
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="field mt-3">
-      <label>Motivo del reso</label>
-      <input pInputText [(ngModel)]="motivoReso" placeholder="Es. Prodotto difettoso, Cambio idea" />
+    <div class="field mb-3">
+      <label style="font-weight: 600; margin-bottom: 5px; display: block; color: #333;">Motivo del reso</label>
+      <input class="custom-input" [(ngModel)]="motivoReso" placeholder="Es. Prodotto difettoso, Cambio idea" />
     </div>
 
-    <button class="custom-btn primary-btn mt-4 w-full" (click)="inviaReso()">
-      <i class="pi pi-check"></i> Conferma Reso
-    </button>
+    <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+      <button class="btn-primary" (click)="inviaReso()" style="padding: 12px 24px; border-radius: 12px; font-size: 1rem;">
+        <i class="pi pi-check"></i> Conferma Reso
+      </button>
+    </div>
   </div>
 </p-dialog>

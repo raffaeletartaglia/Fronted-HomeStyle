@@ -90,6 +90,21 @@
 .order-status.consegnato { background: rgba(46, 204, 113, 0.2); color: #27ae60; border: 1px solid rgba(46, 204, 113, 0.4); }
 .order-status.annullato { background: rgba(231, 76, 60, 0.2); color: #c0392b; border: 1px solid rgba(231, 76, 60, 0.4); }
 
+.reso-status {
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.reso-status.richiesto { background: rgba(241, 196, 15, 0.2); color: #d4ac0d; border: 1px solid rgba(241, 196, 15, 0.4); }
+.reso-status.accettato { background: rgba(46, 204, 113, 0.2); color: #27ae60; border: 1px solid rgba(46, 204, 113, 0.4); }
+.reso-status.rifiutato { background: rgba(231, 76, 60, 0.2); color: #c0392b; border: 1px solid rgba(231, 76, 60, 0.4); }
+
 .order-body {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -229,3 +244,42 @@ h4 {
     gap: 0.5rem;
   }
 }
+
+/* ---------------------------------
+   RESO DIALOG GLASSMORPHISM
+---------------------------------- */
+::ng-deep .reso-dialog .p-dialog-header {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #333 !important;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+::ng-deep .reso-dialog .p-dialog-header-icons .p-dialog-header-icon {
+  color: #666 !important;
+}
+
+::ng-deep .reso-dialog .p-dialog-content {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #333 !important;
+}
+
+::ng-deep .reso-dialog .custom-input,
+::ng-deep .reso-dialog .p-inputtext {
+  background: rgba(255, 255, 255, 1) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #333 !important;
+  border-radius: 12px !important;
+  padding: 0.8rem 1rem !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
+  transition: all 0.3s ease;
+  width: 100% !important;
+}
+
+::ng-deep .reso-dialog .custom-input:focus,
+::ng-deep .reso-dialog .p-inputtext:focus {
+  border-color: #C87965 !important;
+  box-shadow: 0 0 0 3px rgba(200, 121, 101, 0.2), inset 0 2px 4px rgba(0,0,0,0.02) !important;
+  outline: none !important;
+}
+
+

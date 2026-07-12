@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { OrdineService } from '../../../services/ordine.service';
 import { ResoService } from '../../../services/reso.service';
 import { IndirizzoService } from '../../../services/indirizzo.service';
@@ -14,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-user-orders',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, InputTextModule, DatePickerModule, ToastModule],
+  imports: [CommonModule, DialogModule, FormsModule, InputTextModule, DatePickerModule, ToastModule, RouterModule],
   providers: [MessageService],
   templateUrl: './user-orders.html',
   styleUrls: ['./user-orders.css']
@@ -34,17 +35,24 @@ export class UserOrdersComponent implements OnInit {
   
   // Campi form reso
   motivoReso: string = '';
-  dataResoPrevista: Date | null = null;
-  oraRitiroReso: Date | null = null;
+  dataResoPrevista: string = '';
+  oraRitiroReso: string = '';
   idIndirizzoReso: string = ''; 
-  today: Date = new Date();
+  todayStr: string = new Date().toISOString().split('T')[0];
+  
+  mostraDropdownIndirizzo: boolean = false;
+  mostraDropdownOrario: boolean = false;
+  orariDisponibili: string[] = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00'];
+
+  private keycloak = inject(Keycloak);
 
   constructor(
     private ordineService: OrdineService,
     private resoService: ResoService,
     private indirizzoService: IndirizzoService,
     private messageService: MessageService,
-    private keycloak: Keycloak
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -52,9 +60,20 @@ export class UserOrdersComponent implements OnInit {
       this.idUtente = this.keycloak.tokenParsed.sub;
       this.caricaOrdini();
       this.caricaIndirizzi();
+      
+      let count = 0;
+      const intervalId = setInterval(() => {
+        this.cdr.detectChanges();
+        count++;
+        if(count > 10) clearInterval(intervalId); // Stop after 1 second (10 * 100ms)
+      }, 100);
     } else {
       this.isLoading = false;
     }
+  }
+
+  vaiAlloShop() {
+    this.router.navigate(['/risultati-ricerca'], { queryParams: { query: null } });
   }
 
   get indirizziUtente() {
@@ -73,10 +92,12 @@ export class UserOrdersComponent implements OnInit {
         this.totalPages = res.totalPages;
         this.totalElements = res.totalElements;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error("Errore caricamento ordini", err);
         this.isLoading = false;
+        this.cdr.detectChanges();
         this.messageService.add({severity:'error', summary:'Errore', detail:'Impossibile caricare gli ordini'});
       }
     });
@@ -92,11 +113,16 @@ export class UserOrdersComponent implements OnInit {
     }
   }
 
+  formattaStato(stato: string): string {
+    if (!stato) return '';
+    return stato.replace(/_/g, ' ');
+  }
+
   apriDialogReso(idDettaglioOrdine: string) {
     this.resoDettaglioOrdineId = idDettaglioOrdine;
     this.motivoReso = '';
-    this.dataResoPrevista = null;
-    this.oraRitiroReso = null;
+    this.dataResoPrevista = '';
+    this.oraRitiroReso = '';
     this.mostraDialogReso = true;
   }
 
@@ -106,14 +132,14 @@ export class UserOrdersComponent implements OnInit {
       return;
     }
 
-    const ora = this.oraRitiroReso.getHours();
+    const ora = parseInt(this.oraRitiroReso.split(':')[0], 10);
     if (ora < 9 || ora > 13) {
       this.messageService.add({severity:'warn', summary:'Orario Non Valido', detail:'L\'orario di ritiro deve essere compreso tra le 09:00 e le 13:00'});
       return;
     }
 
-    const dataIso = this.dataResoPrevista.toISOString().split('T')[0];
-    const oraIso = this.oraRitiroReso.toTimeString().split(' ')[0];
+    const dataIso = this.dataResoPrevista;
+    const oraIso = this.oraRitiroReso + ':00';
 
     this.resoService.creaReso(
       this.resoDettaglioOrdineId, 
@@ -140,6 +166,42 @@ export class UserOrdersComponent implements OnInit {
       this.currentPage++;
       this.caricaOrdini();
     }
+  }
+
+  toggleDropdownIndirizzo(event: Event) {
+    event.stopPropagation();
+    this.mostraDropdownIndirizzo = !this.mostraDropdownIndirizzo;
+    this.mostraDropdownOrario = false;
+  }
+
+  selezionaIndirizzo(id: string) {
+    this.idIndirizzoReso = id;
+    this.mostraDropdownIndirizzo = false;
+  }
+
+  toggleDropdownOrario(event: Event) {
+    event.stopPropagation();
+    this.mostraDropdownOrario = !this.mostraDropdownOrario;
+    this.mostraDropdownIndirizzo = false;
+  }
+
+  selezionaOrario(orario: string) {
+    this.oraRitiroReso = orario;
+    this.mostraDropdownOrario = false;
+  }
+
+  getIndirizzoDisplay(): string {
+    const ind = this.indirizziUtente.find(i => i.id === this.idIndirizzoReso);
+    if (ind) {
+      return `${ind.via} ${ind.numeroCivico}, ${ind.citta} (${ind.provincia})`;
+    }
+    return 'Seleziona un indirizzo';
+  }
+
+  @HostListener('document:click')
+  closeDropdowns() {
+    this.mostraDropdownIndirizzo = false;
+    this.mostraDropdownOrario = false;
   }
 
   prevPage() {

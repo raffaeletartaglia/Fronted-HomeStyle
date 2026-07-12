@@ -8,7 +8,7 @@ import Keycloak from 'keycloak-js';
 @Component({
   selector: 'app-not-found',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule],
   templateUrl: './not-found.html',
   styleUrls: ['./not-found.css']
 })
