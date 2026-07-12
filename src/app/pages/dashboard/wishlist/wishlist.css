@@ -95,10 +95,110 @@
   color: #6b7280;
 }
 
-.wishlist-grid {
+/* GRIGLIA PRODOTTI (Stile Piattaforma) */
+.products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr); /* 2 per riga per renderle molto più larghe */
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
-/* RIMOSSO STILI CUSTOM IN FAVORE DI QUELLI GLOBALI */
+@media screen and (max-width: 991px) {
+  .products-grid {
+    grid-template-columns: 1fr; /* Su tablet e mobile 1 per riga (orizzontale) */
+  }
+}
+
+.product-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: row; /* Layout orizzontale */
+  padding: 1.5rem;
+  gap: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  align-items: center;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.product-image {
+  height: 160px;
+  width: 200px;
+  min-width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.08);
+}
+
+.no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 0;
+}
+
+.product-brand {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.product-name {
+  font-size: 1.25rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #C87965;
+  margin-top: 0.5rem;
+}
+
+.product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  min-width: 140px;
+}

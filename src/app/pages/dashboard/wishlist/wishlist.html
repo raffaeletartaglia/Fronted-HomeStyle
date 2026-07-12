@@ -17,26 +17,25 @@
     <p>Naviga nello store e aggiungi i prodotti che ami cliccando sul cuore!</p>
   </div>
 
-  <div class="wishlist-grid" *ngIf="wishlistService.prodottiWishlist.length > 0">
-    <div *ngFor="let prodotto of wishlistService.prodottiWishlist" class="glass-card wishlist-card">
-      <div class="wishlist-item-content">
-        <!-- Placeholder immagine -->
-        <div class="img-placeholder">
-          <i class="pi pi-image" style="font-size: 3rem; color: #ccc;"></i>
+  <div class="products-grid" *ngIf="wishlistService.prodottiWishlist.length > 0">
+    <div *ngFor="let prodotto of wishlistService.prodottiWishlist" class="product-card" (click)="goToDetail(prodotto.id)" style="cursor: pointer;">
+      <div class="product-image">
+        <img *ngIf="prodotto.immagine" [src]="'data:image/jpeg;base64,' + prodotto.immagine" [alt]="prodotto.nomeProdotto">
+        <div *ngIf="!prodotto.immagine" class="no-image">
+          <i class="pi pi-image" style="font-size: 2rem; color: #ccc;"></i>
         </div>
-        
-        <div class="item-info">
-          <h4 class="item-title">{{ prodotto.nomeProdotto }}</h4>
-          <span class="item-category">{{ prodotto.categoria?.nomeCategoria || 'Categoria generica' }}</span>
-          <div class="item-price">€{{ prodotto.prezzo | number:'1.2-2' }}</div>
-        </div>
-        
-        <div class="item-actions">
-          <button class="danger-btn w-full" (click)="rimuoviDaWishlist(prodotto.id)">
-            <i class="pi pi-trash"></i> Rimuovi
-          </button>
-          <!-- Il bottone aggiungi al carrello richiederà l'integrazione del carrello in futuro -->
-        </div>
+      </div>
+      
+      <div class="product-info">
+        <h3 class="product-brand">{{prodotto.marca || prodotto.categoria?.nomeCategoria || 'Categoria generica'}}</h3>
+        <h2 class="product-name">{{prodotto.nomeProdotto}}</h2>
+        <div class="product-price">€{{ prodotto.prezzo | number:'1.2-2' }}</div>
+      </div>
+      
+      <div class="product-actions">
+        <button class="danger-btn w-full" (click)="$event.stopPropagation(); rimuoviDaWishlist(prodotto.id)">
+          <i class="pi pi-trash"></i> Rimuovi
+        </button>
       </div>
     </div>
   </div>

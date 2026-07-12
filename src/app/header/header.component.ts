@@ -124,6 +124,12 @@ export class headerComponent implements OnInit {
           }
         }
       });
+      
+      // Caricamento wishlist iniziale per mostrare correttamente il badge
+      const id = this.keycloak.tokenParsed?.sub;
+      if (id) {
+        this.wishlistService.getUserWishList(id);
+      }
     }
   }
   loadHeaderMenu() {

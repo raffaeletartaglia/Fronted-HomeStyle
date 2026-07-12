@@ -134,6 +134,10 @@ export class UserCardsComponent implements OnInit {
     this.cartaPagamentoService.eliminaCarta(id);
   }
 
+  svuotaCarte() {
+    this.cartaPagamentoService.svuotaCarteUtente(this.idUtente);
+  }
+
   impostaPredefinito(carta: CartaPagamento) {
     this.cartaPagamentoService.impostaComePredefinito(carta, true);
   }

@@ -1,8 +1,13 @@
 <div class="cards-container">
   <div class="module-header">
-    <div>
+    <div style="flex: 1; min-width: 250px;">
       <h2>Le Mie Carte</h2>
       <p class="subtitle">Gestisci le tue carte di pagamento salvate.</p>
+    </div>
+    <div style="display: flex; gap: 15px; align-items: center;" *ngIf="cartaPagamentoService.carteUtente.length > 0 && !mostraFormCarta">
+      <button class="danger-btn" (click)="svuotaCarte()">
+        <i class="pi pi-trash"></i> Svuota Carte
+      </button>
     </div>
   </div>
 
@@ -82,7 +87,7 @@
         </button>
         <span *ngIf="carta.isDefault" class="default-label" style="color: #C87965; font-weight: 600; font-size: 0.9rem;"><i class="pi pi-check-circle"></i> Predefinita</span>
         
-        <button class="btn-secondary" style="padding: 6px 12px; color: #ef4444; border-color: rgba(239, 68, 68, 0.2);" (click)="eliminaCarta(carta.id)">
+        <button class="delete-btn-rounded" (click)="eliminaCarta(carta.id)">
           <i class="pi pi-trash"></i>
         </button>
       </div>

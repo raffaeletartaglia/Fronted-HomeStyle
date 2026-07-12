@@ -364,3 +364,23 @@
   background: rgba(0,0,0,0.1);
   margin: 25px 0;
 }
+
+.delete-btn-rounded {
+  background-color: transparent !important;
+  color: #ef4444 !important;
+  border: 1.5px solid #ef4444 !important;
+  border-radius: 20px !important;
+  width: 45px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+.delete-btn-rounded:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+}

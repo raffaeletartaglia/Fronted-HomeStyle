@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../services/productService';
 import { Prodotto } from '../../../models/prodotto.model';
@@ -44,7 +44,8 @@ export class ProductDetailComponent implements OnInit {
     private dialog: MatDialog,
 
     private carrelloService: CarrelloService,
-    private wishListService: WishListService
+    private wishListService: WishListService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -74,7 +75,7 @@ export class ProductDetailComponent implements OnInit {
     if (this.isAdmin) {
       this.router.navigate(['/dashboard/admin/prodotti']);
     } else {
-      this.router.navigate(['/']); // or catalog page
+      this.location.back();
     }
   }
 

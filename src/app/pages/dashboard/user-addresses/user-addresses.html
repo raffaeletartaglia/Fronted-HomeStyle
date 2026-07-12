@@ -4,24 +4,30 @@
       <h2>I Miei Indirizzi</h2>
       <p class="subtitle">Gestisci tutti gli indirizzi associati al tuo account.</p>
     </div>
-    <!-- Filter UI (moved to top right) -->
-    <div *ngIf="indirizzoService.indirizziUtente.length > 0 && !mostraFormIndirizzo" style="position: relative; z-index: 1000; width: 220px; flex-shrink: 0;">
-      <div class="custom-select-container" (click)="toggleDropdownFiltro($event)">
-        <div class="glass-input select-trigger">
-          <span>
-            <i class="pi pi-filter" style="margin-right: 8px; font-size: 0.9rem; color: #666;"></i>
-            {{ filterType === 'TUTTI' ? 'Tutti i Tipi' : filterType === 'SPEDIZIONE' ? 'Spedizione' : filterType === 'FATTURAZIONE' ? 'Fatturazione' : 'Residenza' }}
-          </span>
-          <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownFiltro}"></i>
-        </div>
-        
-        <div class="custom-dropdown-menu" *ngIf="mostraDropdownFiltro">
-          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'TUTTI'}" (click)="selezionaFiltro('TUTTI')">Tutti i Tipi</div>
-          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'SPEDIZIONE'}" (click)="selezionaFiltro('SPEDIZIONE')">Spedizione</div>
-          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'FATTURAZIONE'}" (click)="selezionaFiltro('FATTURAZIONE')">Fatturazione</div>
-          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'RESIDENZA'}" (click)="selezionaFiltro('RESIDENZA')">Residenza</div>
+    <!-- Filter UI & Delete All btn (moved to top right) -->
+    <div style="display: flex; gap: 15px; align-items: center;" *ngIf="indirizzoService.indirizziUtente.length > 0 && !mostraFormIndirizzo">
+      <div style="position: relative; z-index: 1000; width: 220px; flex-shrink: 0;">
+        <div class="custom-select-container" (click)="toggleDropdownFiltro($event)">
+          <div class="glass-input select-trigger">
+            <span>
+              <i class="pi pi-filter" style="margin-right: 8px; font-size: 0.9rem; color: #666;"></i>
+              {{ filterType === 'TUTTI' ? 'Tutti i Tipi' : filterType === 'SPEDIZIONE' ? 'Spedizione' : filterType === 'FATTURAZIONE' ? 'Fatturazione' : 'Residenza' }}
+            </span>
+            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownFiltro}"></i>
+          </div>
+          
+          <div class="custom-dropdown-menu" *ngIf="mostraDropdownFiltro">
+            <div class="dropdown-option" [ngClass]="{'selected': filterType === 'TUTTI'}" (click)="selezionaFiltro('TUTTI')">Tutti i Tipi</div>
+            <div class="dropdown-option" [ngClass]="{'selected': filterType === 'SPEDIZIONE'}" (click)="selezionaFiltro('SPEDIZIONE')">Spedizione</div>
+            <div class="dropdown-option" [ngClass]="{'selected': filterType === 'FATTURAZIONE'}" (click)="selezionaFiltro('FATTURAZIONE')">Fatturazione</div>
+            <div class="dropdown-option" [ngClass]="{'selected': filterType === 'RESIDENZA'}" (click)="selezionaFiltro('RESIDENZA')">Residenza</div>
+          </div>
         </div>
       </div>
+      
+      <button class="danger-btn" (click)="svuotaIndirizzi()">
+        <i class="pi pi-trash"></i> Svuota Indirizzi
+      </button>
     </div>
   </div>
 
@@ -134,7 +140,7 @@
           <i class="pi pi-star"></i> Imposta Predefinito
         </button>
         <span *ngIf="ind.isDefault" class="default-label"><i class="pi pi-check-circle"></i> Predefinito</span>
-        <button class="glass-btn delete-btn" (click)="eliminaIndirizzo(ind.id)"><i class="pi pi-trash"></i></button>
+        <button class="delete-btn-rounded" (click)="eliminaIndirizzo(ind.id)"><i class="pi pi-trash"></i></button>
       </div>
     </div>
   </div>

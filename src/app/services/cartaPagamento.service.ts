@@ -116,6 +116,27 @@ export class CartaPagamentoService {
   }
 
   // ==========================================
+  // Svuota tutte le carte dell'utente
+  // ==========================================
+  svuotaCarteUtente(idUtente: string) {
+    if (!idUtente || !this.carteUtente || this.carteUtente.length === 0) return;
+
+    // Simulate deleting all cards by deleting them one by one
+    this.carteUtente.forEach(carta => {
+      const url = `${this.baseUrl}/${carta.id}`;
+      this.http.delete<void>(url).subscribe(
+        () => {},
+        (error) => console.error("Errore eliminazione carta", error)
+      );
+    });
+
+    // AGGIORNAMENTO ISTANTANEO:
+    this.carteUtente = [];
+    this.popUpService.updateStringa("Tutte le carte sono state rimosse.");
+    this.popUpService.openPopups(999, false);
+  }
+
+  // ==========================================
   // 5. IMPOSTA COME PREDEFINITO
   // Endpoint: PUT /api/v1/carta-pagamento/{idCartaPagamento}
   // ==========================================

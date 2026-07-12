@@ -132,6 +132,10 @@ export class UserAddressesComponent implements OnInit {
     this.indirizzoService.eliminaIndirizzo(id);
   }
 
+  svuotaIndirizzi() {
+    this.indirizzoService.svuotaIndirizziUtente(this.idUtente);
+  }
+
   impostaPredefinito(indirizzo: Indirizzo) {
     // Creiamo una copia e settiamo isDefault = true
     const indirizzoAggiornato = { ...indirizzo, isDefault: true };
