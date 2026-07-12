@@ -1,35 +1,98 @@
 <div class="addresses-container">
-  <div class="module-header">
-    <div>
+  <div class="module-header" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 250px;">
       <h2>I Miei Indirizzi</h2>
       <p class="subtitle">Gestisci tutti gli indirizzi associati al tuo account.</p>
+    </div>
+    <!-- Filter UI (moved to top right) -->
+    <div *ngIf="indirizzoService.indirizziUtente.length > 0 && !mostraFormIndirizzo" style="position: relative; z-index: 1000; width: 220px; flex-shrink: 0;">
+      <div class="custom-select-container" (click)="toggleDropdownFiltro($event)">
+        <div class="glass-input select-trigger">
+          <span>
+            <i class="pi pi-filter" style="margin-right: 8px; font-size: 0.9rem; color: #666;"></i>
+            {{ filterType === 'TUTTI' ? 'Tutti i Tipi' : filterType === 'SPEDIZIONE' ? 'Spedizione' : filterType === 'FATTURAZIONE' ? 'Fatturazione' : 'Residenza' }}
+          </span>
+          <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownFiltro}"></i>
+        </div>
+        
+        <div class="custom-dropdown-menu" *ngIf="mostraDropdownFiltro">
+          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'TUTTI'}" (click)="selezionaFiltro('TUTTI')">Tutti i Tipi</div>
+          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'SPEDIZIONE'}" (click)="selezionaFiltro('SPEDIZIONE')">Spedizione</div>
+          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'FATTURAZIONE'}" (click)="selezionaFiltro('FATTURAZIONE')">Fatturazione</div>
+          <div class="dropdown-option" [ngClass]="{'selected': filterType === 'RESIDENZA'}" (click)="selezionaFiltro('RESIDENZA')">Residenza</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Form aggiunta indirizzo -->
   <div class="glass-module" *ngIf="mostraFormIndirizzo">
+    <div class="form-header">
+      <h3>Aggiungi un Nuovo Indirizzo</h3>
+      <p>Compila i campi sottostanti per salvare un nuovo recapito.</p>
+    </div>
+    
     <div class="form-row">
-      <input type="text" class="glass-input" placeholder="Nazione" [(ngModel)]="nuovoIndirizzo.nazione">
-      <input type="text" class="glass-input" placeholder="Città" [(ngModel)]="nuovoIndirizzo.citta">
-      <input type="text" class="glass-input" placeholder="Provincia (es. RM)" [(ngModel)]="nuovoIndirizzo.provincia" maxlength="2" (input)="nuovoIndirizzo.provincia = nuovoIndirizzo.provincia.toUpperCase()">
+      <div class="form-group">
+        <label>Nazione</label>
+        <input type="text" class="glass-input" placeholder="Es. Italia" [(ngModel)]="nuovoIndirizzo.nazione">
+      </div>
+      <div class="form-group">
+        <label>Città</label>
+        <input type="text" class="glass-input" placeholder="Es. Roma" [(ngModel)]="nuovoIndirizzo.citta">
+      </div>
+      <div class="form-group">
+        <label>Provincia</label>
+        <input type="text" class="glass-input" placeholder="Es. RM" [(ngModel)]="nuovoIndirizzo.provincia" maxlength="2" (input)="nuovoIndirizzo.provincia = nuovoIndirizzo.provincia.toUpperCase()">
+      </div>
     </div>
-    <div class="form-row mt-3">
-      <input type="text" class="glass-input" placeholder="Via" [(ngModel)]="nuovoIndirizzo.via">
-      <input type="text" class="glass-input" placeholder="N° Civico" [(ngModel)]="nuovoIndirizzo.numeroCivico">
-      <input type="text" class="glass-input" placeholder="CAP" [(ngModel)]="nuovoIndirizzo.cap">
+    <div class="form-row">
+      <div class="form-group" style="flex: 2;">
+        <label>Indirizzo (Via, Viale, Piazza...)</label>
+        <input type="text" class="glass-input" placeholder="Es. Via Garibaldi" [(ngModel)]="nuovoIndirizzo.via">
+      </div>
+      <div class="form-group">
+        <label>N° Civico</label>
+        <input type="text" class="glass-input" placeholder="Es. 10/A" [(ngModel)]="nuovoIndirizzo.numeroCivico">
+      </div>
+      <div class="form-group">
+        <label>CAP</label>
+        <input type="text" class="glass-input" placeholder="Es. 00100" [(ngModel)]="nuovoIndirizzo.cap">
+      </div>
     </div>
-    <div class="form-row mt-3 flex-align-center">
-      <select class="glass-input" [(ngModel)]="nuovoIndirizzo.tipo">
-        <option value="SPEDIZIONE">Spedizione</option>
-        <option value="FATTURAZIONE">Fatturazione</option>
-        <option value="RESIDENZA">Residenza</option>
-      </select>
-      <label class="checkbox-label ml-3">
-        <input type="checkbox" [(ngModel)]="nuovoIndirizzo.isDefault"> Imposta come Predefinito
-      </label>
+    <div class="form-row flex-align-center" style="margin-top: 10px;">
+      <div class="form-group" style="flex: 1;">
+        <label>Tipo Indirizzo</label>
+        <div class="custom-select-container" (click)="toggleDropdownTipo($event)">
+          <div class="glass-input select-trigger">
+            <span>{{ nuovoIndirizzo.tipo === 'SPEDIZIONE' ? 'Spedizione' : nuovoIndirizzo.tipo === 'FATTURAZIONE' ? 'Fatturazione' : 'Residenza' }}</span>
+            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownTipo}"></i>
+          </div>
+          
+          <div class="custom-dropdown-menu" *ngIf="mostraDropdownTipo">
+            <div class="dropdown-option" [ngClass]="{'selected': nuovoIndirizzo.tipo === 'SPEDIZIONE'}" (click)="selezionaTipo('SPEDIZIONE')">
+              Spedizione
+            </div>
+            <div class="dropdown-option" [ngClass]="{'selected': nuovoIndirizzo.tipo === 'FATTURAZIONE'}" (click)="selezionaTipo('FATTURAZIONE')">
+              Fatturazione
+            </div>
+            <div class="dropdown-option" [ngClass]="{'selected': nuovoIndirizzo.tipo === 'RESIDENZA'}" (click)="selezionaTipo('RESIDENZA')">
+              Residenza
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="flex: 1; align-items: flex-start; justify-content: flex-end; padding-bottom: 4px;">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="nuovoIndirizzo.isDefault"> Imposta come Indirizzo Predefinito
+        </label>
+      </div>
     </div>
-    <div class="mt-3 text-right">
-      <button class="glass-btn" style="margin-right: 10px;" (click)="mostraFormIndirizzo = false">Annulla</button>
+    
+    <hr class="divider">
+    
+    <div class="form-actions text-right">
+      <button class="btn-secondary" style="margin-right: 15px;" (click)="mostraFormIndirizzo = false">Annulla</button>
       <button class="btn-primary" (click)="salvaIndirizzo()">Salva Indirizzo</button>
     </div>
   </div>
@@ -41,21 +104,6 @@
     <p>Non hai caricato nessun indirizzo. Aggiungine uno per velocizzare il checkout!</p>
   </div>
 
-  <!-- Filter UI -->
-  <div class="filter-bar mt-3" *ngIf="indirizzoService.indirizziUtente.length > 0 && !mostraFormIndirizzo">
-    <div class="filter-group">
-      <div class="search-input-container">
-        <i class="pi pi-search search-icon"></i>
-        <input type="text" class="glass-input search-input" placeholder="Cerca per città, via, nazione, CAP..." [(ngModel)]="searchQuery">
-      </div>
-      <select class="glass-input filter-select" [(ngModel)]="filterType">
-        <option value="TUTTI">Tutti i Tipi</option>
-        <option value="SPEDIZIONE">Spedizione</option>
-        <option value="FATTURAZIONE">Fatturazione</option>
-        <option value="RESIDENZA">Residenza</option>
-      </select>
-    </div>
-  </div>
 
   <!-- Empty state filter (when filter yields no results) -->
   <div class="empty-state" *ngIf="indirizziFiltrati.length === 0 && indirizzoService.indirizziUtente.length > 0 && !mostraFormIndirizzo">

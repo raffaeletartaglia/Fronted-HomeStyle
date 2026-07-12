@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import Keycloak from 'keycloak-js';
 import { IndirizzoService } from '../../../services/indirizzo.service';
 import { NotificationService } from '../../../services/notification.service';
@@ -15,13 +16,45 @@ import { Indirizzo } from '../../../models/indirizzo.model';
 })
 export class UserAddressesComponent implements OnInit {
   mostraFormIndirizzo = false;
+  mostraDropdownTipo = false;
+  mostraDropdownFiltro = false;
   nuovoIndirizzo: any = { citta: '', provincia: '', nazione: '', cap: '', via: '', numeroCivico: '', tipo: 'SPEDIZIONE', isDefault: false };
   idUtente: string = '';
+
+  selezionaTipo(tipo: string) {
+    this.nuovoIndirizzo.tipo = tipo;
+    this.mostraDropdownTipo = false;
+  }
+
+  toggleDropdownTipo(event: Event) {
+    event.stopPropagation();
+    this.mostraDropdownTipo = !this.mostraDropdownTipo;
+    this.mostraDropdownFiltro = false;
+  }
+
+  selezionaFiltro(tipo: string) {
+    this.filterType = tipo;
+    this.mostraDropdownFiltro = false;
+  }
+
+  toggleDropdownFiltro(event: Event) {
+    event.stopPropagation();
+    this.mostraDropdownFiltro = !this.mostraDropdownFiltro;
+    this.mostraDropdownTipo = false;
+  }
+
+  @HostListener('document:click')
+  closeDropdown() {
+    this.mostraDropdownTipo = false;
+    this.mostraDropdownFiltro = false;
+  }
+
+  private keycloak = inject(Keycloak);
 
   constructor(
     public indirizzoService: IndirizzoService,
     private notification: NotificationService,
-    private keycloak: Keycloak
+    private cdr: ChangeDetectorRef
   ) {}
 
   searchQuery: string = '';
@@ -52,6 +85,15 @@ export class UserAddressesComponent implements OnInit {
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;
       this.indirizzoService.getIndirizziUtente(this.idUtente);
+      
+      // Fix initial load not displaying instantly:
+      // Force change detection a few times to catch the async HTTP response from the service
+      let count = 0;
+      const intervalId = setInterval(() => {
+        this.cdr.detectChanges();
+        count++;
+        if(count > 10) clearInterval(intervalId); // Stop after 1 second (10 * 100ms)
+      }, 100);
     }
   }
 

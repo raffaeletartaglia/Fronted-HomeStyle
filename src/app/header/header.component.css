@@ -534,7 +534,9 @@
   background: transparent !important;
   border-bottom: none !important;
   padding: 1.5rem 1.5rem 0.5rem 1.5rem !important;
-  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 ::ng-deep .custom-auth-dialog .p-dialog-content {
@@ -544,12 +546,8 @@
 }
 
 ::ng-deep .custom-auth-dialog .p-dialog-header-icons {
-  position: absolute !important;
-  top: 1rem !important;
-  right: 1rem !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
 }
 
 ::ng-deep .custom-auth-dialog .p-dialog-header-icon {
