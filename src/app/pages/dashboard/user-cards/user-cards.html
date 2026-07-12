@@ -1,11 +1,29 @@
 <div class="cards-container">
-  <div class="module-header">
+  <div class="module-header" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
     <div style="flex: 1; min-width: 250px;">
       <h2>Le Mie Carte</h2>
       <p class="subtitle">Gestisci le tue carte di pagamento salvate.</p>
     </div>
     <div style="display: flex; gap: 15px; align-items: center;" *ngIf="cartaPagamentoService.carteUtente.length > 0 && !mostraFormCarta">
-      <button class="danger-btn" (click)="svuotaCarte()">
+      
+      <div style="position: relative; z-index: 1000; width: 280px; flex-shrink: 0;">
+        <div class="custom-select-container" (click)="toggleDropdownFiltro($event)">
+          <div class="glass-input select-trigger">
+            <span>
+              <i class="pi pi-filter" style="margin-right: 8px; font-size: 0.9rem; color: #666;"></i>
+              {{ filterTipoCarta === 'TUTTE' ? 'Tutte' : filterTipoCarta }}
+            </span>
+            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownFiltro}"></i>
+          </div>
+          <div class="custom-dropdown-menu" *ngIf="mostraDropdownFiltro">
+            <div class="dropdown-option" [ngClass]="{'selected': filterTipoCarta === 'TUTTE'}" (click)="selezionaFiltro('TUTTE')">Tutte</div>
+            <div class="dropdown-option" [ngClass]="{'selected': filterTipoCarta === 'VISA'}" (click)="selezionaFiltro('VISA')">Visa</div>
+            <div class="dropdown-option" [ngClass]="{'selected': filterTipoCarta === 'MASTERCARD'}" (click)="selezionaFiltro('MASTERCARD')">Mastercard</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="delete-btn-rounded with-text" (click)="confermaSvuotaCarte()">
         <i class="pi pi-trash"></i> Svuota Carte
       </button>
     </div>
@@ -62,7 +80,7 @@
   </div>
 
   <div class="cards-grid mt-4">
-    <div class="glass-card" *ngFor="let carta of cartaPagamentoService.carteUtente" [ngClass]="{'default-card': carta.isDefault}">
+    <div class="glass-card" *ngFor="let carta of carteFiltrate" [ngClass]="{'default-card': carta.isDefault}">
       <!-- Ribbon predefinita -->
       <div class="default-ribbon" *ngIf="carta.isDefault">
         <span><i class="pi pi-star-fill"></i> Predefinita</span>
@@ -87,11 +105,17 @@
         </button>
         <span *ngIf="carta.isDefault" class="default-label" style="color: #C87965; font-weight: 600; font-size: 0.9rem;"><i class="pi pi-check-circle"></i> Predefinita</span>
         
-        <button class="delete-btn-rounded" (click)="eliminaCarta(carta.id)">
+        <button class="delete-btn-rounded icon-only" (click)="confermaEliminaCarta(carta.id)">
           <i class="pi pi-trash"></i>
         </button>
       </div>
     </div>
+  </div>
+  
+  <div class="empty-state" *ngIf="carteFiltrate.length === 0 && cartaPagamentoService.carteUtente.length > 0 && !mostraFormCarta" style="text-align: center; padding: 3rem; margin-top: 2rem;">
+    <i class="pi pi-filter-slash empty-icon" style="font-size: 3rem; color: #ccc;"></i>
+    <h3>Nessun risultato</h3>
+    <p>La tua ricerca non ha prodotto alcuna carta. Prova a cambiare i filtri.</p>
   </div>
 
   <div class="text-right mt-4" *ngIf="!mostraFormCarta">
@@ -100,3 +124,31 @@
     </button>
   </div>
 </div>
+
+<!-- Dialog Conferma Svuota -->
+<p-dialog header="Svuota Carte" [(visible)]="mostraDialogEliminaTutto" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
+  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+    <p style="margin: 0;">Sei sicuro di voler rimuovere tutte le carte di pagamento?</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+      <button class="btn-dialog-cancel" (click)="mostraDialogEliminaTutto = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiSvuotaCarte()">Svuota</button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Dialog Conferma Elimina Singola -->
+<p-dialog header="Rimuovi Carta" [(visible)]="mostraDialogEliminaSingola" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
+  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
+    <p style="margin: 0;">Sei sicuro di voler rimuovere questa carta?</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+      <button class="btn-dialog-cancel" (click)="mostraDialogEliminaSingola = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiEliminaCarta()">Rimuovi</button>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import Keycloak from 'keycloak-js';
 import { CartaPagamentoService } from '../../../services/cartaPagamento.service';
 import { NotificationService } from '../../../services/notification.service';
+import { DialogModule } from 'primeng/dialog';
 import { CartaPagamento } from '../../../models/cartaPagamento.model';
 
 @Component({
   selector: 'app-user-cards',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DialogModule],
   templateUrl: './user-cards.html',
   styleUrls: ['./user-cards.css']
 })
@@ -26,6 +27,15 @@ export class UserCardsComponent implements OnInit {
     isDefault: false 
   };
   idUtente: string = '';
+
+  // Filtro
+  mostraDropdownFiltro = false;
+  filterTipoCarta = 'TUTTE'; // TUTTE, VISA, MASTERCARD
+
+  // Dialogs
+  mostraDialogEliminaTutto = false;
+  mostraDialogEliminaSingola = false;
+  cartaDaEliminareId = '';
 
   private keycloak = inject(Keycloak);
 
@@ -47,6 +57,24 @@ export class UserCardsComponent implements OnInit {
         if(count > 10) clearInterval(intervalId); // Stop after 1 second (10 * 100ms)
       }, 100);
     }
+  }
+
+  get carteFiltrate(): CartaPagamento[] {
+    let carte = this.cartaPagamentoService.carteUtente || [];
+    if (this.filterTipoCarta !== 'TUTTE') {
+      carte = carte.filter((c: CartaPagamento) => c.tipoCarta === this.filterTipoCarta);
+    }
+    return carte;
+  }
+
+  toggleDropdownFiltro(event: Event) {
+    event.stopPropagation();
+    this.mostraDropdownFiltro = !this.mostraDropdownFiltro;
+  }
+
+  selezionaFiltro(tipo: string) {
+    this.filterTipoCarta = tipo;
+    this.mostraDropdownFiltro = false;
   }
 
   formattaNumeroCarta(event: any) {
@@ -130,12 +158,26 @@ export class UserCardsComponent implements OnInit {
     }
   }
 
-  eliminaCarta(id: string) {
-    this.cartaPagamentoService.eliminaCarta(id);
+  confermaEliminaCarta(id: string) {
+    this.cartaDaEliminareId = id;
+    this.mostraDialogEliminaSingola = true;
   }
 
-  svuotaCarte() {
+  eseguiEliminaCarta() {
+    if (this.cartaDaEliminareId) {
+      this.cartaPagamentoService.eliminaCarta(this.cartaDaEliminareId);
+    }
+    this.mostraDialogEliminaSingola = false;
+    this.cartaDaEliminareId = '';
+  }
+
+  confermaSvuotaCarte() {
+    this.mostraDialogEliminaTutto = true;
+  }
+
+  eseguiSvuotaCarte() {
     this.cartaPagamentoService.svuotaCarteUtente(this.idUtente);
+    this.mostraDialogEliminaTutto = false;
   }
 
   impostaPredefinito(carta: CartaPagamento) {

@@ -44,6 +44,12 @@ export class UserOrdersComponent implements OnInit {
   mostraDropdownOrario: boolean = false;
   orariDisponibili: string[] = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00'];
 
+  // Filtri
+  mostraDropdownSpedizione = false;
+  mostraDropdownReso = false;
+  filterSpedizione = 'TUTTI';
+  filterReso = 'TUTTI';
+
   private keycloak = inject(Keycloak);
 
   constructor(
@@ -70,6 +76,45 @@ export class UserOrdersComponent implements OnInit {
     } else {
       this.isLoading = false;
     }
+  }
+
+  get ordiniFiltrati(): any[] {
+    return this.ordini.filter(o => {
+      const matchSpedizione = this.filterSpedizione === 'TUTTI' || o.statoSpedizione === this.filterSpedizione;
+      const matchReso = this.filterReso === 'TUTTI' || 
+                        (this.filterReso === 'NESSUNO' ? !o.statoReso : o.statoReso === this.filterReso);
+      return matchSpedizione && matchReso;
+    });
+  }
+
+  toggleDropdownSpedizione(event: Event) {
+    event.stopPropagation();
+    this.mostraDropdownSpedizione = !this.mostraDropdownSpedizione;
+    this.mostraDropdownReso = false;
+  }
+
+  selezionaFiltroSpedizione(stato: string) {
+    this.filterSpedizione = stato;
+    this.mostraDropdownSpedizione = false;
+  }
+
+  toggleDropdownReso(event: Event) {
+    event.stopPropagation();
+    this.mostraDropdownReso = !this.mostraDropdownReso;
+    this.mostraDropdownSpedizione = false;
+  }
+
+  selezionaFiltroReso(stato: string) {
+    this.filterReso = stato;
+    this.mostraDropdownReso = false;
+  }
+
+  @HostListener('document:click')
+  closeDropdowns() {
+    this.mostraDropdownSpedizione = false;
+    this.mostraDropdownReso = false;
+    this.mostraDropdownIndirizzo = false;
+    this.mostraDropdownOrario = false;
   }
 
   vaiAlloShop() {
@@ -198,11 +243,7 @@ export class UserOrdersComponent implements OnInit {
     return 'Seleziona un indirizzo';
   }
 
-  @HostListener('document:click')
-  closeDropdowns() {
-    this.mostraDropdownIndirizzo = false;
-    this.mostraDropdownOrario = false;
-  }
+
 
   prevPage() {
     if (this.currentPage > 0) {

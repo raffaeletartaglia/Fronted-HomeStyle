@@ -1,11 +1,44 @@
 <div class="wishlist-container">
   <div class="wishlist-header">
-    <div class="header-content">
+    <div style="flex: 1; min-width: 250px;">
       <h2>La Mia Wishlist</h2>
       <p>Gli articoli che hai salvato per i tuoi futuri acquisti.</p>
     </div>
-    <div class="header-actions">
-      <button class="delete-btn-rounded" (click)="svuotaWishlist()" *ngIf="wishlistService.prodottiWishlist.length > 0" style="width: auto; padding: 0.5rem 1rem;">
+    <div style="display: flex; gap: 15px; align-items: center;" *ngIf="wishlistService.prodottiWishlist.length > 0">
+      
+      <div style="position: relative; z-index: 1000; width: 280px; flex-shrink: 0;">
+        <div class="custom-select-container" (click)="toggleDropdownCategoria($event)">
+          <div class="glass-input select-trigger">
+            <span>
+              <i class="pi pi-filter" style="margin-right: 8px; font-size: 0.9rem; color: #666;"></i>
+              {{ getNomeCategoria(filterCategoria) }}
+            </span>
+            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownCategoria}"></i>
+          </div>
+          <div class="custom-dropdown-menu" *ngIf="mostraDropdownCategoria">
+            <div class="dropdown-option" [ngClass]="{'selected': filterCategoria === 'TUTTE'}" (click)="selezionaCategoria('TUTTE')">Tutte Categorie</div>
+            <div class="dropdown-option" *ngFor="let cat of categorie" [ngClass]="{'selected': filterCategoria === cat.id}" (click)="selezionaCategoria(cat.id!)">{{ cat.nomeCategoria }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="position: relative; z-index: 999; width: 280px; flex-shrink: 0;">
+        <div class="custom-select-container" (click)="toggleDropdownStanza($event)">
+          <div class="glass-input select-trigger">
+            <span>
+              <i class="pi pi-filter" style="margin-right: 8px; font-size: 0.9rem; color: #666;"></i>
+              {{ getNomeStanza(filterStanza) }}
+            </span>
+            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownStanza}"></i>
+          </div>
+          <div class="custom-dropdown-menu" *ngIf="mostraDropdownStanza">
+            <div class="dropdown-option" [ngClass]="{'selected': filterStanza === 'TUTTE'}" (click)="selezionaStanza('TUTTE')">Tutte Stanze</div>
+            <div class="dropdown-option" *ngFor="let st of stanze" [ngClass]="{'selected': filterStanza === st.id}" (click)="selezionaStanza(st.id!)">{{ st.tipologia }}</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="delete-btn-rounded with-text" (click)="confermaSvuotaWishlist()">
         <i class="pi pi-trash"></i> Svuota Wishlist
       </button>
     </div>
@@ -17,8 +50,14 @@
     <p>Naviga nello store e aggiungi i prodotti che ami cliccando sul cuore!</p>
   </div>
 
-  <div class="products-grid" *ngIf="wishlistService.prodottiWishlist.length > 0">
-    <div *ngFor="let prodotto of wishlistService.prodottiWishlist" class="product-card" (click)="goToDetail(prodotto.id)" style="cursor: pointer;">
+  <div class="empty-wishlist" *ngIf="prodottiFiltrati.length === 0 && wishlistService.prodottiWishlist.length > 0">
+    <i class="pi pi-filter-slash empty-heart-icon"></i>
+    <h3>Nessun risultato</h3>
+    <p>La tua ricerca non ha prodotto alcun risultato. Prova a cambiare i filtri.</p>
+  </div>
+
+  <div class="products-grid" *ngIf="prodottiFiltrati.length > 0">
+    <div *ngFor="let prodotto of prodottiFiltrati" class="product-card-horizontal" (click)="goToDetail(prodotto.id)">
       <div class="product-image">
         <img *ngIf="prodotto.immagine" [src]="'data:image/jpeg;base64,' + prodotto.immagine" [alt]="prodotto.nomeProdotto">
         <div *ngIf="!prodotto.immagine" class="no-image">
@@ -33,10 +72,36 @@
       </div>
       
       <div class="product-actions">
-        <button class="delete-btn-rounded" (click)="$event.stopPropagation(); rimuoviDaWishlist(prodotto.id)">
-          <i class="pi pi-trash"></i> Rimuovi
+        <button class="delete-btn-rounded icon-only" (click)="$event.stopPropagation(); confermaRimuoviDaWishlist(prodotto.id)">
+          <i class="pi pi-trash"></i>
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<p-dialog header="Svuota Wishlist" [(visible)]="mostraDialogEliminaTutto" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
+  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+    <p style="margin: 0;">Sei sicuro di voler svuotare completamente la tua wishlist?</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+      <button class="btn-dialog-cancel" (click)="mostraDialogEliminaTutto = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiSvuotaWishlist()">Svuota</button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-dialog header="Rimuovi Prodotto" [(visible)]="mostraDialogEliminaSingolo" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
+  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
+    <p style="margin: 0;">Sei sicuro di voler rimuovere questo prodotto dalla wishlist?</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+      <button class="btn-dialog-cancel" (click)="mostraDialogEliminaSingolo = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiRimuoviDaWishlist()">Rimuovi</button>
+    </div>
+  </ng-template>
+</p-dialog>

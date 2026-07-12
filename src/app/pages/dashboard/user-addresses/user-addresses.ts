@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 
 import Keycloak from 'keycloak-js';
 import { IndirizzoService } from '../../../services/indirizzo.service';
@@ -10,7 +11,7 @@ import { Indirizzo } from '../../../models/indirizzo.model';
 @Component({
   selector: 'app-user-addresses',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DialogModule],
   templateUrl: './user-addresses.html',
   styleUrls: ['./user-addresses.css']
 })
@@ -20,6 +21,11 @@ export class UserAddressesComponent implements OnInit {
   mostraDropdownFiltro = false;
   nuovoIndirizzo: any = { citta: '', provincia: '', nazione: '', cap: '', via: '', numeroCivico: '', tipo: 'SPEDIZIONE', isDefault: false };
   idUtente: string = '';
+
+  // Dialogs
+  mostraDialogEliminaTutto = false;
+  mostraDialogEliminaSingolo = false;
+  indirizzoDaEliminareId = '';
 
   selezionaTipo(tipo: string) {
     this.nuovoIndirizzo.tipo = tipo;
@@ -128,12 +134,26 @@ export class UserAddressesComponent implements OnInit {
     }
   }
 
-  eliminaIndirizzo(id: string) {
-    this.indirizzoService.eliminaIndirizzo(id);
+  confermaEliminaIndirizzo(id: string) {
+    this.indirizzoDaEliminareId = id;
+    this.mostraDialogEliminaSingolo = true;
   }
 
-  svuotaIndirizzi() {
+  eseguiEliminaIndirizzo() {
+    if (this.indirizzoDaEliminareId) {
+      this.indirizzoService.eliminaIndirizzo(this.indirizzoDaEliminareId);
+    }
+    this.mostraDialogEliminaSingolo = false;
+    this.indirizzoDaEliminareId = '';
+  }
+
+  confermaSvuotaIndirizzi() {
+    this.mostraDialogEliminaTutto = true;
+  }
+
+  eseguiSvuotaIndirizzi() {
     this.indirizzoService.svuotaIndirizziUtente(this.idUtente);
+    this.mostraDialogEliminaTutto = false;
   }
 
   impostaPredefinito(indirizzo: Indirizzo) {
