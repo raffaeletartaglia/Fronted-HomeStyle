@@ -96,57 +96,7 @@
   align-items: center;
 }
 
-/* Credit Card style */
-.cc-card {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: white;
-  border: none;
-  position: relative;
-  overflow: hidden;
-}
 
-.cc-card .cc-number {
-  font-size: 1.4rem;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-  font-family: monospace;
-}
-
-.cc-card .cc-details {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  opacity: 0.8;
-  text-transform: uppercase;
-}
-
-.cc-card .delete-btn {
-  color: #ffcccc;
-  border-color: rgba(255,255,255,0.2);
-}
-.cc-card .delete-btn:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-/* Chip dorato */
-.card-chip {
-  width: 32px;
-  height: 24px;
-  background: linear-gradient(135deg, #d4af37 0%, #f5e07a 50%, #d4af37 100%);
-  border-radius: 4px;
-  font-size: 1.4rem;
-  line-height: 24px;
-  text-align: center;
-  color: #b8860b;
-}
-
-.cc-type-badge {
-  background: rgba(255,255,255,0.2);
-  color: white;
-  font-weight: 700;
-  letter-spacing: 1px;
-  border: 1px solid rgba(255,255,255,0.4);
-}
 
 /* Ribbon angolo in alto a destra */
 .default-ribbon {

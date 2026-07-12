@@ -57,34 +57,34 @@
   </div>
 
   <div class="cards-grid mt-4">
-    <div class="glass-card cc-card" *ngFor="let carta of cartaPagamentoService.carteUtente" [ngClass]="{'default-card': carta.isDefault}">
+    <div class="glass-card" *ngFor="let carta of cartaPagamentoService.carteUtente" [ngClass]="{'default-card': carta.isDefault}">
       <!-- Ribbon predefinita -->
       <div class="default-ribbon" *ngIf="carta.isDefault">
         <span><i class="pi pi-star-fill"></i> Predefinita</span>
       </div>
 
-      <div class="card-header">
-        <div class="card-type-badge">
-          <span class="badge cc-type-badge">{{ carta.tipoCarta }}</span>
+      <div class="card-header" style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span class="badge" style="font-size: 0.9rem; padding: 6px 12px; background: rgba(200,121,101,0.1); color: #C87965;">{{ carta.tipoCarta }}</span>
         </div>
-        <div class="card-chip">&#9632;</div>
-      </div>
-      <div class="cc-number mt-3">
-        **** **** **** {{ carta.ultime4Cifre }}
-      </div>
-      <div class="cc-details mt-2">
-        <span>{{ carta.intestatario }}</span>
-        <span>Scad. {{ carta.scadenza | slice:0:7 }}</span>
+        <i class="pi pi-credit-card" style="font-size: 1.5rem; color: #C87965;"></i>
       </div>
       
-      <div class="card-actions mt-3">
-        <button class="glass-btn set-default-btn" (click)="impostaPredefinito(carta)" *ngIf="!carta.isDefault">
+      <p style="font-family: monospace; font-size: 1.2rem; margin: 15px 0; color: #333; letter-spacing: 1px;">
+        **** **** **** {{ carta.ultime4Cifre }}
+      </p>
+      <p style="margin: 5px 0; color: #555;"><strong>{{ carta.intestatario }}</strong></p>
+      <p style="margin: 5px 0; color: #666; font-size: 0.9rem;">Scadenza: {{ carta.scadenza | slice:0:7 }}</p>
+      
+      <div class="card-actions mt-3" style="display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn-secondary" style="font-size: 0.85rem; padding: 6px 12px;" (click)="impostaPredefinito(carta)" *ngIf="!carta.isDefault">
           <i class="pi pi-star"></i> Imposta Predefinita
         </button>
-        <button class="glass-btn remove-default-btn" (click)="rimuoviPredefinito(carta)" *ngIf="carta.isDefault">
-          <i class="pi pi-star-fill"></i> Rimuovi Predefinita
+        <span *ngIf="carta.isDefault" class="default-label" style="color: #C87965; font-weight: 600; font-size: 0.9rem;"><i class="pi pi-check-circle"></i> Predefinita</span>
+        
+        <button class="btn-secondary" style="padding: 6px 12px; color: #ef4444; border-color: rgba(239, 68, 68, 0.2);" (click)="eliminaCarta(carta.id)">
+          <i class="pi pi-trash"></i>
         </button>
-        <button class="glass-btn delete-btn" (click)="eliminaCarta(carta.id)"><i class="pi pi-trash"></i></button>
       </div>
     </div>
   </div>

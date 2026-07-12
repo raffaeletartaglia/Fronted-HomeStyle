@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Keycloak from 'keycloak-js';
@@ -27,16 +27,25 @@ export class UserCardsComponent implements OnInit {
   };
   idUtente: string = '';
 
+  private keycloak = inject(Keycloak);
+
   constructor(
     public cartaPagamentoService: CartaPagamentoService,
     private notification: NotificationService,
-    private keycloak: Keycloak
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;
       this.cartaPagamentoService.getCarteUtente(this.idUtente);
+      
+      let count = 0;
+      const intervalId = setInterval(() => {
+        this.cdr.detectChanges();
+        count++;
+        if(count > 10) clearInterval(intervalId); // Stop after 1 second (10 * 100ms)
+      }, 100);
     }
   }
 
