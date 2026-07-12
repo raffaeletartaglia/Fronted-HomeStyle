@@ -1,6 +1,8 @@
 .header-wrapper {
-  background-color: rgba(255, 255, 255, 0.85); /* Sfondo bianco trasparente */
-  backdrop-filter: blur(10px); /* Effetto vetro/sfocatura dello sfondo sottostante */
+  background-color: rgba(255, 255, 255, 0.85);
+  /* Sfondo bianco trasparente */
+  backdrop-filter: blur(10px);
+  /* Effetto vetro/sfocatura dello sfondo sottostante */
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   position: sticky;
@@ -30,13 +32,15 @@
 
 .brand-logo i {
   font-size: 1.8rem;
-  color: #C87965; /* Brand color */
+  color: #C87965;
+  /* Brand color */
 }
 
 .brand-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333; /* Testo scuro su sfondo chiaro */
+  color: #333;
+  /* Testo scuro su sfondo chiaro */
   letter-spacing: 0.5px;
 }
 
@@ -55,7 +59,8 @@
 .nav-items-container {
   display: flex;
   align-items: center;
-  gap: 2rem; /* Distanza uguale tra tutte le stanze */
+  gap: 2rem;
+  /* Distanza uguale tra tutte le stanze */
 }
 
 .nav-item-dropdown {
@@ -67,12 +72,14 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  color: #555; /* Testo scuro per leggerlo sul bianco */
+  color: #555;
+  /* Testo scuro per leggerlo sul bianco */
   font-weight: 500;
   font-size: 1.05rem;
   padding: 0.5rem;
   cursor: pointer;
-  white-space: nowrap; /* Mantiene la scritta su una riga dritta */
+  white-space: nowrap;
+  /* Mantiene la scritta su una riga dritta */
   transition: all 0.3s ease;
 }
 
@@ -89,9 +96,10 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
-  background-color: #ffffff; /* Sfondo bianco per il dropdown */
+  background-color: #ffffff;
+  /* Sfondo bianco per il dropdown */
   min-width: 200px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 0.5rem 0;
   z-index: 10;
@@ -110,7 +118,8 @@
   color: #555;
   cursor: pointer;
   font-size: 0.95rem;
-  white-space: nowrap; /* Anche qui testo dritto su una linea */
+  white-space: nowrap;
+  /* Anche qui testo dritto su una linea */
   transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
 }
 
@@ -169,12 +178,13 @@
   height: 40px;
 }
 
-.custom-search-input:focus {
-  width: 300px;
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 2px rgba(200, 121, 101, 0.5);
-  outline: none;
-  border-color: rgba(200, 121, 101, 0.5);
+.custom-search-input:focus,
+:host ::ng-deep .p-inputtext.custom-search-input:enabled:focus {
+  width: 300px !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 0 2px rgba(200, 121, 101, 0.5) !important;
+  outline: none !important;
+  border-color: rgba(200, 121, 101, 0.5) !important;
 }
 
 .custom-search-input::placeholder {
@@ -202,7 +212,7 @@
   width: 100%;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid #eaeaea;
   z-index: 1100;
   overflow: hidden;
@@ -248,7 +258,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-out;
-    box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
   }
 
   .nav-items-container.mobile-open {
@@ -296,7 +306,7 @@
   .custom-search-input {
     width: 130px;
   }
-  
+
   .custom-search-input:focus {
     width: 160px;
   }
@@ -309,7 +319,7 @@
   right: 0;
   background-color: #ffffff;
   min-width: 220px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 0.5rem 0;
   z-index: 1050;
@@ -318,8 +328,15 @@
 }
 
 @keyframes fadeInUserMenu {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .custom-user-dropdown .dropdown-item {
@@ -350,7 +367,7 @@
   margin: 0.5rem 0;
 }
 
-.custom-user-dropdown .text-danger, 
+.custom-user-dropdown .text-danger,
 .custom-user-dropdown .text-danger i {
   color: #d32f2f !important;
 }
@@ -370,33 +387,67 @@
   padding-top: 0 !important;
 }
 
-/* Stili Custom per il Popup di Auth (PrimeNG p-dialog) */
-:host ::ng-deep .custom-auth-dialog .p-dialog-header {
-  background: transparent !important;
-  border-bottom: none !important;
-  padding: 2rem 2rem 0.5rem 2rem !important;
+/* --- CUSTOM MODAL OVERLAY --- */
+.custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  animation: fadeInOverlay 0.3s ease-out;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.custom-modal {
+  width: 450px;
+  max-width: 90vw;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20px;
+  padding: 3rem 2rem;
   position: relative;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  animation: slideUpModal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-:host ::ng-deep .custom-auth-dialog .p-dialog-header .p-dialog-header-icons {
+@keyframes slideUpModal {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.close-btn {
   position: absolute;
-  right: 1rem;
-  top: 1rem;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-:host ::ng-deep .custom-auth-dialog .p-dialog-content {
-  padding: 0 2rem 2.5rem 2rem !important;
-  background: transparent !important;
-}
-
-:host ::ng-deep .custom-auth-dialog {
-  border-radius: 20px !important;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.98) !important;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255,255,255,0.4);
+.close-btn:hover {
+  color: #d32f2f;
+  background: rgba(211, 47, 47, 0.1);
+  transform: rotate(90deg);
 }
 
 .auth-dialog-header {
@@ -408,10 +459,10 @@
 }
 
 .auth-dialog-header i {
-  font-size: 3.5rem;
+  font-size: 2rem;
   color: #C87965;
   background: rgba(200, 121, 101, 0.1);
-  padding: 1rem;
+  padding: 0.8rem;
   border-radius: 50%;
   margin-bottom: 0.5rem;
 }
@@ -466,4 +517,67 @@
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+/* --- PRIME NG DIALOG CUSTOMIZATION --- */
+::ng-deep .custom-auth-dialog {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
+  overflow: hidden !important;
+}
+
+::ng-deep .custom-auth-dialog .p-dialog-header {
+  background: transparent !important;
+  border-bottom: none !important;
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem !important;
+  position: relative !important;
+}
+
+::ng-deep .custom-auth-dialog .p-dialog-content {
+  background: transparent !important;
+  padding: 0 2rem 2rem 2rem !important;
+  color: #333 !important;
+}
+
+::ng-deep .custom-auth-dialog .p-dialog-header-icons {
+  position: absolute !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+::ng-deep .custom-auth-dialog .p-dialog-header-icon {
+  color: #666 !important;
+  background: transparent !important;
+  border: none !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: transform 0.2s, color 0.2s, background-color 0.2s !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .custom-auth-dialog .p-dialog-header-icon:hover {
+  color: #d32f2f !important;
+  background-color: rgba(211, 47, 47, 0.1) !important;
+  transform: rotate(90deg) !important;
+}
+
+::ng-deep .custom-auth-dialog .p-dialog-header-icon:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .custom-auth-dialog .p-dialog-header-close-icon {
+  font-size: 1.2rem !important;
 }

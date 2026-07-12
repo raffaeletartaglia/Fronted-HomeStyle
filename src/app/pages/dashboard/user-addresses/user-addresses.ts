@@ -24,6 +24,30 @@ export class UserAddressesComponent implements OnInit {
     private keycloak: Keycloak
   ) {}
 
+  searchQuery: string = '';
+  filterType: string = 'TUTTI'; // 'TUTTI', 'SPEDIZIONE', 'FATTURAZIONE', 'RESIDENZA'
+
+  get indirizziFiltrati(): Indirizzo[] {
+    let indirizzi = this.indirizzoService.indirizziUtente || [];
+    
+    if (this.filterType !== 'TUTTI') {
+      indirizzi = indirizzi.filter(ind => ind.tipo === this.filterType);
+    }
+    
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      indirizzi = indirizzi.filter(ind => 
+        (ind.citta && ind.citta.toLowerCase().includes(query)) || 
+        (ind.via && ind.via.toLowerCase().includes(query)) ||
+        (ind.provincia && ind.provincia.toLowerCase().includes(query)) ||
+        (ind.nazione && ind.nazione.toLowerCase().includes(query)) ||
+        (ind.cap && ind.cap.includes(query))
+      );
+    }
+    
+    return indirizzi;
+  }
+
   ngOnInit() {
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;

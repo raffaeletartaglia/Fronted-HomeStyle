@@ -26,7 +26,8 @@
 body { 
   margin: 0; 
   font-family: 'Roboto', "Helvetica Neue", sans-serif; 
-  background: linear-gradient(135deg, #f6f8fa 0%, #e9ecef 100%);
+  background: linear-gradient(180deg, #f6f8fa 0%, #e9ecef 100%);
+  background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
 }
@@ -224,4 +225,15 @@ td.mat-mdc-cell button {
   width: 100% !important;
   text-align: center !important;
   display: block !important;
+}
+
+/* =========================================
+   DASHBOARD LAYOUT - GLOBAL FIX
+   Forza gli host element dei componenti figli (es. <app-user-addresses>)
+   ad occupare tutta la larghezza del .main-content.
+   ========================================= */
+.main-content > * {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box;
 }

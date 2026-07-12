@@ -72,7 +72,7 @@ export class ProductDetailComponent implements OnInit {
 
   goBack() {
     if (this.isAdmin) {
-      this.router.navigate(['/dashboard/admin/products']);
+      this.router.navigate(['/dashboard/admin/prodotti']);
     } else {
       this.router.navigate(['/']); // or catalog page
     }

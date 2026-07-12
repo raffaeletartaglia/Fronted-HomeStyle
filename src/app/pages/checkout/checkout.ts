@@ -167,7 +167,7 @@ export class Checkout implements OnInit {
           }
         }
         
-        setTimeout(() => this.router.navigateByUrl('/dashboard/orders'), 2000);
+        setTimeout(() => this.router.navigateByUrl('/dashboard/ordini'), 2000);
       },
       error: (err) => console.error("Errore creazione ordine", err)
     });

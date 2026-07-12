@@ -53,6 +53,7 @@ export class headerComponent implements OnInit {
 
 
   isLoggedIn: boolean = false;
+  isAdmin: boolean = false;
   userProfile: any = null;
 
   ricercaTesto: string = '';
@@ -191,7 +192,7 @@ export class headerComponent implements OnInit {
     const idUtente = this.keycloak.tokenParsed?.sub;
     if (idUtente) {
       this.wishlistService.getUserWishList(idUtente);
-      this.router.navigate(['/dashboard/wishlist']);
+      this.router.navigate(['/dashboard/preferiti']);
     }
   }
 

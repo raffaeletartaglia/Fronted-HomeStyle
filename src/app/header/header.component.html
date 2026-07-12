@@ -1,6 +1,6 @@
 <div class="header-wrapper">
   <nav class="custom-navbar">
-    
+
     <!-- Left: Logo -->
     <div class="brand-logo" (click)="goHomepage()">
       <i class="pi pi-home"></i>
@@ -20,7 +20,7 @@
           {{ item.label }}
           <i *ngIf="item.items" class="pi pi-angle-down"></i>
         </span>
-        
+
         <!-- Sottomenu (Categorie) - si apre in Hover -->
         <div class="dropdown-content" *ngIf="item.items">
           <div class="dropdown-item" *ngFor="let subItem of item.items" (click)="executeItemCommand(subItem)">
@@ -36,13 +36,9 @@
       <div class="custom-search-wrapper">
         <span class="p-input-icon-left search-input-container">
           <i class="pi pi-search" (click)="onSearchEnter()"></i>
-          <input type="text" pInputText [(ngModel)]="ricercaTesto" 
-                 (input)="cercaSuggerimentiCustom($event)"
-                 (keyup.enter)="onSearchEnter()" 
-                 (focus)="onSearchFocus()"
-                 placeholder="Cerca nello store..." 
-                 class="custom-search-input"
-                 autocomplete="off">
+          <input type="text" pInputText [(ngModel)]="ricercaTesto" (input)="cercaSuggerimentiCustom($event)"
+            (keyup.enter)="onSearchEnter()" (focus)="onSearchFocus()" placeholder="Cerca nello store..."
+            class="custom-search-input" autocomplete="off">
         </span>
 
         <!-- Dropdown suggerimenti -->
@@ -60,28 +56,24 @@
           <button class="icon-btn" (click)="toggleUserMenu($event)">
             <i class="pi pi-user"></i>
           </button>
-          
+
           <!-- Custom User Dropdown -->
           <div class="custom-user-dropdown" *ngIf="isUserMenuOpen">
             <ng-container *ngIf="isLoggedIn">
-              <div class="dropdown-item" (click)="router.navigate(['/dashboard/profile']); closeUserMenu()">
+              <div class="dropdown-item" (click)="router.navigate(['/dashboard/profilo']); closeUserMenu()">
                 <i class="pi pi-user"></i> Il mio profilo
               </div>
-              <div class="dropdown-item" (click)="router.navigate(['/dashboard/orders']); closeUserMenu()">
-                <i class="pi pi-box"></i> Ordini
+              <div class="dropdown-item" (click)="router.navigate(['/dashboard/ordini']); closeUserMenu()">
+                <i class="pi pi-box"></i> I miei ordini
               </div>
-              <div class="dropdown-item" (click)="router.navigate(['/dashboard/orders']); closeUserMenu()">
-                <i class="pi pi-refresh"></i> Effettua un reso
+              <div class="dropdown-item" (click)="router.navigate(['/dashboard/ordini']); closeUserMenu()">
+                <i class="pi pi-refresh"></i> I miei resi
               </div>
-              <div class="dropdown-item" (click)="router.navigate(['/aiuto-contatti']); closeUserMenu()">
-                <i class="pi pi-envelope"></i> Aiuto e contatti
-              </div>
-              <div class="dropdown-divider"></div>
-              <div class="dropdown-item text-danger" (click)="logout(); closeUserMenu()">
-                <i class="pi pi-sign-out"></i> Disconnettiti
+              <div class="dropdown-item" (click)="logout()">
+                <i class="pi pi-sign-out"></i> Esci
               </div>
             </ng-container>
-            
+
             <ng-container *ngIf="!isLoggedIn">
               <div class="dropdown-item login-btn-item text-center" (click)="login(); closeUserMenu()">
                 <strong>ACCEDI</strong>
@@ -94,11 +86,11 @@
               <div class="dropdown-item" (click)="closeUserMenu()">
                 <i class="pi pi-user"></i> Il mio profilo
               </div>
-              <div class="dropdown-item" (click)="router.navigate(['/dashboard/orders']); closeUserMenu()">
-                <i class="pi pi-box"></i> Ordini
+              <div class="dropdown-item" (click)="router.navigate(['/dashboard/ordini']); closeUserMenu()">
+                <i class="pi pi-box"></i> I miei ordini
               </div>
-              <div class="dropdown-item" (click)="router.navigate(['/dashboard/orders']); closeUserMenu()">
-                <i class="pi pi-refresh"></i> Effettua un reso
+              <div class="dropdown-item" (click)="router.navigate(['/dashboard/ordini']); closeUserMenu()">
+                <i class="pi pi-refresh"></i> I miei resi
               </div>
               <div class="dropdown-item" (click)="router.navigate(['/aiuto-contatti']); closeUserMenu()">
                 <i class="pi pi-envelope"></i> Aiuto e contatti
@@ -132,8 +124,8 @@
 <!-- Cart Sidebar removed to prevent automatic fetching -->
 
 <!-- Popup Wishlist per utenti non loggati -->
-<p-dialog [(visible)]="mostraDialogWishlist" [modal]="true" [style]="{width: '450px'}"
-  [closable]="true" [draggable]="false" [resizable]="false" styleClass="custom-auth-dialog">
+<p-dialog [(visible)]="mostraDialogWishlist" [modal]="true" [style]="{width: '450px'}" [closable]="true"
+  [draggable]="false" [resizable]="false" styleClass="custom-auth-dialog">
   <ng-template pTemplate="header">
     <div class="auth-dialog-header">
       <i class="pi pi-lock"></i>
@@ -148,7 +140,7 @@
       <button mat-raised-button class="btn-accedi" (click)="login()">
         <mat-icon>login</mat-icon> ACCEDI
       </button>
-      
+
       <div class="register-prompt">
         <span>Nuovo su HomeStyle?</span>
         <span class="register-link" (click)="register()">REGISTRATI</span>

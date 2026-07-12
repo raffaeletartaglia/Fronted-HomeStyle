@@ -33,19 +33,19 @@ export const routes: Routes = [
         canActivate: [authGuard], // Protezione: accessibile solo se loggati
         children: [
           {
-            path: 'profile',
+            path: 'profilo',
             loadComponent: () => import('./pages/dashboard/user-profile/user-profile').then(m => m.UserProfile)
           },
           {
-            path: 'addresses',
+            path: 'indirizzi',
             loadComponent: () => import('./pages/dashboard/user-addresses/user-addresses').then(m => m.UserAddressesComponent)
           },
           {
-            path: 'cards',
+            path: 'carte',
             loadComponent: () => import('./pages/dashboard/user-cards/user-cards').then(m => m.UserCardsComponent)
           },
           {
-            path: 'wishlist',
+            path: 'preferiti',
             loadComponent: () => import('./pages/dashboard/wishlist/wishlist').then(m => m.Wishlist)
           },
           {
@@ -53,42 +53,42 @@ export const routes: Routes = [
             loadComponent: () => import('./pages/cart/cart').then(m => m.Cart)
           },
           {
-            path: 'orders',
+            path: 'ordini',
             loadComponent: () => import('./pages/dashboard/user-orders/user-orders').then(m => m.UserOrdersComponent)
           },
-          { path: '', redirectTo: 'profile', pathMatch: 'full' },
+          { path: '', redirectTo: 'profilo', pathMatch: 'full' },
           {
-            path: 'admin/categories',
+            path: 'admin/categorie',
             loadComponent: () => import('./pages/admin/categories/category-list/category-list').then(m => m.CategoryList),
             canActivate: [adminGuard]
           },
           {
-            path: 'admin/products',
+            path: 'admin/prodotti',
             loadComponent: () => import('./pages/admin/products/product-list/product-list').then(m => m.ProductList),
             canActivate: [adminGuard]
           },
           {
-            path: 'admin/rooms',
+            path: 'admin/stanze',
             loadComponent: () => import('./pages/admin/rooms/room-list/room-list').then(m => m.RoomList),
             canActivate: [adminGuard]
           },
           {
-            path: 'admin/all-orders',
+            path: 'admin/ordini-tutti',
             loadComponent: () => import('./pages/admin/orders/order-list/order-list').then(m => m.OrderList),
             canActivate: [adminGuard]
           },
           {
-            path: 'admin/returns',
+            path: 'admin/resi',
             loadComponent: () => import('./pages/admin/returns/return-list/return-list').then(m => m.ReturnListComponent),
             canActivate: [adminGuard]
           },
           {
-            path: 'admin/shipments',
+            path: 'admin/spedizioni',
             loadComponent: () => import('./pages/admin/shipments/shipment-list/shipment-list').then(m => m.ShipmentList),
             canActivate: [adminGuard]
           },
           {
-            path: 'admin/inventory',
+            path: 'admin/magazzino',
             loadComponent: () => import('./pages/admin/inventory/inventory-list/inventory-list').then(m => m.InventoryList),
             canActivate: [adminGuard]
           }
