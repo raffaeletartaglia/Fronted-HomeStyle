@@ -5,7 +5,7 @@
       <p>Gli articoli che hai salvato per i tuoi futuri acquisti.</p>
     </div>
     <div class="header-actions">
-      <button class="danger-btn" (click)="svuotaWishlist()" *ngIf="wishlistService.prodottiWishlist.length > 0">
+      <button class="delete-btn-rounded" (click)="svuotaWishlist()" *ngIf="wishlistService.prodottiWishlist.length > 0" style="width: auto; padding: 0.5rem 1rem;">
         <i class="pi pi-trash"></i> Svuota Wishlist
       </button>
     </div>
@@ -33,7 +33,7 @@
       </div>
       
       <div class="product-actions">
-        <button class="danger-btn w-full" (click)="$event.stopPropagation(); rimuoviDaWishlist(prodotto.id)">
+        <button class="delete-btn-rounded" (click)="$event.stopPropagation(); rimuoviDaWishlist(prodotto.id)">
           <i class="pi pi-trash"></i> Rimuovi
         </button>
       </div>

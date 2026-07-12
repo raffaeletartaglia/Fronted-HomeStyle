@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from "@angular/core";
+import { Subject } from 'rxjs';
 import { HttpClient } from "@angular/common/http";
 import { UtenteService } from "./utente.service";
 import { PopupService } from "./popUp.service";
@@ -11,13 +12,14 @@ export class WishListService{
 
     wishlist: Wishlist | null = null;
     prodottiWishlist: any[] = [];
+    public wishlistUpdated$ = new Subject<void>();
 
     constructor(private utenteService: UtenteService, private http: HttpClient, private popUpService:PopupService, private ngZone: NgZone) {}
 
   getUserWishList(idUtente: string) {
     if (!idUtente || idUtente.trim() === '') {
       console.warn("Attenzione: hai provato a cercare una wishlist senza passare l'ID utente!");
-      return null;
+      return;
     }
 
     this.prodottiWishlist = [];
@@ -34,6 +36,7 @@ export class WishListService{
               this.wishlist = response;
               // AGGIORNAMENTO ISTANTANEO: nuova referenza per triggerare change detection
               this.prodottiWishlist = [...(response.prodotti || [])];
+              this.wishlistUpdated$.next();
               console.log("Wishlist caricata!", this.prodottiWishlist);
           }
         });
@@ -46,8 +49,6 @@ export class WishListService{
         });
       }
     );
-    
-    return req;
   }
   
   aggiungiProdottoAWishlist(idUtente: string, idProdotto: string) {
@@ -61,6 +62,7 @@ export class WishListService{
           this.wishlist = response;
           // AGGIORNAMENTO ISTANTANEO: nuova referenza per triggerare change detection
           this.prodottiWishlist = [...(response.prodotti || [])];
+          this.wishlistUpdated$.next();
           this.popUpService.updateStringa("Prodotto aggiunto alla tua lista dei desideri!");
           this.popUpService.openPopups(999, false);
         });
@@ -86,6 +88,7 @@ export class WishListService{
           this.wishlist = response;
           // AGGIORNAMENTO ISTANTANEO: nuova referenza per triggerare change detection
           this.prodottiWishlist = [...(response.prodotti || [])];
+          this.wishlistUpdated$.next();
           this.popUpService.updateStringa("Prodotto rimosso dalla wishlist.");
           this.popUpService.openPopups(999, false);
         });
@@ -110,6 +113,7 @@ export class WishListService{
         this.ngZone.run(() => {
           this.wishlist = null;
           this.prodottiWishlist = [];
+          this.wishlistUpdated$.next();
           this.popUpService.updateStringa("La tua lista dei desideri è stata svuotata.");
           this.popUpService.openPopups(999, false);
         });

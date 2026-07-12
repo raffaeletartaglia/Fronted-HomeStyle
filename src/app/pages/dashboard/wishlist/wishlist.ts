@@ -23,22 +23,15 @@ export class Wishlist implements OnInit {
   ngOnInit() {
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;
+      this.wishlistService.wishlistUpdated$.subscribe(() => {
+        this.cdr.detectChanges();
+      });
       this.caricaWishlist();
     }
   }
 
   caricaWishlist() {
-    const req = this.wishlistService.getUserWishList(this.idUtente);
-    if (req) {
-      req.subscribe({
-        next: () => {
-          this.cdr.detectChanges();
-        },
-        error: () => {
-          this.cdr.detectChanges();
-        }
-      });
-    }
+    this.wishlistService.getUserWishList(this.idUtente);
   }
 
   goToDetail(idProdotto: string) {

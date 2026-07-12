@@ -12,7 +12,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import Keycloak from 'keycloak-js';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { WishListService } from '../services/wishList.service'; // Adjust path if needed
 import { UtenteService } from '../services/utente.service';
 import { ProductService } from '../services/productService';
 import { IfAuthenticatedDirective } from '../directives/if-authenticated.directive';
@@ -76,7 +75,6 @@ export class headerComponent implements OnInit {
     private utenteService: UtenteService, 
     private productService: ProductService, 
     public router: Router, 
-    private wishlistService: WishListService,
     private stanzaService: StanzaService,
     private categoriaService: CategoriaService,
     private cdr: ChangeDetectorRef,
@@ -96,7 +94,7 @@ export class headerComponent implements OnInit {
     if (this.isLoggedIn) {
       // Proviamo a ottenere i dati dal nostro backend (database locale)
       this.utenteService.getUserData().subscribe({
-        next: (datiDb) => {
+        next: (datiDb: any) => {
           // L'utente esiste già nel DB, usiamo i suoi dati
           this.userProfile = {
             firstName: datiDb.nome,
@@ -104,7 +102,7 @@ export class headerComponent implements OnInit {
             email: datiDb.email
           };
         },
-        error: (err) => {
+        error: (err: any) => {
           // Se il server risponde 404 (utente non trovato), significa che
           // si è appena registrato su Keycloak ma non esiste nel nostro DB.
           // Lo sincronizziamo!
@@ -113,7 +111,7 @@ export class headerComponent implements OnInit {
             const tokenCognome = this.keycloak.tokenParsed['family_name'] || '';
 
             this.utenteService.aggiornaProfilo(tokenNome, tokenCognome, '').subscribe({
-              next: (newDati) => {
+              next: (newDati: any) => {
                 this.userProfile = {
                   firstName: newDati.nome,
                   lastName: newDati.cognome,
@@ -125,11 +123,6 @@ export class headerComponent implements OnInit {
         }
       });
       
-      // Caricamento wishlist iniziale per mostrare correttamente il badge
-      const id = this.keycloak.tokenParsed?.sub;
-      if (id) {
-        this.wishlistService.getUserWishList(id);
-      }
     }
   }
   loadHeaderMenu() {
@@ -137,7 +130,7 @@ export class headerComponent implements OnInit {
       stanzeRes: this.stanzaService.getAllStanze(0, 100),
       categorieRes: this.categoriaService.getAllCategorie(0, 500)
     }).subscribe({
-      next: ({ stanzeRes, categorieRes }) => {
+      next: ({ stanzeRes, categorieRes }: any) => {
         // @ts-ignore - Assuming PaginatedResponse structure has 'content' or fallback to array if it's already array
         const stanze: Stanza[] = stanzeRes.content || stanzeRes || [];
         // @ts-ignore
@@ -197,7 +190,6 @@ export class headerComponent implements OnInit {
   goToWishlist() {
     const idUtente = this.keycloak.tokenParsed?.sub;
     if (idUtente) {
-      this.wishlistService.getUserWishList(idUtente);
       this.router.navigate(['/dashboard/preferiti']);
     }
   }
@@ -214,11 +206,11 @@ export class headerComponent implements OnInit {
     const query = event.target.value;
     if (query && query.length >= 2) {
       this.productService.ricercaSuggerimenti(query).subscribe({
-        next: (res) => {
+        next: (res: any) => {
           this.suggerimenti = res;
           this.isSearchDropdownOpen = this.suggerimenti.length > 0;
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error("Errore suggerimenti:", err);
           this.suggerimenti = [];
           this.isSearchDropdownOpen = false;
