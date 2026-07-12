@@ -15,7 +15,16 @@ import { CartaPagamento } from '../../../models/cartaPagamento.model';
 })
 export class UserCardsComponent implements OnInit {
   mostraFormCarta = false;
-  nuovaCarta: any = { intestatario: '', numeroCarta: '', scadenza: '', cvv: '', isDefault: false };
+  mostraCvv = false;
+  
+  nuovaCarta: any = { 
+    intestatario: '', 
+    numeroCarta: '', 
+    scadenza: '', 
+    cvv: '', 
+    tipoCarta: '', 
+    isDefault: false 
+  };
   idUtente: string = '';
 
   constructor(
