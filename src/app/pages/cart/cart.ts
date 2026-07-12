@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { CarrelloService } from '../../services/carrello.service';
@@ -6,10 +6,12 @@ import { Router } from '@angular/router';
 import Keycloak from 'keycloak-js';
 import { MessageService } from 'primeng/api';
 
+import { DialogModule } from 'primeng/dialog';
+
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, ToastModule],
+  imports: [CommonModule, ToastModule, DialogModule],
   providers: [MessageService],
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
@@ -23,10 +25,15 @@ export class Cart implements OnInit {
   totalPages: number = 0;
   idCarrello: string = '';
 
+  mostraDialogSvuota: boolean = false;
+  mostraDialogEliminaSingolo: boolean = false;
+  itemDaRimuovere: any = null;
+
+  private keycloak = inject(Keycloak);
+
   constructor(
     private carrelloService: CarrelloService,
     public router: Router,
-    private keycloak: Keycloak,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService
   ) {}
@@ -103,6 +110,19 @@ export class Cart implements OnInit {
     });
   }
 
+  confermaRimuoviItem(item: any) {
+    this.itemDaRimuovere = item;
+    this.mostraDialogEliminaSingolo = true;
+  }
+
+  eseguiRimuoviItem() {
+    if (this.itemDaRimuovere) {
+      this.removeItem(this.itemDaRimuovere);
+      this.mostraDialogEliminaSingolo = false;
+      this.itemDaRimuovere = null;
+    }
+  }
+
   removeItem(item: any) {
     this.carrelloService.rimuoviProdottoObservable(item.id).subscribe({
       next: () => {
@@ -124,6 +144,31 @@ export class Cart implements OnInit {
     });
   }
 
+  confermaSvuotaCarrello() {
+    this.mostraDialogSvuota = true;
+  }
+
+  eseguiSvuotaCarrello() {
+    if (!this.idCarrello) return;
+    this.carrelloService.svuotaCarrelloObservable(this.idCarrello).subscribe({
+      next: () => {
+        this.cartItems = [];
+        this.total = 0;
+        this.currentPage = 0;
+        this.totalPages = 0;
+        this.mostraDialogSvuota = false;
+        this.messageService.add({ severity: 'success', summary: 'Carrello Svuotato', detail: 'Tutti i prodotti sono stati rimossi dal carrello.' });
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Errore svuotamento carrello', err);
+        this.mostraDialogSvuota = false;
+        this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Impossibile svuotare il carrello.' });
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   goToCheckout() {
     this.router.navigate(['/checkout']);
   }
@@ -139,6 +184,12 @@ export class Cart implements OnInit {
     if (this.currentPage > 0) {
       this.currentPage--;
       this.loadCartItems();
+    }
+  }
+
+  goToProduct(productId: string) {
+    if (productId) {
+      this.router.navigate(['/product', productId]);
     }
   }
 }

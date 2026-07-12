@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable, NgZone } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { PopupService } from './popUp.service';
 import { Carrello } from '../models/carrello.model';
 import { PaginatedResponse } from '../models/pagination.model';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +14,16 @@ export class CarrelloService {
   // LA NOSTRA VETRINA: Qui salviamo il carrello dell'utente attualmente loggato
   carrelloAttivo: Carrello | null = null;
   carrelloProdottiPaginated: PaginatedResponse<any> | null = null;
+  public carrelloUpdated$ = new Subject<void>();
 
   // L'URL di base (da cui derivano tutti gli altri)
-  private baseUrl = 'http://localhost:8080/api/v1/carrello';
+  private readonly baseUrl = 'http://localhost:8080/api/v1/carrello';
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private popUpService: PopupService
+    private readonly http: HttpClient,
+    private readonly router: Router,
+    private readonly popUpService: PopupService,
+    private ngZone: NgZone
   ) {}
 
   // ==========================================
@@ -35,13 +38,20 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/utente/${idUtente}`;
 
-    this.http.get<Carrello>(url).subscribe(
-      (response) => {
-        this.carrelloAttivo = response;
-        console.log("Carrello caricato:", this.carrelloAttivo);
+    this.http.get<Carrello>(url).subscribe({
+      next: (response) => {
+        this.ngZone.run(() => {
+          this.carrelloAttivo = response;
+          this.carrelloUpdated$.next();
+          console.log("Carrello caricato:", this.carrelloAttivo);
+        });
       },
-      (error) => console.error("Errore caricamento carrello", error)
-    );
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore caricamento carrello", error);
+        });
+      }
+    });
   }
 
   getCarrelloUtenteObservable(idUtente: string) {
@@ -58,12 +68,19 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/${idCarrello}`;
 
-    this.http.get<Carrello>(url).subscribe(
-      (response) => {
-        this.carrelloAttivo = response;
+    this.http.get<Carrello>(url).subscribe({
+      next: (response) => {
+        this.ngZone.run(() => {
+          this.carrelloAttivo = response;
+          this.carrelloUpdated$.next();
+        });
       },
-      (error) => console.error("Errore recupero carrello per ID", error)
-    );
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore recupero carrello per ID", error);
+        });
+      }
+    });
   }
 
   // ==========================================
@@ -75,15 +92,22 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/${idCarrello}/prodotti?page=${page}&size=${size}`;
 
-    this.http.get<PaginatedResponse<any>>(url).subscribe(
-      (response) => {
-        this.carrelloProdottiPaginated = response;
-        if (this.carrelloAttivo) {
-          this.carrelloAttivo.prodotti = response.content;
-        }
+    this.http.get<PaginatedResponse<any>>(url).subscribe({
+      next: (response) => {
+        this.ngZone.run(() => {
+          this.carrelloProdottiPaginated = response;
+          if (this.carrelloAttivo) {
+            this.carrelloAttivo.prodotti = response.content;
+          }
+          this.carrelloUpdated$.next();
+        });
       },
-      (error) => console.error("Errore recupero prodotti", error)
-    );
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore recupero prodotti", error);
+        });
+      }
+    });
   }
 
   getSoloProdottiObservable(idCarrello: string, page: number = 0, size: number = 5) {
@@ -100,12 +124,18 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/${idCarrello}/totale`;
 
-    this.http.get<number>(url).subscribe(
-      (totale) => {
-        console.log("Il totale calcolato dal server è:", totale);
+    this.http.get<number>(url).subscribe({
+      next: (totale) => {
+        this.ngZone.run(() => {
+          console.log("Il totale calcolato dal server è:", totale);
+        });
       },
-      (error) => console.error("Errore calcolo totale", error)
-    );
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore calcolo totale", error);
+        });
+      }
+    });
   }
 
   getTotaleCarrelloObservable(idCarrello: string) {
@@ -122,18 +152,23 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/utente/${idUtente}/prodotti`;
 
-    this.http.post<Carrello>(url, prodottiDaAggiungere).subscribe(
-      (response) => {
-        this.carrelloAttivo = response;
-        this.popUpService.updateStringa("Prodotti aggiunti al carrello!");
-        this.popUpService.openPopups(999, false);
+    this.http.post<Carrello>(url, prodottiDaAggiungere).subscribe({
+      next: (response) => {
+        this.ngZone.run(() => {
+          this.carrelloAttivo = response;
+          this.carrelloUpdated$.next();
+          this.popUpService.updateStringa("Prodotti aggiunti al carrello!");
+          this.popUpService.openPopups(999, false);
+        });
       },
-      (error) => {
-        console.error("Errore aggiunta al carrello", error);
-        this.popUpService.updateStringa("Errore durante l'aggiunta al carrello.");
-        this.popUpService.openPopups(999, true);
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore aggiunta al carrello", error);
+          this.popUpService.updateStringa("Errore durante l'aggiunta al carrello.");
+          this.popUpService.openPopups(999, true);
+        });
       }
-    );
+    });
   }
 
   aggiungiProdottiObservable(idUtente: string, prodottiDaAggiungere: any[]) {
@@ -150,21 +185,26 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/prodotti/${idCarrelloProdotto}/quantita?quantita=${nuovaQuantita}`;
 
-    this.http.put<any>(url, null).subscribe(
-      (prodottoAggiornato) => {
-        if (this.carrelloAttivo && this.carrelloAttivo.prodotti) {
-          const index = this.carrelloAttivo.prodotti.findIndex(p => p.id === idCarrelloProdotto);
-          if (index !== -1) {
-            this.carrelloAttivo.prodotti[index] = prodottoAggiornato;
+    this.http.put<any>(url, null).subscribe({
+      next: (prodottoAggiornato) => {
+        this.ngZone.run(() => {
+          if (this.carrelloAttivo && this.carrelloAttivo.prodotti) {
+            const index = this.carrelloAttivo.prodotti.findIndex(p => p.id === idCarrelloProdotto);
+            if (index !== -1) {
+              this.carrelloAttivo.prodotti[index] = prodottoAggiornato;
+            }
           }
-        }
+          this.carrelloUpdated$.next();
+        });
       },
-      (error) => {
-        console.error("Errore aggiornamento quantità", error);
-        this.popUpService.updateStringa("Impossibile aggiornare la quantità.");
-        this.popUpService.openPopups(999, true);
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore aggiornamento quantità", error);
+          this.popUpService.updateStringa("Impossibile aggiornare la quantità.");
+          this.popUpService.openPopups(999, true);
+        });
       }
-    );
+    });
   }
 
   aggiornaQuantitaObservable(idCarrelloProdotto: string, nuovaQuantita: number) {
@@ -181,16 +221,23 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/prodotti/${idCarrelloProdotto}`;
 
-    this.http.delete<void>(url).subscribe(
-      () => {
-        if (this.carrelloAttivo && this.carrelloAttivo.prodotti) {
-          this.carrelloAttivo.prodotti = this.carrelloAttivo.prodotti.filter(p => p.id !== idCarrelloProdotto);
-        }
-        this.popUpService.updateStringa("Prodotto rimosso dal carrello.");
-        this.popUpService.openPopups(999, false);
+    this.http.delete<void>(url).subscribe({
+      next: () => {
+        this.ngZone.run(() => {
+          if (this.carrelloAttivo && this.carrelloAttivo.prodotti) {
+            this.carrelloAttivo.prodotti = this.carrelloAttivo.prodotti.filter(p => p.id !== idCarrelloProdotto);
+          }
+          this.carrelloUpdated$.next();
+          this.popUpService.updateStringa("Prodotto rimosso dal carrello.");
+          this.popUpService.openPopups(999, false);
+        });
       },
-      (error) => console.error("Errore rimozione prodotto", error)
-    );
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore rimozione prodotto", error);
+        });
+      }
+    });
   }
 
   rimuoviProdottoObservable(idCarrelloProdotto: string) {
@@ -207,16 +254,28 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/${idCarrello}/svuota`;
 
-    this.http.delete<void>(url).subscribe(
-      () => {
-        if (this.carrelloAttivo) {
-          this.carrelloAttivo.prodotti = [];
-        }
-        this.popUpService.updateStringa("Il carrello è stato svuotato.");
-        this.popUpService.openPopups(999, false);
+    this.http.delete<void>(url).subscribe({
+      next: () => {
+        this.ngZone.run(() => {
+          if (this.carrelloAttivo) {
+            this.carrelloAttivo.prodotti = [];
+          }
+          this.carrelloUpdated$.next();
+          this.popUpService.updateStringa("Il carrello è stato svuotato.");
+          this.popUpService.openPopups(999, false);
+        });
       },
-      (error) => console.error("Errore svuotamento carrello", error)
-    );
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore svuotamento carrello", error);
+        });
+      }
+    });
+  }
+
+  svuotaCarrelloObservable(idCarrello: string) {
+    const url = `${this.baseUrl}/${idCarrello}/svuota`;
+    return this.http.delete<void>(url);
   }
 
   // ==========================================
@@ -228,17 +287,22 @@ export class CarrelloService {
 
     const url = `${this.baseUrl}/${idCarrello}`;
 
-    this.http.delete<void>(url).subscribe(
-      () => {
-        this.carrelloAttivo = null;
-        this.popUpService.updateStringa("Carrello eliminato dal database.");
-        this.popUpService.openPopups(999, false);
+    this.http.delete<void>(url).subscribe({
+      next: () => {
+        this.ngZone.run(() => {
+          this.carrelloAttivo = null;
+          this.carrelloUpdated$.next();
+          this.popUpService.updateStringa("Carrello eliminato dal database.");
+          this.popUpService.openPopups(999, false);
+        });
       },
-      (error) => {
-        console.error("Errore eliminazione carrello", error);
-        this.popUpService.updateStringa("Errore: Probabilmente non sei un Admin.");
-        this.popUpService.openPopups(999, true);
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error("Errore eliminazione carrello", error);
+          this.popUpService.updateStringa("Errore: Probabilmente non sei un Admin.");
+          this.popUpService.openPopups(999, true);
+        });
       }
-    );
+    });
   }
 }

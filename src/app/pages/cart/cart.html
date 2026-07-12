@@ -15,8 +15,8 @@
         </button>
       </div>
 
-      <div class="cart-items-header-bar" *ngIf="totalPages > 1">
-        <div class="pagination-controls">
+      <div class="cart-items-header-bar" *ngIf="cartItems.length > 0">
+        <div class="pagination-controls" *ngIf="totalPages > 1">
           <button class="btn-icon" (click)="prevPage()" [disabled]="currentPage === 0">
             <i class="pi pi-chevron-left"></i>
           </button>
@@ -25,41 +25,48 @@
             <i class="pi pi-chevron-right"></i>
           </button>
         </div>
+        <div style="flex-grow: 1;"></div>
+        <button class="delete-btn-rounded with-text" (click)="confermaSvuotaCarrello()">
+          <i class="pi pi-trash"></i> Svuota Carrello
+        </button>
       </div>
 
       <div *ngIf="cartItems.length > 0" class="cart-items-list">
-        <div *ngFor="let item of cartItems" class="glass-card cart-item-card mb-3">
-          <div class="cart-item-flex">
-            <!-- Immagine (placeholder o futura) -->
-            <div class="item-img-placeholder">
+        <div *ngFor="let item of cartItems" class="cart-card-horizontal mb-3 clickable-card" (click)="goToProduct(item.prodotto.id)">
+          <!-- Immagine -->
+          <div class="product-image">
+            <img *ngIf="item.prodotto.immagine" [src]="'data:image/jpeg;base64,' + item.prodotto.immagine" [alt]="item.prodotto.nomeProdotto">
+            <div *ngIf="!item.prodotto.immagine" class="no-image">
               <i class="pi pi-image" style="font-size: 2rem; color: #ccc;"></i>
             </div>
+          </div>
             
-            <div class="item-details">
-              <h3>{{ item.prodotto.nomeProdotto }}</h3>
-              <p class="text-color-secondary">{{ item.prodotto.categoria?.nomeCategoria || 'Categoria generica' }}</p>
-            </div>
-
-            <div class="item-quantity d-flex align-items-center">
+          <!-- Dettagli e Quantità -->
+          <div class="product-info">
+            <h3 class="product-brand">{{ item.prodotto.categoria?.nomeCategoria || 'Categoria generica' }}</h3>
+            <h2 class="product-name">{{ item.prodotto.nomeProdotto }}</h2>
+            
+            <div class="item-quantity d-flex align-items-center mt-2">
               <span class="qty-label mr-2">Qtà:</span>
-              <button class="icon-btn" (click)="updateQuantity(item, item.quantita - 1)" [disabled]="item.quantita <= 1">
-                <i class="pi pi-minus"></i>
+              <button class="qty-btn" (click)="$event.stopPropagation(); updateQuantity(item, item.quantita - 1)" [disabled]="item.quantita <= 1">
+                <i class="pi pi-minus" style="font-size:0.8rem"></i>
               </button>
-              <span class="qty-value px-2 font-bold">{{ item.quantita }}</span>
-              <button class="icon-btn" (click)="updateQuantity(item, item.quantita + 1)">
-                <i class="pi pi-plus"></i>
+              <span class="qty-value px-3 font-bold" style="min-width:30px;text-align:center;">{{ item.quantita }}</span>
+              <button class="qty-btn" (click)="$event.stopPropagation(); updateQuantity(item, item.quantita + 1)">
+                <i class="pi pi-plus" style="font-size:0.8rem"></i>
               </button>
             </div>
+          </div>
 
-            <div class="item-price" style="display: flex; flex-direction: column; align-items: flex-end;">
-              <span class="price-single text-color-secondary" style="font-size: 0.9rem;">€{{ item.prodotto.prezzo | number:'1.2-2' }} cad.</span>
-              <span class="price-subtotal font-bold" style="font-size: 1.2rem;">€{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</span>
-            </div>
-
-            <div class="item-actions ml-3" style="display: flex; align-items: center;">
-              <button class="icon-btn danger-btn" (click)="removeItem(item)">
-                <i class="pi pi-trash"></i>
-              </button>
+          <!-- Prezzi e Azioni -->
+          <div class="product-actions">
+            <button class="delete-btn-rounded icon-only" style="border: 1px solid #ef4444; color: #ef4444; background: transparent;" (click)="$event.stopPropagation(); confermaRimuoviItem(item)">
+              <i class="pi pi-trash"></i>
+            </button>
+            
+            <div class="product-price-info">
+              <span class="price-single">€{{ item.prodotto.prezzo | number:'1.2-2' }} cad.</span>
+              <span class="price-subtotal">€{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</span>
             </div>
           </div>
         </div>
@@ -98,3 +105,29 @@
 </div>
 
 <p-toast position="top-right"></p-toast>
+
+<p-dialog header="Svuota Carrello" [(visible)]="mostraDialogSvuota" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
+  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+    <p style="margin: 0;">Sei sicuro di voler svuotare completamente il tuo carrello?</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+      <button class="btn-dialog-cancel" (click)="mostraDialogSvuota = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiSvuotaCarrello()">Svuota</button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-dialog header="Rimuovi Prodotto" [(visible)]="mostraDialogEliminaSingolo" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
+  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    <i class="pi pi-trash" style="font-size: 3rem; color: #ef4444;"></i>
+    <p style="margin: 0;">Sei sicuro di voler rimuovere questo prodotto dal carrello?</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+      <button class="btn-dialog-cancel" (click)="mostraDialogEliminaSingolo = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiRimuoviItem()">Rimuovi</button>
+    </div>
+  </ng-template>
+</p-dialog>
