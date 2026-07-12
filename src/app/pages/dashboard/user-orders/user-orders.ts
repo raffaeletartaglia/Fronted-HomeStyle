@@ -50,6 +50,10 @@ export class UserOrdersComponent implements OnInit {
   filterSpedizione = 'TUTTI';
   filterReso = 'TUTTI';
 
+  // Annullamento Ordine
+  mostraDialogAnnulla: boolean = false;
+  ordineDaAnnullareId: string = '';
+
   private keycloak = inject(Keycloak);
 
   constructor(
@@ -250,5 +254,28 @@ export class UserOrdersComponent implements OnInit {
       this.currentPage--;
       this.caricaOrdini();
     }
+  }
+
+  confermaAnnullaOrdine(id: string) {
+    this.ordineDaAnnullareId = id;
+    this.mostraDialogAnnulla = true;
+  }
+
+  eseguiAnnullaOrdine() {
+    if (!this.ordineDaAnnullareId) return;
+
+    this.ordineService.annullaOrdine(this.ordineDaAnnullareId).subscribe({
+      next: (res) => {
+        this.messageService.add({severity:'success', summary:'Successo', detail:'Ordine annullato correttamente'});
+        this.mostraDialogAnnulla = false;
+        this.caricaOrdini();
+      },
+      error: (err) => {
+        console.error(err);
+        const errorMessage = err.error?.messaggio || 'Errore durante l\'annullamento dell\'ordine';
+        this.messageService.add({severity:'error', summary:'Errore', detail: errorMessage});
+        this.mostraDialogAnnulla = false;
+      }
+    });
   }
 }

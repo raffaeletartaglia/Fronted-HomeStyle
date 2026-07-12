@@ -126,6 +126,12 @@
           </div>
         </div>
       </div>
+      
+      <div class="order-footer" *ngIf="ordine.statoOrdine === 'IN_ELABORAZIONE'" style="padding-top: 15px; border-top: 1px solid #eee; margin-top: 15px;">
+        <button class="delete-btn-rounded with-text" (click)="confermaAnnullaOrdine(ordine.id)">
+          <i class="pi pi-times"></i> Annulla Ordine
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -178,9 +184,22 @@
     </div>
 
     <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
-      <button class="btn-primary" (click)="inviaReso()" style="padding: 12px 24px; border-radius: 12px; font-size: 1rem;">
-        <i class="pi pi-check"></i> Conferma Reso
-      </button>
+      <button class="btn-secondary mr-2" (click)="mostraDialogReso = false" style="margin-right: 10px;">Annulla</button>
+      <button class="btn-primary" (click)="inviaReso()">Conferma</button>
     </div>
   </div>
+</p-dialog>
+
+<!-- Dialog Conferma Annulla Ordine -->
+<p-dialog header="Annulla Ordine" [(visible)]="mostraDialogAnnulla" [modal]="true" [style]="{width: '400px'}" [closable]="true" styleClass="light-dialog">
+  <div class="p-fluid mt-2 text-center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #f59e0b;"></i>
+    <p style="margin: 0;">Attenzione sei sicuro di voler annullare l'ordine?</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+      <button class="btn-dialog-cancel" (click)="mostraDialogAnnulla = false">Annulla</button>
+      <button class="btn-dialog-confirm" (click)="eseguiAnnullaOrdine()">Conferma</button>
+    </div>
+  </ng-template>
 </p-dialog>

@@ -49,4 +49,11 @@ export class OrdineService {
   creaOrdineSingolo(idUtente: string, idIndirizzoSpedizione: string, idProdotto: string, quantita: number): Observable<Ordine> {
     return this.http.post<Ordine>(`${this.apiUrl}/utente/${idUtente}/singolo?idIndirizzoSpedizione=${idIndirizzoSpedizione}&idProdotto=${idProdotto}&quantita=${quantita}`, {});
   }
+
+  /**
+   * Annulla un ordine esistente se in stato IN_ELABORAZIONE.
+   */
+  annullaOrdine(idOrdine: string): Observable<Ordine> {
+    return this.http.post<Ordine>(`${this.apiUrl}/${idOrdine}/annulla`, {});
+  }
 }
