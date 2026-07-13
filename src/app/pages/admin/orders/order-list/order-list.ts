@@ -1,15 +1,20 @@
-import { Component, OnInit, signal, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, HostListener, ChangeDetectorRef, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OrdineService } from '../../../../services/ordine.service';
+import { SpedizioneService } from '../../../../services/spedizione.service';
 import { Ordine, StatoOrdine } from '../../../../models/ordine.model';
 import { OrderDetailModal } from '../order-detail/order-detail';
+import { OrderShipmentDialog } from '../order-shipment-dialog/order-shipment-dialog';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
@@ -37,6 +42,7 @@ export class OrderList implements OnInit {
 
   constructor(
     private readonly ordineService: OrdineService,
+    private readonly spedizioneService: SpedizioneService,
     private readonly dialog: MatDialog,
     private readonly messageService: MessageService,
     private readonly cdr: ChangeDetectorRef
@@ -84,6 +90,31 @@ export class OrderList implements OnInit {
   onStatoChange(order: Ordine, nuovoStato: string) {
     this.openDropdownId = null;
     if (order.statoOrdine === nuovoStato) return;
+
+    if (nuovoStato === 'SPEDITO') {
+      const dialogRef = this.dialog.open(OrderShipmentDialog, {
+        width: '400px',
+        panelClass: 'bootstrap-dialog-container',
+        data: { corriere: '', codiceTracking: '' }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result && result.corriere) {
+          this.spedizioneService.creaSpedizione(order.id, result.corriere, result.codiceTracking).subscribe({
+            next: () => {
+              this.messageService.add({ severity: 'success', summary: 'Spedizione Creata', detail: "L'ordine è stato spedito con successo." });
+              this.loadOrders();
+            },
+            error: (err) => {
+              console.error('Errore creazione spedizione', err);
+              this.messageService.add({ severity: 'error', summary: 'Errore', detail: "Impossibile creare la spedizione." });
+              this.loadOrders();
+            }
+          });
+        }
+      });
+      return;
+    }
 
     this.ordineService.updateStatoOrdine(order.id, nuovoStato).subscribe({
       next: () => {

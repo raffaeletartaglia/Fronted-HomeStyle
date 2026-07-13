@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import { ProductService } from '../../../../services/productService';
 import { CategoriaService } from '../../../../services/categoria.service';
 import { ValidationService } from '../../../../services/validation.service';
 import { Categoria } from '../../../../models/categoria.model';
-import { NotificationModal } from '../../../../notification-modal/notification-modal';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-product-form',
@@ -35,8 +35,10 @@ export class ProductForm implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly productService: ProductService,
+    private readonly messageService: MessageService,
     private readonly categoriaService: CategoriaService,
     private readonly validationService: ValidationService,
+    private readonly cdr: ChangeDetectorRef,
     private readonly dialog: MatDialog,
     public dialogRef: MatDialogRef<ProductForm>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -99,14 +101,14 @@ export class ProductForm implements OnInit {
 
     const validationError = this.validationService.validateProduct(payload);
     if (validationError) {
-      this.dialog.open(NotificationModal, { data: { title: 'Attenzione', message: validationError, level: 'warning' } });
+      this.messageService.add({ severity: 'warn', summary: 'Attenzione', detail: validationError });
       return;
     }
 
     if (this.isEdit) {
       this.productService.updateProdotto(this.data.product.id, payload).subscribe({
         next: () => {
-          this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Prodotto aggiornato con successo!', level: 'success' } });
+          this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Prodotto aggiornato con successo!' });
           this.dialogRef.close(true);
         },
         error: (err) => this.handleError(err, 'aggiornare')
@@ -114,7 +116,7 @@ export class ProductForm implements OnInit {
     } else {
       this.productService.createProdotto(payload).subscribe({
         next: () => {
-          this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Prodotto creato con successo!', level: 'success' } });
+          this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Prodotto creato con successo!' });
           this.dialogRef.close(true);
         },
         error: (err) => this.handleError(err, 'creare')
@@ -127,9 +129,9 @@ export class ProductForm implements OnInit {
     
     // Fallback: se il backend risponde con un 400 e fornisce un messaggio specifico (es. ValoreNonValidoException)
     if (err.status === 400 && err.error?.messaggio) {
-      this.dialog.open(NotificationModal, { data: { title: 'Errore di Validazione', message: err.error.messaggio, level: 'warning' } });
+      this.messageService.add({ severity: 'warn', summary: 'Errore di Validazione', detail: err.error.messaggio });
     } else {
-      this.dialog.open(NotificationModal, { data: { title: 'Errore', message: `Non è stato possibile ${azione} il prodotto. Riprova.`, level: 'error' } });
+      this.messageService.add({ severity: 'error', summary: 'Errore', detail: `Non è stato possibile ${azione} il prodotto. Riprova.` });
     }
   }
 }

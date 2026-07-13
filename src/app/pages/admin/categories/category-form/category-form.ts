@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { CategoriaService } from '../../../../services/categoria.service';
 import { StanzaService } from '../../../../services/stanza.service';
-import { NotificationModal } from '../../../../notification-modal/notification-modal';
+import { MessageService } from 'primeng/api';
 import { Stanza } from '../../../../models/stanza.model';
 
 @Component({
@@ -25,6 +25,7 @@ export class CategoryForm implements OnInit {
 
   constructor(
     private readonly fb: FormBuilder,
+    private readonly messageService: MessageService,
     private readonly categoriaService: CategoriaService,
     private readonly stanzaService: StanzaService,
     private readonly dialog: MatDialog,
@@ -69,7 +70,7 @@ export class CategoryForm implements OnInit {
     if (this.isEdit) {
       this.categoriaService.updateCategoria(this.data.category.id, categoryData).subscribe({
         next: () => {
-          this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Categoria modificata con successo!', level: 'success' } });
+          this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Categoria modificata con successo!' });
           this.dialogRef.close(true);
         },
         error: (err) => this.handleError(err, 'modificare')
@@ -77,7 +78,7 @@ export class CategoryForm implements OnInit {
     } else {
       this.categoriaService.createCategoria(categoryData).subscribe({
         next: () => {
-          this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Hai aggiunto una nuova categoria con successo!', level: 'success' } });
+          this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Hai aggiunto una nuova categoria con successo!' });
           this.dialogRef.close(true);
         },
         error: (err) => this.handleError(err, 'aggiungere')
@@ -88,11 +89,11 @@ export class CategoryForm implements OnInit {
   handleError(err: any, azione: string) {
     console.error(`Errore durante l'operazione di ${azione}`, err);
     if (err.error?.codiceErrore === 'CATEGORIA_DUPLICATA' || err.status === 409) {
-      this.dialog.open(NotificationModal, { data: { title: 'Attenzione', message: 'Una categoria con questo nome esiste già.', level: 'warning' } });
-    } else if (err.error?.codiceErrore === 'ERRORE_INTERNO' || err.status >= 500) {
-      this.dialog.open(NotificationModal, { data: { title: 'Errore Server', message: 'Si è verificato un errore interno del server.', level: 'error' } });
+      this.messageService.add({ severity: 'warn', summary: 'Attenzione', detail: 'Una categoria con questo nome esiste già.' });
+    } else if (err.status === 500) {
+      this.messageService.add({ severity: 'error', summary: 'Errore Server', detail: 'Si è verificato un errore interno del server.' });
     } else {
-      this.dialog.open(NotificationModal, { data: { title: 'Errore', message: `Non è stato possibile ${azione} la categoria.`, level: 'error' } });
+      this.messageService.add({ severity: 'error', summary: 'Errore', detail: `Non è stato possibile ${azione} la categoria.` });
     }
   }
 

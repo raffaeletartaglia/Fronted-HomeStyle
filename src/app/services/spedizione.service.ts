@@ -24,6 +24,14 @@ export class SpedizioneService {
     return this.http.get<Spedizione>(`${this.apiUrl}/${idSpedizione}`);
   }
 
+  creaSpedizione(idOrdine: string, corriere: string, codiceTracking?: string): Observable<Spedizione> {
+    let params = new HttpParams().set('corriere', corriere);
+    if (codiceTracking) {
+      params = params.set('codiceTracking', codiceTracking);
+    }
+    return this.http.post<Spedizione>(`${this.apiUrl}/ordine/${idOrdine}`, null, { params });
+  }
+
   aggiornaStatoSpedizione(idSpedizione: string, nuovoStato: StatoSpedizione): Observable<Spedizione> {
     let params = new HttpParams().set('nuovoStato', nuovoStato);
     return this.http.put<Spedizione>(`${this.apiUrl}/${idSpedizione}/stato`, null, { params });

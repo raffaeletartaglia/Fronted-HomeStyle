@@ -1,0 +1,16 @@
+<h2 mat-dialog-title class="fw-bold mb-3" style="color: var(--primary-color);">Dati Spedizione</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="w-100 mt-2">
+    <mat-label>Corriere (Obbligatorio)</mat-label>
+    <input matInput [(ngModel)]="data.corriere" placeholder="es. DHL, BRT" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-100 mt-2">
+    <mat-label>Codice Tracking (Opzionale)</mat-label>
+    <input matInput [(ngModel)]="data.codiceTracking" placeholder="Tracking">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="pb-3 pe-3">
+  <button class="btn-secondary" mat-button mat-dialog-close>Annulla</button>
+  <button class="btn-primary" mat-raised-button [disabled]="!data.corriere" [mat-dialog-close]="data" cdkFocusInitial>Conferma Spedizione</button>
+</mat-dialog-actions>

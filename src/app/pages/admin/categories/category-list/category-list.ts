@@ -9,13 +9,16 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CategoryForm } from '../category-form/category-form';
-import { NotificationModal } from '../../../../notification-modal/notification-modal';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { ConfirmModal } from '../../../../confirm-modal/confirm-modal';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, MatPaginatorModule, RouterModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './category-list.html',
   styleUrls: ['./category-list.css']
 })
@@ -29,7 +32,7 @@ export class CategoryList implements OnInit {
   pageSize = 10;
   pageIndex = 0;
 
-  constructor(private categoriaService: CategoriaService, private dialog: MatDialog, private readonly cdr: ChangeDetectorRef) {}
+  constructor(private categoriaService: CategoriaService, private dialog: MatDialog, private messageService: MessageService, private readonly cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -94,12 +97,12 @@ export class CategoryList implements OnInit {
       if (result) {
         this.categoriaService.deleteCategoria(id).subscribe({
           next: () => {
-            this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Categoria eliminata con successo!', level: 'success' } });
+            this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Categoria eliminata con successo!' });
             this.loadCategories();
           },
           error: (err) => {
-            console.error('Errore durante eliminazione', err);
-            this.dialog.open(NotificationModal, { data: { title: 'Errore', message: 'Non è stato possibile eliminare la categoria.', level: 'error' } });
+            console.error('Errore durante l\'eliminazione della categoria', err);
+            this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Non è stato possibile eliminare la categoria.' });
           }
         });
       }

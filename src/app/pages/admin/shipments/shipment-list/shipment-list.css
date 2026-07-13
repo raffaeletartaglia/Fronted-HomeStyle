@@ -49,3 +49,19 @@ mat-paginator {
 mat-chip {
   font-weight: 500;
 }
+
+.shipment-status {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+}
+.shipment-status.preparazione { background: rgba(241, 196, 15, 0.2); color: #d4ac0d; border: 1px solid rgba(241, 196, 15, 0.4); }
+.shipment-status.spedito { background: rgba(52, 152, 219, 0.2); color: #2980b9; border: 1px solid rgba(52, 152, 219, 0.4); }
+.shipment-status.in_transito { background: rgba(155, 89, 182, 0.2); color: #8e44ad; border: 1px solid rgba(155, 89, 182, 0.4); }
+.shipment-status.consegnato { background: rgba(46, 204, 113, 0.2); color: #27ae60; border: 1px solid rgba(46, 204, 113, 0.4); }
+.shipment-status.annullato { background: rgba(231, 76, 60, 0.2); color: #c0392b; border: 1px solid rgba(231, 76, 60, 0.4); }

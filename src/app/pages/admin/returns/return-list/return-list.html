@@ -1,4 +1,5 @@
 <div class="page-container">
+  <p-toast></p-toast>
   <div class="header-section">
     <h1>Gestione Resi</h1>
     <p>Visualizza e gestisci le richieste di reso degli utenti.</p>
@@ -37,9 +38,9 @@
       <ng-container matColumnDef="statoReso">
         <th mat-header-cell *matHeaderCellDef> Stato </th>
         <td mat-cell *matCellDef="let element">
-          <mat-chip [color]="getStatoColor(element.statoReso)" selected>
+          <span class="reso-status" [ngClass]="element.statoReso.toLowerCase()">
             {{element.statoReso | titlecase}}
-          </mat-chip>
+          </span>
         </td>
       </ng-container>
 

@@ -46,3 +46,19 @@ mat-paginator {
 mat-chip {
   font-weight: 500;
 }
+
+.reso-status {
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.reso-status.richiesto { background: rgba(241, 196, 15, 0.2); color: #d4ac0d; border: 1px solid rgba(241, 196, 15, 0.4); }
+.reso-status.accettato { background: rgba(46, 204, 113, 0.2); color: #27ae60; border: 1px solid rgba(46, 204, 113, 0.4); }
+.reso-status.rifiutato { background: rgba(231, 76, 60, 0.2); color: #c0392b; border: 1px solid rgba(231, 76, 60, 0.4); }
+.reso-status.annullato { background: rgba(231, 76, 60, 0.2); color: #c0392b; border: 1px solid rgba(231, 76, 60, 0.4); }

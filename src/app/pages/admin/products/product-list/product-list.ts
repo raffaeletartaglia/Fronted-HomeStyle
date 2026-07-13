@@ -10,13 +10,15 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ProductForm } from '../product-form/product-form';
-import { NotificationModal } from '../../../../notification-modal/notification-modal';
 import { ConfirmModal } from '../../../../confirm-modal/confirm-modal';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, MatPaginatorModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './product-list.html',
   styleUrls: ['./product-list.css']
 })
@@ -34,6 +36,7 @@ export class ProductList implements OnInit {
     private readonly productService: ProductService,
     private readonly dialog: MatDialog,
     private readonly router: Router,
+    private readonly messageService: MessageService,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -104,12 +107,12 @@ export class ProductList implements OnInit {
       if (result) {
         this.productService.deleteProdotto(id).subscribe({
           next: () => {
-            this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Prodotto eliminato con successo!', level: 'success' } });
+            this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Prodotto eliminato con successo!' });
             this.loadProducts();
           },
           error: (err) => {
             console.error('Errore durante eliminazione', err);
-            this.dialog.open(NotificationModal, { data: { title: 'Errore', message: 'Non è stato possibile eliminare il prodotto.', level: 'error' } });
+            this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Non è stato possibile eliminare il prodotto.' });
           }
         });
       }

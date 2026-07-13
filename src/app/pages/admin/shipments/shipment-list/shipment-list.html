@@ -1,4 +1,5 @@
 <div class="page-container">
+  <p-toast></p-toast>
   <div class="header-section">
     <h1>Gestione Spedizioni</h1>
     <p>Visualizza e gestisci le spedizioni degli ordini (Corriere, Tracking e Stato).</p>
@@ -35,9 +36,9 @@
       <ng-container matColumnDef="statoSpedizione">
         <th mat-header-cell *matHeaderCellDef> Stato </th>
         <td mat-cell *matCellDef="let element">
-          <mat-chip [color]="getStatoColor(element.statoSpedizione)" selected>
+          <span class="shipment-status" [ngClass]="element.statoSpedizione.toLowerCase()">
             {{element.statoSpedizione | titlecase}}
-          </mat-chip>
+          </span>
         </td>
       </ng-container>
 
@@ -45,25 +46,25 @@
       <ng-container matColumnDef="azioni">
         <th mat-header-cell *matHeaderCellDef> Azioni </th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="primary" matTooltip="Modifica Tracking/Corriere" (click)="apriModalModifica(element)" *ngIf="element.statoSpedizione !== 'CONSEGNATO' && element.statoSpedizione !== 'ANNULLATO'">
-            <mat-icon>edit</mat-icon>
+          <button class="edit-btn-rounded icon-only" matTooltip="Modifica Tracking/Corriere" (click)="apriModalModifica(element)" *ngIf="element.statoSpedizione !== 'CONSEGNATO' && element.statoSpedizione !== 'ANNULLATO'">
+            <i class="pi pi-pencil"></i>
           </button>
 
           <!-- Transizioni di stato -->
-          <button mat-icon-button color="primary" matTooltip="Segna come Spedito" (click)="cambiaStato(element.id, 'SPEDITO')" *ngIf="element.statoSpedizione === 'PREPARAZIONE'">
-            <mat-icon>local_shipping</mat-icon>
+          <button class="ship-btn-rounded icon-only" matTooltip="Segna come Spedito" (click)="cambiaStato(element.id, 'SPEDITO')" *ngIf="element.statoSpedizione === 'PREPARAZIONE'">
+            <i class="pi pi-truck"></i>
           </button>
 
-          <button mat-icon-button color="primary" matTooltip="Segna In Transito" (click)="cambiaStato(element.id, 'IN_TRANSITO')" *ngIf="element.statoSpedizione === 'SPEDITO'">
-            <mat-icon>moving</mat-icon>
+          <button class="ship-btn-rounded icon-only" matTooltip="Segna In Transito" (click)="cambiaStato(element.id, 'IN_TRANSITO')" *ngIf="element.statoSpedizione === 'SPEDITO'">
+            <i class="pi pi-truck"></i>
           </button>
 
-          <button mat-icon-button color="primary" matTooltip="Segna come Consegnato" (click)="cambiaStato(element.id, 'CONSEGNATO')" *ngIf="element.statoSpedizione === 'IN_TRANSITO' || element.statoSpedizione === 'SPEDITO'">
-            <mat-icon>check_circle</mat-icon>
+          <button class="success-btn-rounded icon-only" matTooltip="Segna come Consegnato" (click)="cambiaStato(element.id, 'CONSEGNATO')" *ngIf="element.statoSpedizione === 'IN_TRANSITO' || element.statoSpedizione === 'SPEDITO'">
+            <i class="pi pi-check-circle"></i>
           </button>
 
-          <button mat-icon-button color="warn" matTooltip="Annulla Spedizione" (click)="cambiaStato(element.id, 'ANNULLATO')" *ngIf="element.statoSpedizione === 'PREPARAZIONE'">
-            <mat-icon>cancel</mat-icon>
+          <button class="delete-btn-rounded icon-only" matTooltip="Annulla Spedizione" (click)="cambiaStato(element.id, 'ANNULLATO')" *ngIf="element.statoSpedizione === 'PREPARAZIONE'">
+            <i class="pi pi-trash"></i>
           </button>
         </td>
       </ng-container>

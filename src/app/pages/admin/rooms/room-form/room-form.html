@@ -5,12 +5,8 @@
 
   <form [formGroup]="roomForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="w-100 mb-2 mt-2">
-      <mat-label>Tipologia Stanza</mat-label>
-      <mat-select formControlName="tipologia" required>
-        <mat-option *ngFor="let option of areaCasaOptions" [value]="option">
-          {{ formatRoomType(option) }}
-        </mat-option>
-      </mat-select>
+      <mat-label>Nome Stanza</mat-label>
+      <input matInput formControlName="tipologia" placeholder="es. Cucina, Soggiorno" required>
       <mat-error *ngIf="roomForm.get('tipologia')?.hasError('required')">
         La tipologia è obbligatoria
       </mat-error>

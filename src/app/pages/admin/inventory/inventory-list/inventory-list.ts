@@ -6,7 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { InventoryMovement } from '../../../../models/inventory.model';
 import { InventoryService } from '../../../../services/inventory.service';
-import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 // Dialogs
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -25,9 +26,10 @@ import { ProductService } from '../../../../services/productService';
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
-    MessageModule,
+    ToastModule,
     MatDialogModule
   ],
+  providers: [MessageService],
   templateUrl: './inventory-list.html',
   styleUrls: ['./inventory-list.css']
 })
@@ -39,12 +41,10 @@ export class InventoryList implements OnInit {
   pageSize = 10;
   pageIndex = 0;
 
-  // PrimeNG messages array
-  messages: Array<{ severity: "error" | "success" | "info" | "warn" | "secondary" | "contrast" | undefined, icon: string, text: string }> = [];
-
   constructor(
     private readonly inventoryService: InventoryService,
     private readonly dialog: MatDialog,
+    private readonly messageService: MessageService,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -57,11 +57,10 @@ export class InventoryList implements OnInit {
       next: (response) => {
         this.movements = response.content;
         this.totalElements = response.totalElements;
-        this.messages = []; // Clear messages on refresh
         this.cdr.detectChanges();
       },
       error: () => {
-        this.showMessage('error', 'pi pi-exclamation-triangle', 'Errore durante il caricamento dei movimenti.');
+        this.showMessage('error', 'Errore', 'Errore durante il caricamento dei movimenti.');
         this.cdr.detectChanges();
       }
     });
@@ -83,23 +82,19 @@ export class InventoryList implements OnInit {
       if (result) {
         this.inventoryService.addManualRestock(result.prodottoId, result.quantita, result.note).subscribe({
           next: () => {
-            this.showMessage('success', 'pi pi-check', 'Rifornimento registrato con successo.');
+            this.showMessage('success', 'Successo', 'Rifornimento registrato con successo.');
             this.loadMovements();
           },
           error: () => {
-            this.showMessage('error', 'pi pi-exclamation-triangle', 'Errore durante il rifornimento.');
+            this.showMessage('error', 'Errore', 'Errore durante il rifornimento.');
           }
         });
       }
     });
   }
 
-  showMessage(severity: "error" | "success" | "info" | "warn" | "secondary" | "contrast" | undefined, icon: string, text: string): void {
-    this.messages = [{ severity, icon, text }];
-    // Auto-hide message after 5 seconds
-    setTimeout(() => {
-      this.messages = [];
-    }, 5000);
+  showMessage(severity: string, summary: string, detail: string): void {
+    this.messageService.add({ severity, summary, detail });
   }
 
   formatDate(dateStr: string): string {

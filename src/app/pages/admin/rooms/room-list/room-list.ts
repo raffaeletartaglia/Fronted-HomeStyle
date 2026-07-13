@@ -9,13 +9,15 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { RoomForm } from '../room-form/room-form';
-import { NotificationModal } from '../../../../notification-modal/notification-modal';
 import { ConfirmModal } from '../../../../confirm-modal/confirm-modal';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-room-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, MatPaginatorModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './room-list.html',
   styleUrls: ['./room-list.css']
 })
@@ -29,7 +31,7 @@ export class RoomList implements OnInit {
   pageSize = 10;
   pageIndex = 0;
 
-  constructor(private stanzaService: StanzaService, private dialog: MatDialog, private readonly cdr: ChangeDetectorRef) { }
+  constructor(private stanzaService: StanzaService, private dialog: MatDialog, private messageService: MessageService, private readonly cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loadRooms();
@@ -94,12 +96,12 @@ export class RoomList implements OnInit {
       if (result) {
         this.stanzaService.deleteStanza(id).subscribe({
           next: () => {
-            this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Stanza eliminata con successo!', level: 'success' } });
+            this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Stanza eliminata con successo!' });
             this.loadRooms();
           },
           error: (err) => {
-            console.error('Errore durante eliminazione stanza', err);
-            this.dialog.open(NotificationModal, { data: { title: 'Errore', message: 'Non è stato possibile eliminare la stanza.', level: 'error' } });
+            console.error('Errore durante l\'eliminazione della stanza', err);
+            this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Non è stato possibile eliminare la stanza.' });
           }
         });
       }

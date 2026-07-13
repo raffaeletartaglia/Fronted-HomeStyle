@@ -1,30 +1,30 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { StanzaService } from '../../../../services/stanza.service';
-import { AreaCasa } from '../../../../models/stanza.model';
-import { NotificationModal } from '../../../../notification-modal/notification-modal';
+import { Stanza } from '../../../../models/stanza.model';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-room-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatSelectModule, MatButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './room-form.html',
   styleUrls: ['./room-form.css']
 })
 export class RoomForm {
   roomForm: FormGroup;
   isEdit: boolean;
-  areaCasaOptions = Object.values(AreaCasa);
 
   constructor(
     private fb: FormBuilder,
     private stanzaService: StanzaService,
-    private dialog: MatDialog,
+    private readonly messageService: MessageService,
+    private readonly cdr: ChangeDetectorRef,
     public dialogRef: MatDialogRef<RoomForm>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -48,7 +48,7 @@ export class RoomForm {
     if (this.isEdit) {
       this.stanzaService.updateStanza(this.data.room.id, roomData).subscribe({
         next: () => {
-          this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Stanza modificata con successo!', level: 'success' } });
+          this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Stanza modificata con successo!' });
           this.dialogRef.close(true);
         },
         error: (err) => this.handleError(err, 'modificare')
@@ -56,7 +56,7 @@ export class RoomForm {
     } else {
       this.stanzaService.createStanza(roomData).subscribe({
         next: () => {
-          this.dialog.open(NotificationModal, { data: { title: 'Successo', message: 'Hai aggiunto una nuova stanza con successo!', level: 'success' } });
+          this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Hai aggiunto una nuova stanza con successo!' });
           this.dialogRef.close(true);
         },
         error: (err) => this.handleError(err, 'aggiungere')
@@ -67,15 +67,12 @@ export class RoomForm {
   handleError(err: any, azione: string) {
     console.error(`Errore durante l'operazione di ${azione}`, err);
     if (err.error?.codiceErrore === 'STANZA_DUPLICATA' || err.status === 409) {
-      this.dialog.open(NotificationModal, { data: { title: 'Attenzione', message: 'La tipologia di stanza inserita è già presente.', level: 'warning' } });
-    } else if (err.error?.codiceErrore === 'ERRORE_INTERNO' || err.status >= 500) {
-      this.dialog.open(NotificationModal, { data: { title: 'Errore Server', message: 'Si è verificato un errore interno del server.', level: 'error' } });
+      this.messageService.add({ severity: 'warn', summary: 'Attenzione', detail: 'La tipologia di stanza inserita è già presente.' });
+    } else if (err.status === 500) {
+      this.messageService.add({ severity: 'error', summary: 'Errore Server', detail: 'Si è verificato un errore interno del server.' });
     } else {
-      this.dialog.open(NotificationModal, { data: { title: 'Errore', message: `Non è stato possibile ${azione} la stanza.`, level: 'error' } });
+      this.messageService.add({ severity: 'error', summary: 'Errore', detail: `Non è stato possibile ${azione} la stanza.` });
     }
   }
 
-  formatRoomType(type: string): string {
-    return type ? type.replaceAll('_', ' ') : '';
-  }
 }

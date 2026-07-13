@@ -5,7 +5,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { RouterModule } from '@angular/router';
 
 import { ResoService } from '../../../../services/reso.service';
@@ -21,8 +22,10 @@ import { Reso } from '../../../../models/reso.model';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
-    RouterModule
+    RouterModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './return-list.html',
   styleUrls: ['./return-list.css']
 })
@@ -36,7 +39,7 @@ export class ReturnListComponent implements OnInit {
 
   constructor(
     private readonly resoService: ResoService,
-    private readonly snackBar: MatSnackBar,
+    private readonly messageService: MessageService,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -53,7 +56,7 @@ export class ReturnListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore durante il caricamento dei resi', err);
-        this.snackBar.open('Errore durante il caricamento dei resi', 'Chiudi', { duration: 3000 });
+        this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Errore durante il caricamento dei resi' });
         this.cdr.detectChanges();
       }
     });
@@ -68,12 +71,12 @@ export class ReturnListComponent implements OnInit {
   cambiaStato(resoId: string, nuovoStato: string): void {
     this.resoService.modificaStatoReso(resoId, nuovoStato).subscribe({
       next: () => {
-        this.snackBar.open('Stato modificato con successo', 'Chiudi', { duration: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Stato modificato con successo' });
         this.loadResi();
       },
       error: (err) => {
         console.error('Errore durante la modifica dello stato', err);
-        this.snackBar.open('Errore durante la modifica dello stato', 'Chiudi', { duration: 3000 });
+        this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Errore durante la modifica dello stato' });
       }
     });
   }
