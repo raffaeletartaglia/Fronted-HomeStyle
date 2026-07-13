@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IndirizzoService } from '../../services/indirizzo.service';
@@ -17,9 +17,14 @@ import Keycloak from 'keycloak-js';
   styleUrls: ['./checkout.css']
 })
 export class Checkout implements OnInit {
+  private keycloak = inject(Keycloak);
   idUtente: string = '';
   indirizzoSelezionato: any = null;
-  pagamentoOnlineSelezionato: boolean | null = null;
+  modalitaSelezionata: any = null;
+  modalitaDisponibili = [
+    { id: '1', tipo: 'ONLINE', descrizione: 'Paga in modo sicuro con carta di credito' },
+    { id: '2', tipo: 'FISICO', descrizione: 'Paga in contanti alla consegna' }
+  ];
   cartaSelezionata: any = null;
   cartItems: any[] = [];
   totale: number = 0;
@@ -37,33 +42,39 @@ export class Checkout implements OnInit {
     private carrelloService: CarrelloService,
     private ordineService: OrdineService,
     private pagamentoService: PagamentoService,
-    private keycloak: Keycloak,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;
-      this.indirizzoService.getIndirizziUtente(this.idUtente);
-      this.cartaPagamentoService.getCarteUtente(this.idUtente);
+      
+      // Carica Indirizzi e pre-seleziona il default
+      this.indirizzoService.getIndirizziUtenteObservable(this.idUtente).subscribe(res => {
+        this.indirizzoService.indirizziUtente = res;
+        const defaultInd = res.find((i: any) => i.isDefault);
+        if (defaultInd) {
+          this.indirizzoSelezionato = defaultInd;
+        }
+      });
 
-      // Controlla se siamo in modalità "Acquisto Singolo"
-      const state = history.state;
-      if (state && state.singoloProdotto) {
-        this.cartItems = [{
-          prodotto: state.singoloProdotto,
-          quantita: state.quantita || 1
-        }];
-        this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
-      } else {
-        // Altrimenti carica il carrello normale
-        this.carrelloService.getCarrelloUtenteObservable(this.idUtente).subscribe({
-          next: (res: any) => {
-            this.cartItems = res.prodotti || [];
-            this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
-          }
-        });
-      }
+      // Carica Carte e pre-seleziona la default
+      this.cartaPagamentoService.getCarteUtenteObservable(this.idUtente).subscribe(res => {
+        this.cartaPagamentoService.carteUtente = res;
+        const defaultCarta = res.find((c: any) => c.isDefault);
+        if (defaultCarta) {
+          this.cartaSelezionata = defaultCarta;
+          this.modalitaSelezionata = this.modalitaDisponibili.find(m => m.tipo === 'ONLINE');
+        }
+      });
+
+      this.carrelloService.getCarrelloUtenteObservable(this.idUtente).subscribe({
+        next: (res: any) => {
+          this.cartItems = res.prodotti || [];
+          this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
+        }
+      });
     } else {
       this.keycloak.login();
     }
@@ -74,6 +85,7 @@ export class Checkout implements OnInit {
     this.indirizzoService.aggiungiIndirizzo(this.idUtente, this.nuovoIndirizzo);
     this.isAddingIndirizzo = false;
     this.nuovoIndirizzo = { citta: '', provincia: '', cap: '', via: '', numeroCivico: '', tipo: 'SPEDIZIONE' };
+    setTimeout(() => this.cdr.detectChanges(), 300);
   }
 
   salvaNuovaCarta() {
@@ -105,6 +117,7 @@ export class Checkout implements OnInit {
     this.cartaPagamentoService.aggiungiCarta(cartaDaSalvare);
     this.isAddingCarta = false;
     this.nuovaCarta = { intestatario: '', numeroCarta: '', scadenza: '', cvv: '' };
+    setTimeout(() => this.cdr.detectChanges(), 300);
   }
 
   formattaNumeroCarta(event: any) {
@@ -139,35 +152,29 @@ export class Checkout implements OnInit {
   }
 
   confermaOrdine() {
-    if (!this.indirizzoSelezionato || this.pagamentoOnlineSelezionato === null) return;
-    if (this.pagamentoOnlineSelezionato && !this.cartaSelezionata) return;
+    if (!this.indirizzoSelezionato || !this.modalitaSelezionata) return;
+    if (this.modalitaSelezionata.tipo === 'ONLINE' && !this.cartaSelezionata) return;
 
-    const state = history.state;
-    const isAcquistoSingolo = state && state.singoloProdotto;
-
-    const ordineObservable = isAcquistoSingolo 
-      ? this.ordineService.creaOrdineSingolo(this.idUtente, this.indirizzoSelezionato.id, state.singoloProdotto.id, state.quantita || 1)
-      : this.ordineService.creaOrdine(this.idUtente, this.indirizzoSelezionato.id);
-
-    ordineObservable.subscribe({
+    this.ordineService.creaOrdine(this.idUtente, this.indirizzoSelezionato.id).subscribe({
       next: (ordine) => {
         const datiPagamento = {
           importo: this.totale,
-          pagamentoOnline: this.pagamentoOnlineSelezionato,
-          cartaPagamentoId: this.pagamentoOnlineSelezionato ? this.cartaSelezionata.id : null,
-          pagamentoEffettuato: this.pagamentoOnlineSelezionato ? true : false,
+          modalitaPagamentoId: this.modalitaSelezionata.id,
+          cartaPagamentoId: this.modalitaSelezionata.tipo === 'ONLINE' ? this.cartaSelezionata.id : null,
+          pagamentoEffettuato: this.modalitaSelezionata.tipo === 'ONLINE' ? true : false,
+          numeroRate: 1,
+          rataCorrente: 1,
+          importoRata: this.totale,
           ordineId: ordine.id
         };
         this.pagamentoService.creaPagamento(datiPagamento);
         
-        if (!isAcquistoSingolo) {
-          const idCarrello = this.carrelloService.carrelloAttivo?.id;
-          if (idCarrello) {
-            this.carrelloService.svuotaCarrello(idCarrello);
-          }
+        const idCarrello = this.carrelloService.carrelloAttivo?.id;
+        if (idCarrello) {
+          this.carrelloService.svuotaCarrello(idCarrello);
         }
         
-        setTimeout(() => this.router.navigateByUrl('/dashboard/ordini'), 2000);
+        setTimeout(() => this.router.navigateByUrl('/dashboard/orders'), 2000);
       },
       error: (err) => console.error("Errore creazione ordine", err)
     });

@@ -11,11 +11,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-orders',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, InputTextModule, DatePickerModule, ToastModule, RouterModule],
+  imports: [CommonModule, DialogModule, FormsModule, InputTextModule, DatePickerModule, ToastModule, RouterModule, MatPaginatorModule],
   providers: [MessageService],
   templateUrl: './user-orders.html',
   styleUrls: ['./user-orders.css']
@@ -222,11 +223,10 @@ export class UserOrdersComponent implements OnInit {
     });
   }
 
-  nextPage() {
-    if (this.currentPage < this.totalPages - 1) {
-      this.currentPage++;
-      this.caricaOrdini();
-    }
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.caricaOrdini();
   }
 
   toggleDropdownIndirizzo(event: Event) {
@@ -261,12 +261,7 @@ export class UserOrdersComponent implements OnInit {
 
 
 
-  prevPage() {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.caricaOrdini();
-    }
-  }
+
 
   confermaAnnullaOrdine(id: string) {
     this.ordineDaAnnullareId = id;

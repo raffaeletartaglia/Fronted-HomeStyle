@@ -4,27 +4,34 @@
     <div class="sidebar-header">
       <h3>Area Personale</h3>
     </div>
-    
+
     <nav class="sidebar-nav">
       <!-- Sezione Utente Base -->
       <h6 class="nav-section-title">UTENTE</h6>
       <a routerLink="/dashboard/profilo" routerLinkActive="active-link" class="nav-item">Il Mio Profilo</a>
-      <a routerLink="/dashboard/indirizzi" routerLinkActive="active-link" class="nav-item">I Miei Indirizzi</a>
-      <a routerLink="/dashboard/carte" routerLinkActive="active-link" class="nav-item">Le Mie Carte</a>
-      <a routerLink="/dashboard/ordini" routerLinkActive="active-link" class="nav-item">I Miei Ordini</a>
-      <a routerLink="/dashboard/preferiti" routerLinkActive="active-link" class="nav-item">La Mia Wishlist</a>
-      <a routerLink="/dashboard/carrello" routerLinkActive="active-link" class="nav-item">Il Mio Carrello</a>
+
+      <ng-container *ngIf="!isAdmin">
+        <a routerLink="/dashboard/indirizzi" routerLinkActive="active-link" class="nav-item">I Miei Indirizzi</a>
+        <a routerLink="/dashboard/carte" routerLinkActive="active-link" class="nav-item">Le Mie Carte</a>
+        <a routerLink="/dashboard/ordini" routerLinkActive="active-link" class="nav-item">I Miei Ordini</a>
+        <a routerLink="/dashboard/preferiti" routerLinkActive="active-link" class="nav-item">La Mia Wishlist</a>
+        <a routerLink="/dashboard/carrello" routerLinkActive="active-link" class="nav-item">Il Mio Carrello</a>
+      </ng-container>
 
       <!-- Sezione Admin -->
       <div *ngIf="isAdmin" class="admin-section">
         <h6 class="nav-section-title mt-4">AMMINISTRAZIONE</h6>
         <a routerLink="/dashboard/admin/prodotti" routerLinkActive="active-link" class="nav-item">Gestione Prodotti</a>
-        <a routerLink="/dashboard/admin/categorie" routerLinkActive="active-link" class="nav-item">Gestione Categorie</a>
+        <a routerLink="/dashboard/admin/categorie" routerLinkActive="active-link" class="nav-item">Gestione
+          Categorie</a>
         <a routerLink="/dashboard/admin/stanze" routerLinkActive="active-link" class="nav-item">Gestione Stanze</a>
-        <a routerLink="/dashboard/admin/ordini-tutti" routerLinkActive="active-link" class="nav-item">Tutti gli Ordini</a>
+        <a routerLink="/dashboard/admin/ordini-tutti" routerLinkActive="active-link" class="nav-item">Tutti gli
+          Ordini</a>
         <a routerLink="/dashboard/admin/resi" routerLinkActive="active-link" class="nav-item">Gestione Resi</a>
-        <a routerLink="/dashboard/admin/spedizioni" routerLinkActive="active-link" class="nav-item">Gestione Spedizioni</a>
-        <a routerLink="/dashboard/admin/magazzino" routerLinkActive="active-link" class="nav-item">Log Magazzino</a>
+        <a routerLink="/dashboard/admin/spedizioni" routerLinkActive="active-link" class="nav-item">Gestione
+          Spedizioni</a>
+        <a routerLink="/dashboard/admin/magazzino" routerLinkActive="active-link" class="nav-item">Gestione
+          Magazzino</a>
       </div>
     </nav>
   </aside>

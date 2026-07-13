@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StanzaService } from '../../../../services/stanza.service';
 import { Stanza } from '../../../../models/stanza.model';
@@ -29,7 +29,7 @@ export class RoomList implements OnInit {
   pageSize = 10;
   pageIndex = 0;
 
-  constructor(private stanzaService: StanzaService, private dialog: MatDialog) { }
+  constructor(private stanzaService: StanzaService, private dialog: MatDialog, private readonly cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loadRooms();
@@ -42,10 +42,12 @@ export class RoomList implements OnInit {
         this.rooms = data.content;
         this.totalElements = data.totalElements;
         this.isLoading.set(false);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Errore nel caricamento stanze', err);
         this.isLoading.set(false);
+        this.cdr.detectChanges();
       }
     });
   }

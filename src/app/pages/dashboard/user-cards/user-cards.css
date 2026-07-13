@@ -80,13 +80,13 @@
 }
 
 .default-card {
-  border: 2px solid #64b5f6 !important;
-  box-shadow: 0 4px 20px rgba(100, 181, 246, 0.4) !important;
+  border: 2px solid rgba(200, 121, 101, 0.5) !important;
+  box-shadow: 0 4px 20px rgba(200, 121, 101, 0.15) !important;
   transform: scale(1.02);
 }
 
 .default-card:hover {
-  box-shadow: 0 8px 30px rgba(100, 181, 246, 0.6) !important;
+  box-shadow: 0 8px 30px rgba(200, 121, 101, 0.25) !important;
   transform: scale(1.03) translateY(-5px);
 }
 
@@ -98,28 +98,7 @@
 
 
 
-/* Ribbon angolo in alto a destra */
-.default-ribbon {
-  position: absolute;
-  top: 12px;
-  right: -28px;
-  background: linear-gradient(135deg, #ffd700, #ffaa00);
-  color: #333;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 4px 36px;
-  transform: rotate(35deg);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  z-index: 10;
-}
 
-.default-ribbon span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
 
 /* Pulsante "Imposta Predefinita" sulla cc-card */
 .set-default-btn {
@@ -135,9 +114,9 @@
 
 /* Label predefinita attiva */
 .default-label {
-  color: #ffd700;
-  font-weight: 700;
-  font-size: 0.85rem;
+  color: #C87965;
+  font-weight: 600;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 5px;

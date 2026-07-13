@@ -5,8 +5,13 @@
 }
 
 .checkout-container {
-  padding: 3rem;
-  border-radius: 16px;
+  padding: 3rem 2rem;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
 }
 
 /* Stepper */
@@ -50,8 +55,8 @@
 }
 
 .step.completed .step-circle {
-  background: var(--success-color);
-  border-color: var(--success-color);
+  background: var(--primary-color);
+  border-color: var(--primary-color);
   color: white;
 }
 
@@ -87,9 +92,11 @@
 }
 
 .option-card {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+  border-radius: 16px;
   padding: 1.5rem;
   cursor: pointer;
   display: flex;
@@ -100,14 +107,16 @@
 }
 
 .option-card:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
 }
 
 .option-card.selected {
-  border-color: var(--primary-color);
-  background: rgba(200, 121, 101, 0.05);
+  border: 2px solid var(--primary-color);
+  background: rgba(200, 121, 101, 0.08);
+  box-shadow: 0 8px 25px rgba(200, 121, 101, 0.15);
+  transform: translateY(-2px);
 }
 
 .option-icon i {

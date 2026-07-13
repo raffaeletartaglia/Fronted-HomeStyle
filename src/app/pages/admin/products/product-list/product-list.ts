@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductService } from '../../../../services/productService';
@@ -33,7 +33,8 @@ export class ProductList implements OnInit {
   constructor(
     private readonly productService: ProductService,
     private readonly dialog: MatDialog,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -47,10 +48,12 @@ export class ProductList implements OnInit {
         this.products = data.content;
         this.totalElements = data.totalElements;
         this.isLoading.set(false);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Errore nel caricamento prodotti', err);
         this.isLoading.set(false);
+        this.cdr.detectChanges();
       }
     });
   }

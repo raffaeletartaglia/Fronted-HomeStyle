@@ -81,11 +81,6 @@
 
   <div class="cards-grid mt-4">
     <div class="glass-card" *ngFor="let carta of carteFiltrate" [ngClass]="{'default-card': carta.isDefault}">
-      <!-- Ribbon predefinita -->
-      <div class="default-ribbon" *ngIf="carta.isDefault">
-        <span><i class="pi pi-star-fill"></i> Predefinita</span>
-      </div>
-
       <div class="card-header" style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
         <div>
           <span class="badge" style="font-size: 0.9rem; padding: 6px 12px; background: rgba(200,121,101,0.1); color: #C87965;">{{ carta.tipoCarta }}</span>

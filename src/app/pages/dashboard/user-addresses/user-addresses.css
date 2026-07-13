@@ -183,45 +183,24 @@
 }
 
 .default-card {
-  border: 2px solid #1976d2;
-  background: rgba(33, 150, 243, 0.06);
-  box-shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
+  border: 2px solid rgba(200, 121, 101, 0.5) !important;
+  background: rgba(200, 121, 101, 0.04);
+  box-shadow: 0 4px 20px rgba(200, 121, 101, 0.15) !important;
   overflow: hidden;
   position: relative;
 }
 
 .default-card:hover {
-  box-shadow: 0 8px 30px rgba(33, 150, 243, 0.22);
+  box-shadow: 0 8px 30px rgba(200, 121, 101, 0.25) !important;
 }
 
-/* Ribbon angolo in alto a destra */
-.default-ribbon {
-  position: absolute;
-  top: 14px;
-  right: -26px;
-  background: linear-gradient(135deg, #ffd700, #ffaa00);
-  color: #333;
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 4px 36px;
-  transform: rotate(35deg);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  z-index: 10;
-}
 
-.default-ribbon span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
 
 /* Label predefinita nella parte bassa della card */
 .default-label {
-  color: #1976d2;
-  font-weight: 700;
-  font-size: 0.85rem;
+  color: #C87965;
+  font-weight: 600;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 5px;

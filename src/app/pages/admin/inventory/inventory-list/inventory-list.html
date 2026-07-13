@@ -1,7 +1,7 @@
 <div class="page-container p-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-primary">Log Movimenti Magazzino</h1>
-    <button mat-flat-button color="primary" (click)="openRestockDialog()">
+    <h1 class="h3 mb-0" style="color: #1f2937; font-weight: 600;">Movimenti Magazzino</h1>
+    <button mat-raised-button color="primary" (click)="openRestockDialog()">
       <mat-icon>add</mat-icon> Nuovo Rifornimento
     </button>
   </div>
@@ -17,7 +17,7 @@
 
   <div class="table-container mat-elevation-z8 bg-white" style="border-radius: 16px; overflow: hidden;">
     <table mat-table [dataSource]="movements" class="w-100 table-hover">
-      
+
       <!-- Prodotto ID Column -->
       <ng-container matColumnDef="prodottoId">
         <th mat-header-cell *matHeaderCellDef> ID Prodotto </th>
@@ -28,8 +28,7 @@
       <ng-container matColumnDef="tipoMovimento">
         <th mat-header-cell *matHeaderCellDef> Causale </th>
         <td mat-cell *matCellDef="let element">
-          <span class="badge" 
-                [ngClass]="{
+          <span class="badge" [ngClass]="{
                   'bg-success': element.tipoMovimento === 'PRODUZIONE' || element.tipoMovimento === 'RESO_CLIENTE',
                   'bg-danger': element.tipoMovimento === 'SCARICO_VENDITA' || element.tipoMovimento === 'ANNULLAMENTO_ORDINE',
                   'bg-secondary': element.tipoMovimento === 'RETTIFICA_INVENTARIO'
@@ -42,9 +41,11 @@
       <!-- Quantita Column -->
       <ng-container matColumnDef="quantita">
         <th mat-header-cell *matHeaderCellDef> Quantità </th>
-        <td mat-cell *matCellDef="let element"> 
-          <span [ngClass]="{'text-success fw-bold': element.tipoMovimento === 'PRODUZIONE' || element.tipoMovimento === 'RESO_CLIENTE', 'text-danger fw-bold': element.tipoMovimento === 'SCARICO_VENDITA'}">
-            {{ (element.tipoMovimento === 'PRODUZIONE' || element.tipoMovimento === 'RESO_CLIENTE') ? '+' : (element.tipoMovimento === 'SCARICO_VENDITA' ? '-' : '')}}{{ element.quantita }}
+        <td mat-cell *matCellDef="let element">
+          <span
+            [ngClass]="{'text-success fw-bold': element.tipoMovimento === 'PRODUZIONE' || element.tipoMovimento === 'RESO_CLIENTE', 'text-danger fw-bold': element.tipoMovimento === 'SCARICO_VENDITA'}">
+            {{ (element.tipoMovimento === 'PRODUZIONE' || element.tipoMovimento === 'RESO_CLIENTE') ? '+' :
+            (element.tipoMovimento === 'SCARICO_VENDITA' ? '-' : '')}}{{ element.quantita }}
           </span>
         </td>
       </ng-container>
@@ -58,26 +59,29 @@
       <!-- Note Column -->
       <ng-container matColumnDef="note">
         <th mat-header-cell *matHeaderCellDef> Note </th>
-        <td mat-cell *matCellDef="let element"> 
+        <td mat-cell *matCellDef="let element">
           <span class="text-muted small">{{ element.note || 'N/D' }}</span>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      
+
       <!-- Riga Vuota -->
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell text-center p-4" colspan="5">Nessun movimento di magazzino trovato.</td>
+        <td class="mat-cell empty-state-cell" colspan="100%">
+          <mat-icon>manage_history</mat-icon>
+          Nessun movimento di magazzino trovato.
+        </td>
       </tr>
     </table>
 
     <mat-paginator 
-      [length]="totalElements" 
-      [pageSize]="pageSize" 
-      [pageSizeOptions]="[5, 10, 20]" 
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]"
       (page)="onPageChange($event)"
-      showFirstLastButtons>
+      aria-label="Select page">
     </mat-paginator>
   </div>
 </div>

@@ -7,6 +7,23 @@
     <div style="display: flex; gap: 15px; align-items: center;" *ngIf="wishlistService.prodottiWishlist.length > 0">
       
       <div style="position: relative; z-index: 1000; width: 280px; flex-shrink: 0;">
+        <div class="custom-select-container">
+          <div class="glass-input select-trigger" style="padding: 0; display: flex; align-items: center;">
+            <i class="pi pi-search" (click)="onSearchEnter()" style="margin-left: 15px; font-size: 0.9rem; color: #666; cursor: pointer;"></i>
+            <input type="text" [(ngModel)]="ricercaTesto" (input)="cercaSuggerimentiCustom($event)"
+              (keyup.enter)="onSearchEnter()" (focus)="onSearchFocus()" placeholder="Cerca tra i preferiti..."
+              style="background: transparent; border: none; outline: none; width: 100%; padding: 12px 10px; color: inherit; font-family: inherit;" autocomplete="off">
+          </div>
+          <div class="custom-dropdown-menu" *ngIf="isSearchDropdownOpen && suggerimenti.length > 0">
+            <div class="dropdown-option" *ngFor="let prod of suggerimenti" (click)="onProdottoSelezionatoCustom(prod)">
+              <i class="pi pi-search" style="margin-right: 10px; color: #ccc;"></i>
+              {{ prod.nomeProdotto }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="position: relative; z-index: 999; width: 280px; flex-shrink: 0;">
         <div class="custom-select-container" (click)="toggleDropdownCategoria($event)">
           <div class="glass-input select-trigger">
             <span>
@@ -18,22 +35,6 @@
           <div class="custom-dropdown-menu" *ngIf="mostraDropdownCategoria">
             <div class="dropdown-option" [ngClass]="{'selected': filterCategoria === 'TUTTE'}" (click)="selezionaCategoria('TUTTE')">Tutte Categorie</div>
             <div class="dropdown-option" *ngFor="let cat of categorie" [ngClass]="{'selected': filterCategoria === cat.id}" (click)="selezionaCategoria(cat.id!)">{{ formattaNome(cat.nomeCategoria) }}</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="position: relative; z-index: 999; width: 280px; flex-shrink: 0;">
-        <div class="custom-select-container" (click)="toggleDropdownStanza($event)">
-          <div class="glass-input select-trigger">
-            <span>
-              <i class="pi pi-filter" style="margin-right: 8px; font-size: 0.9rem; color: #666;"></i>
-              {{ getNomeStanza(filterStanza) }}
-            </span>
-            <i class="pi pi-chevron-down" [ngClass]="{'rotated': mostraDropdownStanza}"></i>
-          </div>
-          <div class="custom-dropdown-menu" *ngIf="mostraDropdownStanza">
-            <div class="dropdown-option" [ngClass]="{'selected': filterStanza === 'TUTTE'}" (click)="selezionaStanza('TUTTE')">Tutte Stanze</div>
-            <div class="dropdown-option" *ngFor="let st of stanze" [ngClass]="{'selected': filterStanza === st.id}" (click)="selezionaStanza(st.id!)">{{ formattaNome(st.tipologia) }}</div>
           </div>
         </div>
       </div>

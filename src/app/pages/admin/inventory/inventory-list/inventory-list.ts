@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -44,7 +44,8 @@ export class InventoryList implements OnInit {
 
   constructor(
     private readonly inventoryService: InventoryService,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -57,9 +58,11 @@ export class InventoryList implements OnInit {
         this.movements = response.content;
         this.totalElements = response.totalElements;
         this.messages = []; // Clear messages on refresh
+        this.cdr.detectChanges();
       },
       error: () => {
         this.showMessage('error', 'pi pi-exclamation-triangle', 'Errore durante il caricamento dei movimenti.');
+        this.cdr.detectChanges();
       }
     });
   }

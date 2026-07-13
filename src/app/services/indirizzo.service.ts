@@ -62,6 +62,11 @@ export class IndirizzoService {
     );
   }
 
+  getIndirizziUtenteObservable(idUtente: string) {
+    const url = `${this.baseUrl}/utente/${idUtente}`;
+    return this.http.get<Indirizzo[]>(url);
+  }
+
   // ==========================================
   // 3. RECUPERA INDIRIZZI DI UN UTENTE PER TIPO (Es. SPEDIZIONE)
   // Endpoint: GET /utente/{idUtente}/{tipo}

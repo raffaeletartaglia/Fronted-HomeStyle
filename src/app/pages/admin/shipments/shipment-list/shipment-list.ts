@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -75,7 +75,8 @@ export class ShipmentList implements OnInit {
   constructor(
     private readonly spedizioneService: SpedizioneService,
     private readonly snackBar: MatSnackBar,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -87,10 +88,12 @@ export class ShipmentList implements OnInit {
       next: (page) => {
         this.spedizioni = page.content;
         this.totalElements = page.totalElements;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Errore caricamento spedizioni', err);
         this.snackBar.open('Errore caricamento spedizioni', 'Chiudi', { duration: 3000 });
+        this.cdr.detectChanges();
       }
     });
   }

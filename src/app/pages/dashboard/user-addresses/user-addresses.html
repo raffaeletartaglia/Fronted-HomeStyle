@@ -121,10 +121,6 @@
   <!-- Lista indirizzi -->
   <div class="cards-grid mt-4" *ngIf="indirizziFiltrati.length > 0">
     <div class="glass-card" *ngFor="let ind of indirizziFiltrati" [ngClass]="{'default-card': ind.isDefault}">
-      <!-- Ribbon predefinito -->
-      <div class="default-ribbon" *ngIf="ind.isDefault">
-        <span><i class="pi pi-star-fill"></i> Predefinito</span>
-      </div>
 
       <div class="card-header">
         <div>

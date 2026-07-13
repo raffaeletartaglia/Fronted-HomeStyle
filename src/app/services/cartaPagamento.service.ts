@@ -72,6 +72,11 @@ export class CartaPagamentoService {
     );
   }
 
+  getCarteUtenteObservable(utenteId: string) {
+    const url = `${this.baseUrl}/utente/${utenteId}`;
+    return this.http.get<CartaPagamento[]>(url);
+  }
+
   // ==========================================
   // 3. RECUPERA DETTAGLI DI UNA SINGOLA CARTA
   // Endpoint: GET /api/v1/carta-pagamento/{cartaId}

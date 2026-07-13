@@ -128,4 +128,19 @@ export class WishListService{
     );
   }
 
+  ricercaSuggerimentiWishlist(idUtente: string, query: string, categoriaId?: string) {
+    let params: any = {};
+    if (query) params.query = query;
+    if (categoriaId && categoriaId !== 'TUTTE') params.categoriaId = categoriaId;
+    return this.http.get<any[]>(`http://localhost:8080/api/v1/wishlist/utente/${idUtente}/ricerca-suggerimenti`, { params });
+  }
+
+  ricercaProdottiWishlist(idUtente: string, query: string, categoriaId?: string) {
+    let params: any = {};
+    if (query) params.query = query;
+    if (categoriaId && categoriaId !== 'TUTTE') params.categoriaId = categoriaId;
+    const url = `http://localhost:8080/api/v1/wishlist/utente/${idUtente}/ricerca`;
+
+    return this.http.get<any[]>(url, { params });
+  }
 }

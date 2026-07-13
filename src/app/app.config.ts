@@ -19,12 +19,15 @@ const urlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
 });
 
 import { MessageService } from 'primeng/api';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomPaginatorIntl } from './services/custom-paginator-intl';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     MessageService,
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
 
     // HTTP CLIENT con interceptor
     provideHttpClient(

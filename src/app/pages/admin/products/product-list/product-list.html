@@ -11,58 +11,51 @@
   </div>
 
   <div class="mat-elevation-z8 table-wrapper" *ngIf="!isLoading()">
-    <table mat-table [dataSource]="products" class="w-100">
-    
-    <ng-container matColumnDef="immagine">
-      <th mat-header-cell *matHeaderCellDef> Immagine </th>
-      <td mat-cell *matCellDef="let element">
-        <div class="product-image-container">
-          <img *ngIf="element.immagine" [src]="'data:image/jpeg;base64,' + element.immagine" alt="Img" class="product-thumb">
-          <div *ngIf="!element.immagine" class="no-image-placeholder">N/D</div>
-        </div>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="nomeProdotto">
-      <th mat-header-cell *matHeaderCellDef> Nome Prodotto </th>
-      <td mat-cell *matCellDef="let element"> {{element.nomeProdotto}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="marca">
-      <th mat-header-cell *matHeaderCellDef> Marca </th>
-      <td mat-cell *matCellDef="let element"> {{element.marca}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="categoria">
-      <th mat-header-cell *matHeaderCellDef> Categoria </th>
-      <td mat-cell *matCellDef="let element"> {{element.categoria?.nomeCategoria || 'N/D'}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="prezzo">
-      <th mat-header-cell *matHeaderCellDef> Prezzo </th>
-      <td mat-cell *matCellDef="let element"> €{{element.prezzo | number:'1.2-2'}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="giacenza">
-      <th mat-header-cell *matHeaderCellDef> Giacenza </th>
-      <td mat-cell *matCellDef="let element"> {{element.giacenza || 0}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="azioni">
-      <th mat-header-cell *matHeaderCellDef> Azioni </th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-icon-button color="primary" (click)="openEditDialog(element)" style="background-color: rgba(240, 240, 245); margin-right: 8px;">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="deleteProduct(element.id)" style="background-color: rgba(240, 240, 245);">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetail(row.id)" class="clickable-row"></tr>
-  </table>
+    <table class="custom-table w-100">
+      <thead>
+        <tr>
+          <th>Immagine</th>
+          <th>Nome Prodotto</th>
+          <th>Marca</th>
+          <th>Categoria</th>
+          <th>Prezzo</th>
+          <th>Giacenza</th>
+          <th class="text-center">Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of products" (click)="goToDetail(element.id)" class="clickable-row">
+          <td>
+            <div class="product-image-container">
+              <img *ngIf="element.immagine" [src]="'data:image/jpeg;base64,' + element.immagine" alt="Img" class="product-thumb">
+              <div *ngIf="!element.immagine" class="no-image-placeholder">N/D</div>
+            </div>
+          </td>
+          <td>{{element.nomeProdotto}}</td>
+          <td>{{element.marca}}</td>
+          <td>{{element.categoria.nomeCategoria || 'N/D'}}</td>
+          <td>€{{element.prezzo | number:'1.2-2'}}</td>
+          <td>{{element.giacenza || 0}}</td>
+          <td class="text-center" (click)="$event.stopPropagation()">
+            <div style="display: flex; flex-wrap: nowrap; justify-content: center; gap: 12px;">
+              <button class="edit-btn-rounded icon-only" (click)="openEditDialog(element)" matTooltip="Modifica">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button class="delete-btn-rounded icon-only" (click)="deleteProduct(element.id)" matTooltip="Elimina">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        
+        <tr *ngIf="products.length === 0">
+          <td class="empty-state-cell" colspan="7">
+            <mat-icon>inventory_2</mat-icon>
+            Nessun prodotto trovato.
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
   <div *ngIf="!isLoading() && products.length === 0" class="no-data">
     Nessun prodotto trovato.

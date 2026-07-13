@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CategoriaService } from '../../../../services/categoria.service';
 import { Categoria } from '../../../../models/categoria.model';
@@ -29,7 +29,7 @@ export class CategoryList implements OnInit {
   pageSize = 10;
   pageIndex = 0;
 
-  constructor(private categoriaService: CategoriaService, private dialog: MatDialog) {}
+  constructor(private categoriaService: CategoriaService, private dialog: MatDialog, private readonly cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -42,10 +42,12 @@ export class CategoryList implements OnInit {
         this.categories = data.content;
         this.totalElements = data.totalElements;
         this.isLoading.set(false);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Errore nel caricamento categorie', err);
         this.isLoading.set(false);
+        this.cdr.detectChanges();
       }
     });
   }

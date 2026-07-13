@@ -4,11 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { WishListService } from '../../../services/wishList.service';
 import { CategoriaService } from '../../../services/categoria.service';
-import { StanzaService } from '../../../services/stanza.service';
 import { Categoria } from '../../../models/categoria.model';
-import { Stanza } from '../../../models/stanza.model';
 import { Router } from '@angular/router';
 import Keycloak from 'keycloak-js';
+import { PopupService } from '../../../services/popUp.service';
 
 @Component({
   selector: 'app-wishlist',
@@ -21,10 +20,10 @@ export class Wishlist implements OnInit {
   idUtente: string = '';
   public wishlistService = inject(WishListService);
   private categoriaService = inject(CategoriaService);
-  private stanzaService = inject(StanzaService);
   private keycloak = inject(Keycloak);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private popupService = inject(PopupService);
 
   // Dialogs
   mostraDialogEliminaTutto = false;
@@ -33,11 +32,13 @@ export class Wishlist implements OnInit {
 
   // Filtri
   mostraDropdownCategoria = false;
-  mostraDropdownStanza = false;
   filterCategoria = 'TUTTE';
-  filterStanza = 'TUTTE';
   categorie: Categoria[] = [];
-  stanze: Stanza[] = [];
+
+  // Ricerca
+  ricercaTesto: string = '';
+  suggerimenti: any[] = [];
+  isSearchDropdownOpen = false;
 
   constructor() {}
 
@@ -57,61 +58,91 @@ export class Wishlist implements OnInit {
       // @ts-ignore
       this.categorie = res.content || res || [];
     });
-    this.stanzaService.getAllStanze(0, 100).subscribe(res => {
-      // @ts-ignore
-      this.stanze = res.content || res || [];
-    });
   }
 
   get prodottiFiltrati(): any[] {
-    let prodotti = this.wishlistService.prodottiWishlist || [];
-    
-    if (this.filterCategoria !== 'TUTTE') {
-      prodotti = prodotti.filter(p => p.categoria?.id === this.filterCategoria);
+    return this.wishlistService.prodottiWishlist || [];
+  }
+
+  eseguiRicercaBackend() {
+    const query = typeof this.ricercaTesto === 'string' ? this.ricercaTesto.trim() : this.ricercaTesto?.['nomeProdotto'] || '';
+    this.wishlistService.ricercaProdottiWishlist(this.idUtente, query, this.filterCategoria).subscribe({
+      next: (response) => {
+        if (response && response.length === 0 && (query || this.filterCategoria !== 'TUTTE')) {
+          this.popupService.updateStringa("La ricerca non ha prodotto risultati. Ritorno alla wishlist completa.");
+          this.popupService.openPopups(999, true);
+          this.ricercaTesto = '';
+          this.filterCategoria = 'TUTTE';
+          this.wishlistService.prodottiWishlist = [...(this.wishlistService.wishlist?.prodotti || [])];
+        } else {
+          this.wishlistService.prodottiWishlist = [...(response || [])];
+        }
+        this.wishlistService.wishlistUpdated$.next();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Errore nella ricerca della wishlist", err);
+        this.popupService.updateStringa("Errore durante la ricerca nella wishlist.");
+        this.popupService.openPopups(999, true);
+      }
+    });
+  }
+
+  onSearchEnter() {
+    this.isSearchDropdownOpen = false;
+    this.eseguiRicercaBackend();
+  }
+
+  onSearchFocus() {
+    if (this.ricercaTesto.length >= 2) {
+      this.isSearchDropdownOpen = true;
     }
-    
-    if (this.filterStanza !== 'TUTTE') {
-      prodotti = prodotti.filter(p => {
-        const cat = this.categorie.find(c => c.id === p.categoria?.id);
-        return cat?.stanze?.some((s: any) => s.id === this.filterStanza);
+  }
+
+  cercaSuggerimentiCustom(event: any) {
+    const query = event.target.value.trim();
+    if (query.length >= 2) {
+      this.wishlistService.ricercaSuggerimentiWishlist(this.idUtente, query, this.filterCategoria).subscribe({
+        next: (data) => {
+          this.suggerimenti = data;
+          this.isSearchDropdownOpen = true;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Errore nel recupero suggerimenti wishlist', err);
+        }
       });
+    } else {
+      this.suggerimenti = [];
+      this.isSearchDropdownOpen = false;
+      if (query.length === 0) {
+        this.eseguiRicercaBackend();
+      }
     }
-    
-    return prodotti;
+  }
+
+  onProdottoSelezionatoCustom(prod: any) {
+    this.ricercaTesto = prod.nomeProdotto;
+    this.isSearchDropdownOpen = false;
+    this.eseguiRicercaBackend();
   }
 
   toggleDropdownCategoria(event: Event) {
     event.stopPropagation();
     this.mostraDropdownCategoria = !this.mostraDropdownCategoria;
-    this.mostraDropdownStanza = false;
+    this.isSearchDropdownOpen = false;
   }
 
   selezionaCategoria(catId: string) {
     this.filterCategoria = catId;
     this.mostraDropdownCategoria = false;
+    this.eseguiRicercaBackend();
   }
 
   getNomeCategoria(catId: string): string {
     if (catId === 'TUTTE') return 'Tutte Categorie';
     const cat = this.categorie.find(c => c.id === catId);
     return cat ? this.formattaNome(cat.nomeCategoria) : 'Seleziona Categoria';
-  }
-
-  toggleDropdownStanza(event: Event) {
-    event.stopPropagation();
-    this.mostraDropdownStanza = !this.mostraDropdownStanza;
-    this.mostraDropdownCategoria = false;
-  }
-
-  selezionaStanza(stanzaId: string) {
-    this.filterStanza = stanzaId;
-    this.mostraDropdownStanza = false;
-  }
-
-  getNomeStanza(stanzaId: string): string {
-    if (stanzaId === 'TUTTE') return 'Tutte Stanze';
-    const st = this.stanze.find(s => s.id === stanzaId);
-    return st ? this.formattaNome(st.tipologia) : 'Seleziona Stanza';
   }
 
   formattaNome(nome: string): string {
@@ -122,7 +153,7 @@ export class Wishlist implements OnInit {
   @HostListener('document:click')
   closeDropdowns() {
     this.mostraDropdownCategoria = false;
-    this.mostraDropdownStanza = false;
+    this.isSearchDropdownOpen = false;
   }
 
   caricaWishlist() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -36,7 +36,8 @@ export class ReturnListComponent implements OnInit {
 
   constructor(
     private readonly resoService: ResoService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -48,10 +49,12 @@ export class ReturnListComponent implements OnInit {
       next: (page) => {
         this.resi = page.content;
         this.totalElements = page.totalElements;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Errore durante il caricamento dei resi', err);
         this.snackBar.open('Errore durante il caricamento dei resi', 'Chiudi', { duration: 3000 });
+        this.cdr.detectChanges();
       }
     });
   }

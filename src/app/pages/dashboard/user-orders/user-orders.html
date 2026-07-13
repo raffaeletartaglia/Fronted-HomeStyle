@@ -49,15 +49,6 @@
     </div>
   </div>
 
-  <div class="pagination-controls" *ngIf="totalPages > 1">
-    <button class="btn-icon" (click)="prevPage()" [disabled]="currentPage === 0">
-      <i class="pi pi-chevron-left"></i>
-    </button>
-    <span class="page-info">{{ currentPage + 1 }} di {{ totalPages }}</span>
-    <button class="btn-icon" (click)="nextPage()" [disabled]="currentPage === totalPages - 1">
-      <i class="pi pi-chevron-right"></i>
-    </button>
-  </div>
 
   <div *ngIf="isLoading" class="loading-state">
     <div class="spinner"></div>
@@ -125,12 +116,24 @@
         </div>
       </div>
       
-      <div class="order-footer" *ngIf="ordine.statoOrdine === 'IN_ELABORAZIONE'" style="padding-top: 15px; border-top: 1px solid #eee; margin-top: 15px; display: flex; justify-content: flex-start;">
+      <div class="order-footer" *ngIf="ordine.statoOrdine === 'IN_ELABORAZIONE'" style="padding-top: 15px; border-top: 1px solid #eee; margin-top: 15px; display: flex; justify-content: flex-end;">
         <button class="delete-btn-rounded icon-only" (click)="confermaAnnullaOrdine(ordine.id)" title="Annulla Ordine">
           <i class="pi pi-trash"></i>
         </button>
       </div>
     </div>
+  </div>
+
+  <div class="paginator-container" *ngIf="!isLoading && totalElements > 0" style="display: flex; justify-content: center; margin-top: 2rem;">
+    <mat-paginator 
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20]"
+      [pageIndex]="currentPage"
+      (page)="onPageChange($event)"
+      aria-label="Seleziona pagina"
+      style="background: transparent; box-shadow: none;">
+    </mat-paginator>
   </div>
 </div>
 

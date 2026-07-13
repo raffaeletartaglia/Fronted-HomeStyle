@@ -563,10 +563,13 @@ button:disabled {
 /* Rendi le tabelle più "morbide" e ariose */
 .mat-elevation-z8,
 .table-container {
-  border-radius: 16px !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025) !important;
-  border: 1px solid #f3f4f6;
-  background: #ffffff;
+  border-radius: 20px !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  overflow: hidden;
 }
 
 /* Centra il testo e aumenta il padding nelle celle */
@@ -581,24 +584,110 @@ td.mat-mdc-cell {
 
 /* Colore e peso dell'intestazione per distinguerla */
 th.mat-mdc-header-cell {
-  color: #6b7280 !important;
-  font-weight: 600 !important;
+  color: var(--primary-color) !important;
+  font-weight: 700 !important;
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.05em;
-  background-color: #f9fafb !important;
-  border-bottom: 2px solid #e5e7eb !important;
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Linea di separazione morbida tra le righe */
 tr.mat-mdc-row {
-  border-bottom: 1px solid #f3f4f6 !important;
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(0,0,0,0.03) !important;
+  transition: all 0.3s ease;
 }
 
 /* Effetto hover più pulito */
 tr.mat-mdc-row:hover {
-  background-color: #f8fafc !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+/* Update Material Raised Buttons to look premium */
+.mdc-button--raised.mat-primary, 
+.mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(200, 121, 101, 0.3) !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+}
+
+.mdc-button--raised.mat-primary:hover, 
+.mat-mdc-raised-button.mat-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(200, 121, 101, 0.4) !important;
+}
+
+/* =========================================
+   STATO VUOTO TABELLE GLOBALE (EMPTY STATE)
+   ========================================= */
+.empty-state-cell {
+  text-align: center !important;
+  padding: 4rem 2rem !important;
+  color: #6b7280 !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  background: transparent !important;
+  border-bottom: none !important;
+}
+.empty-state-cell mat-icon {
+  display: block;
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem auto;
+  color: #9ca3af;
+}
+
+/* =========================================
+   TABELLE CUSTOM HTML
+   ========================================= */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: transparent;
+  font-family: 'Inter', 'Roboto', sans-serif;
+}
+
+.custom-table th {
+  padding: 16px 24px;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #8c736d; /* Colore tema primario */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  background-color: rgba(255, 255, 255, 0.5); /* Effetto glass leggero */
+}
+
+.custom-table td {
+  padding: 16px 24px;
+  font-size: 0.95rem;
+  color: #333;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  vertical-align: middle;
+}
+
+.custom-table tbody tr {
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  background-color: white;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #faf9f8;
+}
+
+.custom-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.custom-table .text-center {
+  text-align: center !important;
 }
 
 /* Assicura che i bottoni nelle tabelle siano ben spaziati */
@@ -651,10 +740,10 @@ td.mat-mdc-cell button {
 }
 
 .delete-btn-rounded.icon-only {
-  width: 45px;
-  height: 45px;
+  width: 36px;
+  height: 36px;
   border-radius: 50% !important;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
 }
 
 .delete-btn-rounded.with-text {
@@ -666,6 +755,39 @@ td.mat-mdc-cell button {
   background-color: rgba(239, 68, 68, 0.1) !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+}
+
+.edit-btn-rounded {
+  background-color: transparent !important;
+  color: #000000 !important;
+  border: 1.5px solid #000000 !important;
+  border-radius: 20px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  font-weight: 600;
+  gap: 0.5rem;
+}
+
+.edit-btn-rounded.icon-only {
+  width: 36px;
+  height: 36px;
+  border-radius: 50% !important;
+  font-size: 1.05rem;
+}
+
+.edit-btn-rounded.with-text {
+  padding: 0.6rem 1.2rem !important;
+  height: auto;
+}
+
+.edit-btn-rounded:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Light Dialog */

@@ -1,49 +1,68 @@
-<h2 mat-dialog-title>Dettagli Ordine - {{ data.order.id | slice:0:8 }}</h2>
-
-<mat-dialog-content>
-  <div class="detail-section">
-    <h3>Dati Cliente</h3>
-    <p><strong>Nome:</strong> {{ data.order.utente.nome }} {{ data.order.utente.cognome }}</p>
-    <p><strong>Email:</strong> {{ data.order.utente.email }}</p>
-    <p><strong>Telefono:</strong> {{ data.order.utente.numeroTelefono || 'N/D' }}</p>
+<div class="order-detail-container">
+  <div class="modal-header">
+    <h2 class="title">Dettagli Ordine <span class="order-id">#{{ data.order.id | slice:0:8 }}</span></h2>
+    <button class="close-btn" (click)="dialogRef.close()"><i class="pi pi-times"></i></button>
   </div>
 
-  <div class="detail-section mt-3">
-    <h3>Indirizzo di Spedizione</h3>
-    <ng-container *ngIf="data.order.indirizzoSpedizione; else noAddress">
-      <p>{{ data.order.indirizzoSpedizione.via }}, {{ data.order.indirizzoSpedizione.numeroCivico }}</p>
-      <p>{{ data.order.indirizzoSpedizione.cap }} - {{ data.order.indirizzoSpedizione.citta }} ({{ data.order.indirizzoSpedizione.provincia }})</p>
-    </ng-container>
-    <ng-template #noAddress><p>Indirizzo non disponibile</p></ng-template>
-  </div>
+  <div class="modal-body">
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="card-icon"><i class="pi pi-user"></i></div>
+        <div class="card-content">
+          <h3>Dati Cliente</h3>
+          <p><strong>{{ data.order.utente.nome }} {{ data.order.utente.cognome }}</strong></p>
+          <p class="text-muted">{{ data.order.utente.email }}</p>
+          <p class="text-muted">{{ data.order.utente.numeroTelefono || 'N/D' }}</p>
+        </div>
+      </div>
 
-  <div class="detail-section mt-3">
-    <h3>Prodotti Acquistati</h3>
-    <table class="products-table">
-      <thead>
-        <tr>
-          <th>Prodotto</th>
-          <th>Quantità</th>
-          <th>Prezzo Unitario</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of data.order.prodotti">
-          <td>{{ p.prodotto.nomeProdotto }} ({{ p.prodotto.marca }})</td>
-          <td>{{ p.quantita }}</td>
-          <td>€{{ p.prezzoUnitario | number:'1.2-2' }}</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2" class="text-end"><strong>Totale Ordine:</strong></td>
-          <td><strong>€{{ data.order.prezzoTotale | number:'1.2-2' }}</strong></td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</mat-dialog-content>
+      <div class="info-card">
+        <div class="card-icon"><i class="pi pi-map-marker"></i></div>
+        <div class="card-content">
+          <h3>Indirizzo di Spedizione</h3>
+          <ng-container *ngIf="data.order.indirizzoSpedizione; else noAddress">
+            <p><strong>{{ data.order.indirizzoSpedizione.via }}, {{ data.order.indirizzoSpedizione.numeroCivico }}</strong></p>
+            <p class="text-muted">{{ data.order.indirizzoSpedizione.cap }} - {{ data.order.indirizzoSpedizione.citta }} ({{ data.order.indirizzoSpedizione.provincia }})</p>
+          </ng-container>
+          <ng-template #noAddress><p class="text-muted">Indirizzo non disponibile</p></ng-template>
+        </div>
+      </div>
+    </div>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="dialogRef.close()">Chiudi</button>
-</mat-dialog-actions>
+    <div class="products-section">
+      <h3>Prodotti Acquistati</h3>
+      <div class="table-responsive">
+        <table class="custom-table w-100">
+          <thead>
+            <tr>
+              <th>Prodotto</th>
+              <th class="text-center">Quantità</th>
+              <th class="text-right">Prezzo Unitario</th>
+              <th class="text-right">Subtotale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of data.order.prodotti">
+              <td>
+                <div class="product-info">
+                  <span class="product-name">{{ p.prodotto.nomeProdotto }}</span>
+                  <span class="product-brand">{{ p.prodotto.marca }}</span>
+                </div>
+              </td>
+              <td class="text-center">{{ p.quantita }}</td>
+              <td class="text-right">€{{ p.prezzoUnitario | number:'1.2-2' }}</td>
+              <td class="text-right font-weight-bold">€{{ (p.quantita * p.prezzoUnitario) | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="order-summary">
+        <div class="summary-row total">
+          <span>Totale Ordine:</span>
+          <span>€{{ data.order.prezzoTotale | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
