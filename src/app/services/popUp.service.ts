@@ -50,7 +50,7 @@ export class PopupService {
   }
 
 
-  openPopups(num: number, avviso: boolean) {
+  openPopups(num: number, avviso: boolean, customSeverity?: string) {
     switch (num) {
       case 0:
         this.dialog.open(AllPopup);
@@ -81,7 +81,10 @@ export class PopupService {
 
       default:
         this.isAvviso = avviso;
-        if (avviso) {
+        if (customSeverity) {
+          let summary = customSeverity === 'warn' ? 'Avviso' : (customSeverity === 'error' ? 'Errore' : 'Informazione');
+          this.messageService.add({ severity: customSeverity, summary: summary, detail: this.stringaSource.getValue() });
+        } else if (avviso) {
           this.messageService.add({ severity: 'error', summary: 'Attenzione', detail: this.stringaSource.getValue() });
         } else {
           this.messageService.add({ severity: 'success', summary: 'Successo', detail: this.stringaSource.getValue() });

@@ -33,7 +33,7 @@
             <div class="option-details">
               <strong>
                 {{ ind.via }} {{ ind.numeroCivico }}
-                <span *ngIf="ind.isDefault" class="badge" style="background: rgba(200,121,101,0.1); color: #C87965; font-size: 0.75rem; margin-left: 8px; border: 1px solid rgba(200,121,101,0.3);">Predefinito</span>
+                <span *ngIf="ind.isDefault" class="badge">Predefinito</span>
               </strong>
               <p>{{ ind.citta }} ({{ ind.provincia }}) - {{ ind.cap }}</p>
             </div>
@@ -82,7 +82,7 @@
           </div>
         </div>
 
-        <div class="step-actions mt-5 flex justify-content-between">
+        <div class="step-actions">
           <div></div> <!-- Spacer for flex-between -->
           <button class="btn-primary" (click)="activeStep = 2" [disabled]="!indirizzoSelezionato">
             Continua <i class="pi pi-arrow-right"></i>
@@ -121,7 +121,7 @@
             <div class="option-details">
               <strong>
                 **** **** **** {{ carta.ultime4Cifre }}
-                <span *ngIf="carta.isDefault" class="badge" style="background: rgba(200,121,101,0.1); color: #C87965; font-size: 0.75rem; margin-left: 8px; border: 1px solid rgba(200,121,101,0.3);">Predefinita</span>
+                <span *ngIf="carta.isDefault" class="badge">Predefinita</span>
               </strong>
               <p>Scadenza: {{ carta.scadenza }}</p>
               <p class="text-sm text-500">{{ carta.intestatario }}</p>
@@ -171,7 +171,7 @@
         </div>
         </div>
 
-        <div class="step-actions mt-5 flex justify-content-between">
+        <div class="step-actions">
           <button class="btn-secondary" (click)="activeStep = 1">
             <i class="pi pi-arrow-left"></i> Indietro
           </button>
@@ -186,49 +186,49 @@
         <h3 class="panel-title mb-4">Riepilogo Ordine</h3>
         
         <div class="summary-container">
-          <div class="summary-section items-summary p-4 mb-4" style="background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 8px 32px rgba(0,0,0,0.05);">
-            <h4>Articoli ({{ cartItems.length }})</h4>
+          <div class="summary-section">
+            <h4><i class="pi pi-shopping-bag"></i> Articoli ({{ cartItems.length }})</h4>
             <div class="summary-item-list">
-              <div *ngFor="let item of cartItems" class="summary-item flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
-                <span class="font-medium">{{ item.quantita }}x {{ item.prodotto.nomeProdotto }}</span>
+              <div *ngFor="let item of cartItems" class="summary-item">
+                <span>{{ item.quantita }}x {{ item.prodotto.nomeProdotto }}</span>
                 <span>€{{ (item.prodotto.prezzo * item.quantita) | number:'1.2-2' }}</span>
               </div>
             </div>
-            <div class="summary-total mt-3 pt-3 border-top-1 surface-border flex justify-content-between">
-              <span class="text-xl font-bold">Totale:</span>
-              <span class="text-xl font-bold color-primary">€{{ totale | number:'1.2-2' }}</span>
+            <div class="summary-total">
+              <span style="font-size: 1.15rem; font-weight: 700;">Totale:</span>
+              <span style="font-size: 1.15rem; font-weight: 700;" class="color-primary">€{{ totale | number:'1.2-2' }}</span>
             </div>
           </div>
 
-          <div class="summary-details flex flex-column md:flex-row gap-4">
-            <div class="summary-box p-4 flex-1" style="background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 8px 32px rgba(0,0,0,0.05);">
-              <h4><i class="pi pi-map-marker mr-2"></i> Spedizione</h4>
-              <p class="mt-2">{{ indirizzoSelezionato?.via }} {{ indirizzoSelezionato?.numeroCivico }}</p>
+          <div class="summary-details">
+            <div class="summary-box">
+              <h4><i class="pi pi-map-marker"></i> Spedizione</h4>
+              <p>{{ indirizzoSelezionato?.via }} {{ indirizzoSelezionato?.numeroCivico }}</p>
               <p>{{ indirizzoSelezionato?.citta }} ({{ indirizzoSelezionato?.provincia }}) - {{ indirizzoSelezionato?.cap }}</p>
             </div>
             
-            <div class="summary-box p-4 flex-1" style="background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 8px 32px rgba(0,0,0,0.05);">
-              <h4><i class="pi mr-2" [ngClass]="modalitaSelezionata?.tipo === 'ONLINE' ? 'pi-credit-card' : 'pi-wallet'"></i> Pagamento</h4>
-              <p class="mt-2"><strong>Modalità:</strong> {{ modalitaSelezionata?.tipo === 'ONLINE' ? 'Online' : 'Fisico' }}</p>
+            <div class="summary-box">
+              <h4><i class="pi" [ngClass]="modalitaSelezionata?.tipo === 'ONLINE' ? 'pi-credit-card' : 'pi-wallet'"></i> Pagamento</h4>
+              <p><strong>Modalità:</strong> {{ modalitaSelezionata?.tipo === 'ONLINE' ? 'Online' : 'Fisico' }}</p>
               
               <ng-container *ngIf="modalitaSelezionata?.tipo === 'ONLINE'">
-                <p>Carta terminante con {{ cartaSelezionata?.ultime4Cifre }}</p>
+                <p>Carta terminante con **** {{ cartaSelezionata?.ultime4Cifre }}</p>
                 <p>Intestatario: {{ cartaSelezionata?.intestatario }}</p>
               </ng-container>
               
               <ng-container *ngIf="modalitaSelezionata?.tipo === 'FISICO'">
-                <p class="text-500 text-sm mt-2">{{ modalitaSelezionata?.descrizione }}</p>
+                <p>{{ modalitaSelezionata?.descrizione }}</p>
               </ng-container>
             </div>
           </div>
         </div>
         
-        <div class="step-actions mt-5 flex justify-content-between">
+        <div class="step-actions">
           <button class="btn-secondary" (click)="activeStep = 2">
             <i class="pi pi-arrow-left"></i> Indietro
           </button>
-          <button class="btn-success" (click)="confermaOrdine()">
-            <i class="pi pi-credit-card mr-2"></i> Paga e Conferma Ordine
+          <button class="btn-primary" (click)="confermaOrdine()">
+            <i class="pi pi-check-circle"></i> Paga e Conferma Ordine
           </button>
         </div>
       </div>
@@ -236,3 +236,4 @@
     </div>
   </div>
 </div>
+

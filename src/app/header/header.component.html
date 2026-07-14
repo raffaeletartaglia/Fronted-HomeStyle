@@ -23,8 +23,16 @@
 
         <!-- Sottomenu (Categorie) - si apre in Hover -->
         <div class="dropdown-content" *ngIf="item.items">
-          <div class="dropdown-item" *ngFor="let subItem of item.items" (click)="executeItemCommand(subItem)">
+          <div class="dropdown-item" *ngFor="let subItem of item.items" (click)="executeItemCommand(subItem)" [class.has-children]="subItem.items">
             {{ subItem.label }}
+            <i *ngIf="subItem.items" class="pi pi-angle-right" style="float: right; margin-top: 3px; font-size: 0.8rem; color: #888;"></i>
+            
+            <!-- Terzo Livello (Sotto-categorie per il menu 'Altre') -->
+            <div class="sub-dropdown-content" *ngIf="subItem.items">
+              <div class="dropdown-item" *ngFor="let nestedItem of subItem.items" (click)="executeItemCommand(nestedItem); $event.stopPropagation()">
+                {{ nestedItem.label }}
+              </div>
+            </div>
           </div>
         </div>
       </div>

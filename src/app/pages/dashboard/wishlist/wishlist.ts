@@ -70,7 +70,7 @@ export class Wishlist implements OnInit {
       next: (response) => {
         if (response && response.length === 0 && (query || this.filterCategoria !== 'TUTTE')) {
           this.popupService.updateStringa("La ricerca non ha prodotto risultati. Ritorno alla wishlist completa.");
-          this.popupService.openPopups(999, true);
+          this.popupService.openPopups(999, true, 'warn');
           this.ricercaTesto = '';
           this.filterCategoria = 'TUTTE';
           this.wishlistService.prodottiWishlist = [...(this.wishlistService.wishlist?.prodotti || [])];

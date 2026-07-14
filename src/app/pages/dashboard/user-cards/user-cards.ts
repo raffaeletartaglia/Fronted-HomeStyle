@@ -182,9 +182,20 @@ export class UserCardsComponent implements OnInit {
 
   impostaPredefinito(carta: CartaPagamento) {
     this.cartaPagamentoService.impostaComePredefinito(carta, true);
+    this.forceDetectChanges();
   }
 
   rimuoviPredefinito(carta: CartaPagamento) {
     this.cartaPagamentoService.impostaComePredefinito(carta, false);
+    this.forceDetectChanges();
+  }
+
+  private forceDetectChanges() {
+    let count = 0;
+    const intervalId = setInterval(() => {
+      this.cdr.detectChanges();
+      count++;
+      if (count > 10) clearInterval(intervalId);
+    }, 100);
   }
 }

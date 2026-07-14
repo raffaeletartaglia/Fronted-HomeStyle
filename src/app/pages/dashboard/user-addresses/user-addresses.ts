@@ -160,5 +160,15 @@ export class UserAddressesComponent implements OnInit {
     // Creiamo una copia e settiamo isDefault = true
     const indirizzoAggiornato = { ...indirizzo, isDefault: true };
     this.indirizzoService.modificaIndirizzo(this.idUtente, indirizzo.id, indirizzoAggiornato);
+    this.forceDetectChanges();
+  }
+
+  private forceDetectChanges() {
+    let count = 0;
+    const intervalId = setInterval(() => {
+      this.cdr.detectChanges();
+      count++;
+      if (count > 10) clearInterval(intervalId);
+    }, 100);
   }
 }

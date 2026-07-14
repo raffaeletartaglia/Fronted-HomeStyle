@@ -129,6 +129,34 @@
   padding-left: 1.5rem;
 }
 
+/* --- SUB DROPDOWN CONTENT (Terzo Livello) --- */
+.dropdown-item {
+  position: relative; /* Necessario per posizionare il sottomenu */
+}
+
+.sub-dropdown-content {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: -1px;
+  left: 100%; /* Si apre a destra */
+  background-color: #ffffff;
+  min-width: 200px;
+  box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  z-index: 20;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #eee;
+  transform: translateX(-10px);
+}
+
+.dropdown-item.has-children:hover > .sub-dropdown-content {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+}
+
 /* --- RIGHT ACTIONS --- */
 .header-actions {
   display: flex;

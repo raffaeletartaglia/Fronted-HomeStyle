@@ -30,6 +30,11 @@ export class Checkout implements OnInit {
   totale: number = 0;
   activeStep: number = 1;
 
+  // Flag per distinguere acquisto singolo da carrello
+  isSingoloProdotto: boolean = false;
+  singoloProdotto: any = null;
+  quantitaSingola: number = 1;
+
   isAddingIndirizzo: boolean = false;
   nuovoIndirizzo: any = { citta: '', provincia: '', cap: '', via: '', numeroCivico: '', tipo: 'SPEDIZIONE' };
 
@@ -47,6 +52,9 @@ export class Checkout implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Leggiamo lo state dal router (passato da "Compra Ora")
+    const navState = history.state;
+
     if (this.keycloak.authenticated && this.keycloak.tokenParsed?.sub) {
       this.idUtente = this.keycloak.tokenParsed.sub;
       
@@ -69,12 +77,24 @@ export class Checkout implements OnInit {
         }
       });
 
-      this.carrelloService.getCarrelloUtenteObservable(this.idUtente).subscribe({
-        next: (res: any) => {
-          this.cartItems = res.prodotti || [];
-          this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
-        }
-      });
+      // Distinguiamo: acquisto singolo o carrello?
+      if (navState?.singoloProdotto) {
+        this.isSingoloProdotto = true;
+        this.singoloProdotto = navState.singoloProdotto;
+        this.quantitaSingola = navState.quantita || 1;
+        this.cartItems = [{
+          prodotto: this.singoloProdotto,
+          quantita: this.quantitaSingola
+        }];
+        this.totale = this.singoloProdotto.prezzo * this.quantitaSingola;
+      } else {
+        this.carrelloService.getCarrelloUtenteObservable(this.idUtente).subscribe({
+          next: (res: any) => {
+            this.cartItems = res.prodotti || [];
+            this.totale = this.cartItems.reduce((acc: number, item: any) => acc + (item.prodotto.prezzo * item.quantita), 0);
+          }
+        });
+      }
     } else {
       this.keycloak.login();
     }
@@ -155,28 +175,47 @@ export class Checkout implements OnInit {
     if (!this.indirizzoSelezionato || !this.modalitaSelezionata) return;
     if (this.modalitaSelezionata.tipo === 'ONLINE' && !this.cartaSelezionata) return;
 
-    this.ordineService.creaOrdine(this.idUtente, this.indirizzoSelezionato.id).subscribe({
-      next: (ordine) => {
-        const datiPagamento = {
-          importo: this.totale,
-          modalitaPagamentoId: this.modalitaSelezionata.id,
-          cartaPagamentoId: this.modalitaSelezionata.tipo === 'ONLINE' ? this.cartaSelezionata.id : null,
-          pagamentoEffettuato: this.modalitaSelezionata.tipo === 'ONLINE' ? true : false,
-          numeroRate: 1,
-          rataCorrente: 1,
-          importoRata: this.totale,
-          ordineId: ordine.id
-        };
-        this.pagamentoService.creaPagamento(datiPagamento);
-        
+    const onOrdineCreato = (ordine: any) => {
+      const datiPagamento = {
+        importo: this.totale,
+        modalitaPagamentoId: this.modalitaSelezionata.id,
+        cartaPagamentoId: this.modalitaSelezionata.tipo === 'ONLINE' ? this.cartaSelezionata.id : null,
+        pagamentoEffettuato: this.modalitaSelezionata.tipo === 'ONLINE',
+        numeroRate: 1,
+        rataCorrente: 1,
+        importoRata: this.totale,
+        ordineId: ordine.id
+      };
+      this.pagamentoService.creaPagamento(datiPagamento);
+
+      // Svuota il carrello solo se l'ordine viene dal carrello
+      if (!this.isSingoloProdotto) {
         const idCarrello = this.carrelloService.carrelloAttivo?.id;
         if (idCarrello) {
           this.carrelloService.svuotaCarrello(idCarrello);
         }
-        
-        setTimeout(() => this.router.navigateByUrl('/dashboard/orders'), 2000);
-      },
-      error: (err) => console.error("Errore creazione ordine", err)
-    });
+      }
+
+      setTimeout(() => this.router.navigateByUrl('/'), 2000);
+    };
+
+    if (this.isSingoloProdotto && this.singoloProdotto) {
+      // Acquisto diretto singolo prodotto
+      this.ordineService.creaOrdineSingolo(
+        this.idUtente, 
+        this.indirizzoSelezionato.id, 
+        this.singoloProdotto.id, 
+        this.quantitaSingola
+      ).subscribe({
+        next: onOrdineCreato,
+        error: (err) => console.error("Errore creazione ordine singolo", err)
+      });
+    } else {
+      // Acquisto da carrello
+      this.ordineService.creaOrdine(this.idUtente, this.indirizzoSelezionato.id).subscribe({
+        next: onOrdineCreato,
+        error: (err) => console.error("Errore creazione ordine", err)
+      });
+    }
   }
 }

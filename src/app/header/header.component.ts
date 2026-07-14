@@ -154,7 +154,7 @@ export class headerComponent implements OnInit {
           return {
             label: labelSanitized,
             items: items.length > 0 ? items : undefined,
-            command: items.length === 0 ? () => this.router.navigate(['/risultati-ricerca'], { queryParams: { stanzaId: stanza.id } }) : undefined
+            command: () => this.router.navigate(['/risultati-ricerca'], { queryParams: { stanzaId: stanza.id } })
           };
         };
 
